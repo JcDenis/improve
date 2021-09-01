@@ -1,0 +1,311 @@
+# Language: Français
+# Module: improve - 0.0.1
+# Date: 2021-09-01 22:48:14
+# Translated with translater 2021.08.18
+
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: improve 0.0.1\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2021-09-01T22:48:14+00:00\n"
+"Last-Translator: Jean-Christian Denis\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: inc/class.improve.php:66
+msgid "Module path is not writable"
+msgstr "Le chemin du module n'est pas accessible en écriture"
+
+#: inc/class.improve.php:94
+msgid "File content has been removed: %s by %s"
+msgstr "Le contenu du fichier a été supprimé : %s par %s"
+
+#: inc/lib.improve.action.dcstore.php:9
+msgid "Fix dcstore.xml"
+msgstr "Fixer dcstore.xml"
+
+#: inc/lib.improve.action.dcstore.php:10
+msgid "Re-create dcstore.xml file according to _define.php variables"
+msgstr "Re-créer le fichier dcstore.xml suivant les variables du fichier _dephine.php"
+
+#: inc/lib.improve.action.dcstore.php:32
+msgid "File will be overwritten if it exists"
+msgstr "Le fichier sera réécrit si il existe"
+
+#: inc/lib.improve.action.dcstore.php:34
+msgid "Predictable URL to zip file on the external repository"
+msgstr "URL prédictive du fichier zip sur le dépôt externe"
+
+#: inc/lib.improve.action.dcstore.php:38
+msgid "You can use widcards %s"
+msgstr "Vous pouvez utiliser les jokers %s"
+
+#: inc/lib.improve.action.dcstore.php:40
+msgid "For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip"
+msgstr "Par exemple sur github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip"
+
+#: inc/lib.improve.action.dcstore.php:42
+msgid "Note on github, you must create a release and join to it the module zip file."
+msgstr "Note sur Github, vous devez créer un release et y joindre le fichier zip du module."
+
+#: inc/lib.improve.action.dcstore.php:59
+msgid "Failed to write dcstore.xml file"
+msgstr "Impossible d'écrire le fichier dcstore.xml"
+
+#: inc/lib.improve.action.dcstore.php:78
+msgid "unkow module id"
+msgstr "Id du module inconu"
+
+#: inc/lib.improve.action.dcstore.php:84
+msgid "unknow module name"
+msgstr "nom du module inconnu"
+
+#: inc/lib.improve.action.dcstore.php:90
+msgid "unknow module version"
+msgstr "version du module inconnue"
+
+#: inc/lib.improve.action.dcstore.php:96
+msgid "unknow module author"
+msgstr "auteur du module inconnu"
+
+#: inc/lib.improve.action.dcstore.php:103
+msgid "unknow module description"
+msgstr "description du module inconnue"
+
+#: inc/lib.improve.action.dcstore.php:109
+msgid "no repository set in _define.php"
+msgstr "Aucun dépôt défini dans le fichier _define.php"
+
+#: inc/lib.improve.action.dcstore.php:115
+msgid "no zip file pattern set in configuration"
+msgstr "Pas de modèle de fichier zip présent dans la configuration"
+
+#: inc/lib.improve.action.dcstore.php:121
+msgid "no minimum dotclear version"
+msgstr "pas de version minimum de Dotclear"
+
+#: inc/lib.improve.action.dcstore.php:128
+msgid "no details URL"
+msgstr "Lien de détail non défini"
+
+#: inc/lib.improve.action.dcstore.php:141
+msgid "no support URL"
+msgstr "Lien de support non défini"
+
+#: inc/lib.improve.action.license.php:42
+#: inc/lib.improve.action.license.php:48
+#: inc/lib.improve.action.phpheader.php:33
+msgid "Do nothing"
+msgstr "Ne rien faire"
+
+#: inc/lib.improve.action.license.php:49
+#: inc/lib.improve.action.phpheader.php:34
+msgid "Add bloc if it does not exist"
+msgstr "Ajouter les blocs si ils n'existent pas déjà"
+
+#: inc/lib.improve.action.license.php:97
+msgid "Do not add license block to files from locales folder"
+msgstr "Ne pas ajouter la licence aux fichiers du dossier locales"
+
+#: inc/lib.improve.action.php:9
+msgid "Fix tabulation"
+msgstr "Fixer les tabulations"
+
+#: inc/lib.improve.action.php:10
+msgid "Replace tabulation by four space in php files"
+msgstr "Remplace les tabulation par quatre espaces dans les fichiers php"
+
+#: inc/lib.improve.action.php:42
+msgid "Fix newline"
+msgstr "Fixer les retours à la ligne"
+
+#: inc/lib.improve.action.php:43
+msgid "Replace bad and repetitive and empty newline by single newline in files"
+msgstr "Remplace les mauvais ou répétitifs retour à la ligne par une seule nouvelle ligne"
+
+#: inc/lib.improve.action.php:80
+msgid "List of files extension to work on:"
+msgstr "Liste des extensions de fichier à corriger:"
+
+#: inc/lib.improve.action.php:83
+msgid "Use comma separated list of extensions without dot, recommand \"php,js,xml,txt,md\"."
+msgstr "Utiliser une liste d'extensions séparé par des virgules et sans le point, recommandation: \"php,js,xml,txt,md\"."
+
+#: inc/lib.improve.action.php:118
+msgid "Remove php tag and empty lines from end of files"
+msgstr "Supprimer le tag PHP et els lignes vides de fin de fichiers"
+
+#: inc/lib.improve.action.php:142
+msgid "Add a blank line to the end of file"
+msgstr "Ajouter une ligne vide en fin de fichier"
+
+#: inc/lib.improve.action.php:144
+msgid "PSR2 must have a blank line, whereas PSR12 must not."
+msgstr "PSR2 doit avoir une ligne vide, alors que PSR12 non."
+
+#: inc/lib.improve.action.phpheader.php:25
+msgid "Fix PHP header"
+msgstr "Fixer les enêtes php"
+
+#: inc/lib.improve.action.phpheader.php:26
+msgid "Add or remove phpdoc header bloc from php file"
+msgstr "Ajouter ou supprimer les bloc d'entête phpdoc des fichiers php"
+
+#: inc/lib.improve.action.phpheader.php:35
+msgid "Add and overwrite bloc"
+msgstr "Ajouter et écraser les blocs"
+
+#: inc/lib.improve.action.phpheader.php:36
+msgid "Overwrite bloc only if it exists"
+msgstr "Ecraser les blocs seulement si ils existent"
+
+#: inc/lib.improve.action.phpheader.php:37
+msgid "Remove existing bloc header"
+msgstr "Retirer les blocs d'entête existant"
+
+#: inc/lib.improve.action.phpheader.php:61
+msgid "Action:"
+msgstr "Action :"
+
+#: inc/lib.improve.action.phpheader.php:67
+msgid "Remove old style bloc header (using #)"
+msgstr "Supprimer les bloc d'entête ancien (utilisant #)"
+
+#: inc/lib.improve.action.phpheader.php:72
+msgid "Do not add bloc to files from \"locales\" and \"libs\" folder"
+msgstr "Ne pas ajouter les blocs d'entête aux fichiers des répertoires \"locales\" et \"llibs\""
+
+#: inc/lib.improve.action.phpheader.php:75
+msgid "Bloc content:"
+msgstr "Contenu du bloc :"
+
+#: inc/lib.improve.action.phpheader.php:142
+msgid "bloc is empty"
+msgstr "le bloc est vide"
+
+#: inc/lib.improve.action.phpheader.php:164
+msgid "failed to parse bloc"
+msgstr "impossible de traiter le bloc"
+
+#: inc/lib.improve.action.zip.php:30
+msgid "Zip module"
+msgstr "Zipper le module"
+
+#: inc/lib.improve.action.zip.php:31
+msgid "Compress module into a ready to install package"
+msgstr "Compresser le module en un paquetage près à installer"
+
+#: inc/lib.improve.action.zip.php:61
+msgid "Root"
+msgstr "Racine"
+
+#: inc/lib.improve.action.zip.php:63
+msgid "Path to repository:"
+msgstr "Chemin vers le dépôt :"
+
+#: inc/lib.improve.action.zip.php:66
+#: inc/lib.improve.action.zip.php:77
+#: inc/lib.improve.action.zip.php:82
+#: inc/lib.improve.action.zip.php:96
+msgid "Preconization: %s"
+msgstr "Préconisation : %s"
+
+#: inc/lib.improve.action.zip.php:67
+msgid "Blog's public directory"
+msgstr "Répertoire public du blog"
+
+#: inc/lib.improve.action.zip.php:72
+msgid "Files"
+msgstr "Fichiers"
+
+#: inc/lib.improve.action.zip.php:74
+msgid "Name of exported package:"
+msgstr "Nom du paquetage exporté :"
+
+#: inc/lib.improve.action.zip.php:79
+msgid "Name of second exported package:"
+msgstr "Nom du second paquetage exporté :"
+
+#: inc/lib.improve.action.zip.php:86
+msgid "Overwrite existing package"
+msgstr "Écraser les paquetages existants"
+
+#: inc/lib.improve.action.zip.php:93
+msgid "Extra files to exclude from package:"
+msgstr "Fichiers supplémentaires à exclure du paquetage :"
+
+#: inc/lib.improve.action.zip.php:100
+msgid "Remove comments from files"
+msgstr "Retirer les commentaires des fichiers"
+
+#: inc/lib.improve.action.zip.php:142
+msgid "Destination filename already exists"
+msgstr "Le fichier de destination existe déjà"
+
+#: inc/lib.improve.action.zip.php:147
+msgid "Destination path is not writable"
+msgstr "Le répertoire de destination n'est pas accessible en écriture"
+
+#: index.php:50
+msgid "Select a module"
+msgstr "Sélectionner un module"
+
+#: index.php:68
+msgid "No action selected"
+msgstr "Aucune action sélectionné"
+
+#: index.php:71
+msgid "No module selected"
+msgstr "Aucun module sélectionné"
+
+#: index.php:80
+msgid "Fix of %s complete in %s secondes"
+msgstr "Correction de %s complété en %s secondes"
+
+#: index.php:95
+#: index.php:100
+#: index.php:101
+#: index.php:137
+msgid "Themes"
+msgstr "Thèmes"
+
+#: index.php:96
+#: index.php:156
+msgid "Configure module"
+msgstr "Configurer le module"
+
+#: index.php:118
+msgid "Configure module \"%s\""
+msgstr "Configurer le module \"%s\""
+
+#: index.php:122
+msgid "Nothing to configure"
+msgstr "Rien à configurer"
+
+#: index.php:131
+msgid "Unknow module"
+msgstr "Module inconnu"
+
+#: index.php:140
+msgid "No module to manage"
+msgstr "Aucun module à gérer"
+
+#: index.php:156
+msgid "Configure action '%s'"
+msgstr "Configurer l'action \"%s\""
+
+#: index.php:166
+msgid "Save fields selection as preference"
+msgstr "Enregistrer la sélection comme préférence"
+
+#: index.php:167
+msgid "Select a module:"
+msgstr "Sélectionner un  module :"
+
+#: index.php:170
+msgid "Fix it"
+msgstr "Corriger"
+

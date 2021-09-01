@@ -1,0 +1,8 @@
+This file is part of %module_id%, a %module_type% for Dotclear 2.
+
+Copyright (c) %year% %user_cn% and contributors
+%user_email%
+
+Licensed under the GPL version 2.0 license.
+A copy of this license is available in LICENSE file or at
+http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
