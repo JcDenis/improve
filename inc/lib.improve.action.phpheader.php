@@ -156,20 +156,25 @@ class ImproveActionPhpheader extends ImproveAction
         }
 
         try {
-            $this->bloc = str_replace(
-                $this->bloc_wildcards,
-                [
-                    date('Y'),
-                    $this->module['id'],
-                    $this->module['name'],
-                    $this->module['author'],
-                    $this->module['type'],
-                    $this->core->auth->getInfo('user_cn'),
-                    $this->core->auth->getinfo('user_name'),
-                    $this->core->auth->getInfo('user_email'),
-                    $this->core->auth->getInfo('user_url')
-                ],
-                $bloc
+            $this->bloc = preg_replace_callback(
+                // use \u in bloc content for first_upper_case
+                '/(\\\u([a-z]{1}))/', 
+                function($str) { return ucfirst($str[2]); }, 
+                str_replace(
+                    $this->bloc_wildcards,
+                    [
+                        date('Y'),
+                        $this->module['id'],
+                        $this->module['name'],
+                        $this->module['author'],
+                        $this->module['type'],
+                        $this->core->auth->getInfo('user_cn'),
+                        $this->core->auth->getinfo('user_name'),
+                        $this->core->auth->getInfo('user_email'),
+                        $this->core->auth->getInfo('user_url')
+                    ],
+                    $bloc
+                )
             );
         } catch (Exception $e) {
             self::notice(__('failed to parse bloc'));

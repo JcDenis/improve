@@ -5,7 +5,7 @@
 **improve** is a plugin for the open-source 
 web publishing software called Dotclear.
 
-It helps dev to clean up his plugin or theme before publishing its code.
+It helps dev to clean up plugin or theme before publishing code.
 
  * Open to third party plugin
  * Easy and fast to use
