@@ -182,7 +182,7 @@ if (!empty($_REQUEST['config'])) {
         <p><label for="save_preferences" class="classic">' .
         form::checkbox('save_preferences', 1, !empty($_POST['save_preferences'])) .
         __('Save fields selection as preference') .'</label></p>
-        <p class="field"><label for="modules" class="classic">' . __('Select a module:') . '</label>' .
+        <p class="field"><label for="module" class="classic">' . __('Select a module:') . '</label>' .
         form::combo('module', $combo_modules, $module) . '
         </p></p>
         <input type="submit" name="fix" value="' . __('Fix it') . '" />' . 

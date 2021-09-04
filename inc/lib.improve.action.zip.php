@@ -22,7 +22,8 @@ class ImproveActionZip extends ImproveAction
         '.git*',
         'CVS',
         '.DS_Store',
-        'Thumbs.db'
+        'Thumbs.db',
+        '_disabled'
     ];
     public static $filename_wildcards = [
         '%type%',
