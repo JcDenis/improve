@@ -60,7 +60,7 @@ class Improve
 
     public function fix(string $type, string $id, array $module, array $actions): int
     {
-        $module = self::sanitizeModule($id, $module);
+        $module = ImproveDefinition::clean($id, $module);
 
         $workers = [];
         foreach($actions as $action) {
@@ -134,57 +134,6 @@ class Improve
         return count($tree);
     }
 
-    # adapt from lib.moduleslist.php
-    public static function sanitizeModule(string $id, array $module): array
-    {
-        $label = empty($module['label']) ? $id : $module['label'];
-        $name  = __(empty($module['name']) ? $label : $module['name']);
-
-        return array_merge(
-            # Default values
-            [
-                'desc'              => '',
-                'author'            => '',
-                'version'           => 0,
-                'current_version'   => 0,
-                'root'              => '',
-                'root_writable'     => false,
-                'permissions'       => null,
-                'parent'            => null,
-                'priority'          => 1000,
-                'standalone_config' => false,
-                'support'           => '',
-                'section'           => '',
-                'tags'              => '',
-                'details'           => '',
-                'sshot'             => '',
-                'score'             => 0,
-                'type'              => null,
-                'require'           => [],
-                'settings'          => [],
-                'repository'        => '',
-                'dc_min'            => 0
-            ],
-            # Module's values
-            $module,
-            # Clean up values
-            [
-                'id'    => $id,
-                'sid'   => self::sanitizeString($id),
-                'label' => $label,
-                'name'  => $name,
-                'sname' => self::sanitizeString($name),
-                'sroot' => path::real($module['root'])
-            ]
-        );
-    }
-
-    # taken from lib.moduleslist.php
-    public static function sanitizeString(string $str): string
-    {
-        return preg_replace('/[^A-Za-z0-9\@\#+_-]/', '', strtolower($str));
-    }
-
     private static function getModuleFiles(string $path, string $dir = '', array $res = []): array
     {
         $path = path::real($path);
@@ -241,5 +190,120 @@ class Improve
             return strcasecmp($a->name, $b->name);
         }
         return $a->priority < $b->priority ? -1 : 1;
+    }
+}
+
+class ImproveDefinition
+{
+    private $properties = [];
+
+    public function __construct(string $id, array $properties = [])
+    {
+        $this->loadDefine($id, $properties['root']);
+
+        $this->properties = array_merge($this->properties, self::sanitizeModule($id, $properties));
+    }
+
+    public function get()
+    {
+        return $this->properties;
+    }
+
+    public static function clean($id, $properties)
+    {
+        $p = new self($id, $properties);
+        return $p->get();
+    }
+
+    private function loadDefine($id, $root)
+    {
+        if (file_exists($root . '/_define.php')) {
+            $this->id    = $id;
+            $this->mroot = $root;
+            ob_start();
+            require $root . '/_define.php';
+            ob_end_clean();
+        }
+    }
+
+    # adapt from class.dc.modules.php
+    private function registerModule($name, $desc, $author, $version, $properties = [])
+    {
+        if (!is_array($properties)) {
+            $args       = func_get_args();
+            $properties = [];
+            if (isset($args[4])) {
+                $properties['permissions'] = $args[4];
+            }
+            if (isset($args[5])) {
+                $properties['priority'] = (integer) $args[5];
+            }
+        }
+
+        $this->properties = array_merge(
+            [
+                'permissions'       => null,
+                'priority'          => 1000,
+                'standalone_config' => false,
+                'type'              => null,
+                'enabled'           => true,
+                'requires'          => [],
+                'settings'          => [],
+                'repository'        => ''
+            ], $properties
+        );
+    }
+
+    # adapt from lib.moduleslist.php
+    public static function sanitizeModule(string $id, array $properties): array
+    {
+        $label = empty($properties['label']) ? $id : $properties['label'];
+        $name  = __(empty($properties['name']) ? $label : $properties['name']);
+        $oname  = empty($properties['name']) ? $label : $properties['name'];
+
+        return array_merge(
+            # Default values
+            [
+                'desc'              => '',
+                'author'            => '',
+                'version'           => 0,
+                'current_version'   => 0,
+                'root'              => '',
+                'root_writable'     => false,
+                'permissions'       => null,
+                'parent'            => null,
+                'priority'          => 1000,
+                'standalone_config' => false,
+                'support'           => '',
+                'section'           => '',
+                'tags'              => '',
+                'details'           => '',
+                'sshot'             => '',
+                'score'             => 0,
+                'type'              => null,
+                'require'           => [],
+                'settings'          => [],
+                'repository'        => '',
+                'dc_min'            => 0
+            ],
+            # Module's values
+            $properties,
+            # Clean up values
+            [
+                'id'    => $id,
+                'sid'   => self::sanitizeString($id),
+                'label' => $label,
+                'name'  => $name,
+                'oname' => $oname,
+                'sname' => self::sanitizeString($name),
+                'sroot' => path::real($properties['root'])
+            ]
+        );
+    }
+
+    # taken from lib.moduleslist.php
+    public static function sanitizeString(string $str): string
+    {
+        return preg_replace('/[^A-Za-z0-9\@\#+_-]/', '', strtolower($str));
     }
 }
