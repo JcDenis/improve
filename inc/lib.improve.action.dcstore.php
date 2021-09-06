@@ -80,7 +80,6 @@ class ImproveActionDcstore extends ImproveAction
         if (!is_array($module) || empty($module)) {
             return false;
         }
-        $module = Improve::sanitizeModule($id, $module);
 
         $xml = ['<modules xmlns:da="http://dotaddict.org/da/">'];
 
@@ -91,7 +90,7 @@ class ImproveActionDcstore extends ImproveAction
         $xml[] = sprintf('<module id="%s">', html::escapeHTML($module['id']));
 
         # name
-        if (empty($module['name'])) {
+        if (empty($module['oname'])) {
             self::notice(__('unknow module name'));
         }
         $xml[] = sprintf('<name>%s</name>', html::escapeHTML($module['name']));
@@ -127,7 +126,18 @@ class ImproveActionDcstore extends ImproveAction
         }
         $xml[] = sprintf('<file>%s</file>', html::escapeHTML($file_pattern));
 
-        # da dc_min
+        # da dc_min or requires core
+        if (!empty($module['requires']) && is_array($module['requires'])) {
+            foreach ($module['requires'] as $req) {
+                if (!is_array($req)) {
+                    $req = [$req];
+                }
+                if ($req[0] == 'core') {
+                    $module['dc_min'] = $req[1];
+                    break;
+                }
+            }
+        }
         if (empty($module['dc_min'])) {
             self::notice(__('no minimum dotclear version'), false);
         } else {
