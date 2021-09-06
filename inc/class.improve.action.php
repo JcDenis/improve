@@ -3,7 +3,7 @@
  * @brief improve, a plugin for Dotclear 2
  * 
  * @package Dotclear
- * @subpackage plugin
+ * @subpackage Plugin
  * 
  * @author Jean-Christian Denis and contributors
  * 

@@ -5,6 +5,7 @@
 <author>Jean-Christian Denis and contributors</author>
 <desc>Tiny tools to fix things for module devs</desc>
 <file>https://github.com/JcDenis/improve/releases/download/v0.0.1/plugin-improve.zip</file>
+<da:dcmin>2.19</da:dcmin>
 <da:details>https://github.com/JcDenis/improve</da:details>
 <da:support>https://github.com/JcDenis/improve</da:support>
 </module>
