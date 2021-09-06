@@ -107,7 +107,7 @@ abstract class ImproveAction
         foreach($preferences as $k => $v) {
             $this->preferences[$k] = $v;
         }
-        return $true;
+        return true;
     }
 
     final protected function redirect(string $url)
