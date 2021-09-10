@@ -155,6 +155,8 @@ class ImproveActionPhpheader extends ImproveAction
             return null;
         }
 
+        $bloc = trim(str_replace("\r\n", "\n", $bloc));
+
         try {
             $this->bloc = preg_replace_callback(
                 // use \u in bloc content for first_upper_case
@@ -196,7 +198,7 @@ class ImproveActionPhpheader extends ImproveAction
     private function deleteDocBloc($content)
     {
         return preg_replace(
-            '/^(\<\?php[\n|\r\n]{0,1}\/\*\*.*?\s*\*\/\s*[\n|\r\n]+)/msi',
+            '/^(\<\?php\s*[\n|\r\n]{0,1}\s*\/\*\*.*?\s*\*\/\s*[\n|\r\n]+)/msi',
             "<?php\n",
             $content
         );
