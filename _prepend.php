@@ -24,6 +24,7 @@ $__autoload['ImproveActionEndoffile'] = $d . 'lib.improve.action.php';
 //$__autoload['ImproveActionLicense']   = $d . 'lib.improve.action.license.php';
 $__autoload['ImproveActionNewline']   = $d . 'lib.improve.action.php';
 $__autoload['ImproveActionPhpheader'] = $d . 'lib.improve.action.phpheader.php';
+$__autoload['ImproveActionGitshields'] = $d . 'lib.improve.action.gitshields.php';
 $__autoload['ImproveActionTab']       = $d . 'lib.improve.action.php';
 $__autoload['ImproveActionZip']       = $d . 'lib.improve.action.zip.php';
 $__autoload['ImproveZipFileZip']      = $d . 'lib.improve.action.zip.php';
