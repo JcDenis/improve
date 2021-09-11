@@ -6,8 +6,6 @@
 [![Dotclear](https://img.shields.io/badge/dotclear-v2.19-blue.svg)](https://fr.dotclear.org/download)
 [![License](https://img.shields.io/github/license/JcDenis/improve)](https://github.com/JcDenis/improve/blob/master/LICENSE)
 
-[![Dotclear version](https://img.shields.io/badge/dotclear-2.19-blue)](https://fr.dotclear.org/download)
-
 ## WHAT IS IMPROVE ?
 
 **improve** is a plugin for the open-source 
@@ -42,6 +40,7 @@ Configure actions. Select actions and module to work with, then click fix.
  * Fix header (phpdoc) on php files
  * _Fix license old style bloc (removed)_
  * Fix dcstore.xml file
+ * Fix README.md shields.io badges
  * Create package
 
 ## NEXT
