@@ -1,5 +1,10 @@
 # README
 
+[![Release][releases-shield]][releases]
+[![Issues][issues-shield]][issues]
+[![License][license-shield]](LICENSE)
+[![Dotclear version](https://img.shields.io/badge/dotclear-2.19-blue)](https://fr.dotclear.org/download)
+
 ## WHAT IS IMPROVE ?
 
 **improve** is a plugin for the open-source 
