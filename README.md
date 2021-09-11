@@ -38,7 +38,7 @@ Configure actions. Select actions and module to work with, then click fix.
  * Fix End Of Line
  * Fix End Of File on php files
  * Fix header (phpdoc) on php files
- * _Fix license old style bloc (removed)_
+ * Fix license file
  * Fix dcstore.xml file
  * Fix README.md shields.io badges
  * Create package
@@ -49,7 +49,11 @@ Configure actions. Select actions and module to work with, then click fix.
  * Scan for deprecated function
  * ...
 
+ Hope some of you have idea to complete function of this plugin 
+ and help devs to maintain their plugins and themes.
+
 ## MORE
 
  * License : GNU GPL v2
  * Source & contribution : [GitHub Page](https://github.com/JcDenis/improve)
+ * Packages & details:  [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/improve)

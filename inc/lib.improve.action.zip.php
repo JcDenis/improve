@@ -105,7 +105,8 @@ class ImproveActionZip extends ImproveAction
         <p><label for="pack_excludefiles">' . __('Extra files to exclude from package:') . ' ' .
         form::field('pack_excludefiles', 65, 255, $this->getPreference('pack_excludefiles'), 'maximal') .
         '</label></p>
-        <p class="form-note">' . sprintf(__('Preconization: %s'), '*.zip,*.tar,*.tar.gz') . '</p>
+        <p class="form-note">' . sprintf(__('Preconization: %s'), '*.zip,*.tar,*.tar.gz') . '<br />' .
+        sprintf(__('By default all these files are always removed from packages : %s'), implode(', ', self::$exclude)) . '</p>
 
         <p><label class="classic" for="pack_nocomment">' .
         form::checkbox('pack_nocomment', 1, $this->getPreference('pack_nocomment')) . ' ' .

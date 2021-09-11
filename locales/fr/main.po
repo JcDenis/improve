@@ -1,6 +1,6 @@
 # Language: Français
 # Module: improve - 0.0.1
-# Date: 2021-09-11 15:39:25
+# Date: 2021-09-11 20:19:34
 # Translated with translater 2021.09.02.1
 
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: improve 0.0.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-11T15:39:25+00:00\n"
+"PO-Revision-Date: 2021-09-11T20:19:34+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -96,8 +96,8 @@ msgid "no support URL"
 msgstr "Lien de support non défini"
 
 #: inc/lib.improve.action.gitshields.php:33
-msgid "Add shields badges"
-msgstr "Ajouter  les badges Shields"
+msgid "Fix shields badges"
+msgstr "Fixer les badges shields.io"
 
 #: inc/lib.improve.action.gitshields.php:34
 msgid "Add and maintain shields.io badges to the REDAME.md file"
@@ -111,25 +111,75 @@ msgstr "Votre \"username\" Github :"
 msgid "Used in your Github URL: http://github.com/username/module_id."
 msgstr "Utilisé dans l'URL Github tel que : http://github.com/username/module_id."
 
-#: inc/lib.improve.action.gitshields.php:88
+#: inc/lib.improve.action.gitshields.php:59
+msgid "If you have badges not created by this tool in the README.md file you should remove them manually."
+msgstr "Si vous avez déjà des badges non créés par cet outil, vous devrez les retirer manuellement."
+
+#: inc/lib.improve.action.gitshields.php:89
 #: inc/lib.improve.action.phpheader.php:153
 msgid "bloc is empty"
 msgstr "le bloc est vide"
 
-#: inc/lib.improve.action.license.php:53
-#: inc/lib.improve.action.license.php:59
+#: inc/lib.improve.action.licensefile.php:29
+msgid "Fix license file"
+msgstr "Fixer le fichier de licence"
+
+#: inc/lib.improve.action.licensefile.php:30
+msgid "Add or remove full license file to module root"
+msgstr "Ajoute ou supprime le fichier de licence"
+
+#: inc/lib.improve.action.licensefile.php:36
+msgid "no version selected"
+msgstr "aucune version selectionnée"
+
+#: inc/lib.improve.action.licensefile.php:43
 #: inc/lib.improve.action.phpheader.php:44
 msgid "Do nothing"
 msgstr "Ne rien faire"
 
-#: inc/lib.improve.action.license.php:60
-#: inc/lib.improve.action.phpheader.php:45
-msgid "Add bloc if it does not exist"
-msgstr "Ajouter les blocs si ils n'existent pas déjà"
+#: inc/lib.improve.action.licensefile.php:44
+msgid "Add file if it does not exist"
+msgstr "Ajouter le fichier si il n'existe pas"
 
-#: inc/lib.improve.action.license.php:108
-msgid "Do not add license block to files from locales folder"
-msgstr "Ne pas ajouter la licence aux fichiers du dossier locales"
+#: inc/lib.improve.action.licensefile.php:45
+msgid "Add file even if it exists"
+msgstr "Ajouter le fichier même si il existe"
+
+#: inc/lib.improve.action.licensefile.php:46
+msgid "Add file and remove others"
+msgstr "Ajouter la nouvelle licence et supprimer les autres"
+
+#: inc/lib.improve.action.licensefile.php:47
+msgid "Remove license files"
+msgstr "Supprimer les fichiers de licence"
+
+#: inc/lib.improve.action.licensefile.php:68
+msgid "License version:"
+msgstr "Version de la licence :"
+
+#: inc/lib.improve.action.licensefile.php:72
+msgid "Action on file:"
+msgstr "Action sur le fichier :"
+
+#: inc/lib.improve.action.licensefile.php:87
+msgid "no full license type selected"
+msgstr "Aucun type de licence sélectionné"
+
+#: inc/lib.improve.action.licensefile.php:100
+msgid "failed to load full license"
+msgstr "Impossible de charger le fichier de licence"
+
+#: inc/lib.improve.action.licensefile.php:106
+msgid "failed to write full license"
+msgstr "Impossible d'écrire le fichier de license"
+
+#: inc/lib.improve.action.licensefile.php:120
+msgid "full license is not deletable (%s)"
+msgstr "Le fichier de licence n'est pas supprimable (%s)"
+
+#: inc/lib.improve.action.licensefile.php:123
+msgid "failed to delete full license (%s)"
+msgstr "Impossible de supprimer le fichier de licence (%s)"
 
 #: inc/lib.improve.action.php:20
 msgid "Fix tabulation"
@@ -155,6 +205,10 @@ msgstr "Liste des extensions de fichier à corriger:"
 msgid "Use comma separated list of extensions without dot, recommand \"php,js,xml,txt,md\"."
 msgstr "Utiliser une liste d'extensions séparé par des virgules et sans le point, recommandation: \"php,js,xml,txt,md\"."
 
+#: inc/lib.improve.action.php:128
+msgid "Fix end of file"
+msgstr "Fixer les fins de fichiers"
+
 #: inc/lib.improve.action.php:129
 msgid "Remove php tag and empty lines from end of files"
 msgstr "Supprimer le tag PHP et els lignes vides de fin de fichiers"
@@ -174,6 +228,10 @@ msgstr "Fixer les enêtes php"
 #: inc/lib.improve.action.phpheader.php:37
 msgid "Add or remove phpdoc header bloc from php file"
 msgstr "Ajouter ou supprimer les bloc d'entête phpdoc des fichiers php"
+
+#: inc/lib.improve.action.phpheader.php:45
+msgid "Add bloc if it does not exist"
+msgstr "Ajouter les blocs si ils n'existent pas déjà"
 
 #: inc/lib.improve.action.phpheader.php:46
 msgid "Add and overwrite bloc"
@@ -202,6 +260,14 @@ msgstr "Ne pas ajouter les blocs d'entête aux fichiers des répertoires \"local
 #: inc/lib.improve.action.phpheader.php:86
 msgid "Bloc content:"
 msgstr "Contenu du bloc :"
+
+#: inc/lib.improve.action.phpheader.php:91
+msgid "You can use wildcards %s"
+msgstr "Vous pouvez utiliser les jokers suivants :"
+
+#: inc/lib.improve.action.phpheader.php:93
+msgid "Do not put structural elements to the begining of lines."
+msgstr "Ne pas mettre d'élément de structure en début de ligne"
 
 #: inc/lib.improve.action.phpheader.php:182
 msgid "failed to parse bloc"
@@ -254,15 +320,19 @@ msgstr "Écraser les paquetages existants"
 msgid "Extra files to exclude from package:"
 msgstr "Fichiers supplémentaires à exclure du paquetage :"
 
-#: inc/lib.improve.action.zip.php:112
+#: inc/lib.improve.action.zip.php:109
+msgid "By default all these files are always removed from packages : %s"
+msgstr "Pas défaut tous ces fichiers sont toujours exclu des paquetages : %s"
+
+#: inc/lib.improve.action.zip.php:113
 msgid "Remove comments from files"
 msgstr "Retirer les commentaires des fichiers"
 
-#: inc/lib.improve.action.zip.php:154
+#: inc/lib.improve.action.zip.php:155
 msgid "Destination filename already exists"
 msgstr "Le fichier de destination existe déjà"
 
-#: inc/lib.improve.action.zip.php:159
+#: inc/lib.improve.action.zip.php:160
 msgid "Destination path is not writable"
 msgstr "Le répertoire de destination n'est pas accessible en écriture"
 

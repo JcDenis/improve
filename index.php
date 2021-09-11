@@ -125,9 +125,9 @@ if (!empty($_REQUEST['config'])) {
 
         echo '
         <h3>' . sprintf(__('Configure module "%s"'), $action->name) . '</h3>
+        <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>
         <p>' . html::escapeHTML($action->desc) . '</p>
-        <form action="' . $improve->getURL() . '" method="post" id="form-actions">
-        <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>' .
+        <form action="' . $improve->getURL() . '" method="post" id="form-actions">' .
         (empty($res) ? '<p class="message">' . __('Nothing to configure'). '</p>' : $res) . '
         <p class="clear"><input type="submit" name="save" value="' . __('Save') . '" />' .
         form::hidden('type', $type) .

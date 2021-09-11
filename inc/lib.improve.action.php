@@ -125,7 +125,7 @@ class ImproveActionEndoffile extends ImproveAction
     {
         $this->setProperties([
             'id' => 'endoffile',
-            'name' => _('Fix end of file'),
+            'name' => __('Fix end of file'),
             'desc' => __('Remove php tag and empty lines from end of files'),
             'priority' => 860,
             'config' => true,

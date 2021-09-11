@@ -1,7 +1,7 @@
 <?php
 // Language: Français 
 // Module: improve - 0.0.1
-// Date: 2021-09-11 15:39:25 
+// Date: 2021-09-11 20:19:34 
 // Translated with dcTranslater - 2021.09.02.1 
 
 #inc/class.improve.php:77
@@ -65,7 +65,7 @@ $GLOBALS['__l10n']['no details URL'] = 'Lien de détail non défini';
 $GLOBALS['__l10n']['no support URL'] = 'Lien de support non défini';
 
 #inc/lib.improve.action.gitshields.php:33
-$GLOBALS['__l10n']['Add shields badges'] = 'Ajouter  les badges Shields';
+$GLOBALS['__l10n']['Fix shields badges'] = 'Fixer les badges shields.io';
 
 #inc/lib.improve.action.gitshields.php:34
 $GLOBALS['__l10n']['Add and maintain shields.io badges to the REDAME.md file'] = 'Ajoute et maintient à jour les badges shields.io du fichier README.md';
@@ -76,21 +76,58 @@ $GLOBALS['__l10n']['Your Github user name :'] = 'Votre "username" Github :';
 #inc/lib.improve.action.gitshields.php:58
 $GLOBALS['__l10n']['Used in your Github URL: http://github.com/username/module_id.'] = 'Utilisé dans l\'URL Github tel que : http://github.com/username/module_id.';
 
-#inc/lib.improve.action.gitshields.php:88
+#inc/lib.improve.action.gitshields.php:59
+$GLOBALS['__l10n']['If you have badges not created by this tool in the README.md file you should remove them manually.'] = 'Si vous avez déjà des badges non créés par cet outil, vous devrez les retirer manuellement.';
+
+#inc/lib.improve.action.gitshields.php:89
 #inc/lib.improve.action.phpheader.php:153
 $GLOBALS['__l10n']['bloc is empty'] = 'le bloc est vide';
 
-#inc/lib.improve.action.license.php:53
-#inc/lib.improve.action.license.php:59
+#inc/lib.improve.action.licensefile.php:29
+$GLOBALS['__l10n']['Fix license file'] = 'Fixer le fichier de licence';
+
+#inc/lib.improve.action.licensefile.php:30
+$GLOBALS['__l10n']['Add or remove full license file to module root'] = 'Ajoute ou supprime le fichier de licence';
+
+#inc/lib.improve.action.licensefile.php:36
+$GLOBALS['__l10n']['no version selected'] = 'aucune version selectionnée';
+
+#inc/lib.improve.action.licensefile.php:43
 #inc/lib.improve.action.phpheader.php:44
 $GLOBALS['__l10n']['Do nothing'] = 'Ne rien faire';
 
-#inc/lib.improve.action.license.php:60
-#inc/lib.improve.action.phpheader.php:45
-$GLOBALS['__l10n']['Add bloc if it does not exist'] = 'Ajouter les blocs si ils n\'existent pas déjà';
+#inc/lib.improve.action.licensefile.php:44
+$GLOBALS['__l10n']['Add file if it does not exist'] = 'Ajouter le fichier si il n\'existe pas';
 
-#inc/lib.improve.action.license.php:108
-$GLOBALS['__l10n']['Do not add license block to files from locales folder'] = 'Ne pas ajouter la licence aux fichiers du dossier locales';
+#inc/lib.improve.action.licensefile.php:45
+$GLOBALS['__l10n']['Add file even if it exists'] = 'Ajouter le fichier même si il existe';
+
+#inc/lib.improve.action.licensefile.php:46
+$GLOBALS['__l10n']['Add file and remove others'] = 'Ajouter la nouvelle licence et supprimer les autres';
+
+#inc/lib.improve.action.licensefile.php:47
+$GLOBALS['__l10n']['Remove license files'] = 'Supprimer les fichiers de licence';
+
+#inc/lib.improve.action.licensefile.php:68
+$GLOBALS['__l10n']['License version:'] = 'Version de la licence :';
+
+#inc/lib.improve.action.licensefile.php:72
+$GLOBALS['__l10n']['Action on file:'] = 'Action sur le fichier :';
+
+#inc/lib.improve.action.licensefile.php:87
+$GLOBALS['__l10n']['no full license type selected'] = 'Aucun type de licence sélectionné';
+
+#inc/lib.improve.action.licensefile.php:100
+$GLOBALS['__l10n']['failed to load full license'] = 'Impossible de charger le fichier de licence';
+
+#inc/lib.improve.action.licensefile.php:106
+$GLOBALS['__l10n']['failed to write full license'] = 'Impossible d\'écrire le fichier de license';
+
+#inc/lib.improve.action.licensefile.php:120
+$GLOBALS['__l10n']['full license is not deletable (%s)'] = 'Le fichier de licence n\'est pas supprimable (%s)';
+
+#inc/lib.improve.action.licensefile.php:123
+$GLOBALS['__l10n']['failed to delete full license (%s)'] = 'Impossible de supprimer le fichier de licence (%s)';
 
 #inc/lib.improve.action.php:20
 $GLOBALS['__l10n']['Fix tabulation'] = 'Fixer les tabulations';
@@ -110,6 +147,9 @@ $GLOBALS['__l10n']['List of files extension to work on:'] = 'Liste des extension
 #inc/lib.improve.action.php:94
 $GLOBALS['__l10n']['Use comma separated list of extensions without dot, recommand "php,js,xml,txt,md".'] = 'Utiliser une liste d\'extensions séparé par des virgules et sans le point, recommandation: "php,js,xml,txt,md".';
 
+#inc/lib.improve.action.php:128
+$GLOBALS['__l10n']['Fix end of file'] = 'Fixer les fins de fichiers';
+
 #inc/lib.improve.action.php:129
 $GLOBALS['__l10n']['Remove php tag and empty lines from end of files'] = 'Supprimer le tag PHP et els lignes vides de fin de fichiers';
 
@@ -124,6 +164,9 @@ $GLOBALS['__l10n']['Fix PHP header'] = 'Fixer les enêtes php';
 
 #inc/lib.improve.action.phpheader.php:37
 $GLOBALS['__l10n']['Add or remove phpdoc header bloc from php file'] = 'Ajouter ou supprimer les bloc d\'entête phpdoc des fichiers php';
+
+#inc/lib.improve.action.phpheader.php:45
+$GLOBALS['__l10n']['Add bloc if it does not exist'] = 'Ajouter les blocs si ils n\'existent pas déjà';
 
 #inc/lib.improve.action.phpheader.php:46
 $GLOBALS['__l10n']['Add and overwrite bloc'] = 'Ajouter et écraser les blocs';
@@ -145,6 +188,12 @@ $GLOBALS['__l10n']['Do not add bloc to files from "locales" and "libs" folder'] 
 
 #inc/lib.improve.action.phpheader.php:86
 $GLOBALS['__l10n']['Bloc content:'] = 'Contenu du bloc :';
+
+#inc/lib.improve.action.phpheader.php:91
+$GLOBALS['__l10n']['You can use wildcards %s'] = 'Vous pouvez utiliser les jokers suivants :';
+
+#inc/lib.improve.action.phpheader.php:93
+$GLOBALS['__l10n']['Do not put structural elements to the begining of lines.'] = 'Ne pas mettre d\'élément de structure en début de ligne';
 
 #inc/lib.improve.action.phpheader.php:182
 $GLOBALS['__l10n']['failed to parse bloc'] = 'impossible de traiter le bloc';
@@ -185,13 +234,16 @@ $GLOBALS['__l10n']['Overwrite existing package'] = 'Écraser les paquetages exis
 #inc/lib.improve.action.zip.php:105
 $GLOBALS['__l10n']['Extra files to exclude from package:'] = 'Fichiers supplémentaires à exclure du paquetage :';
 
-#inc/lib.improve.action.zip.php:112
+#inc/lib.improve.action.zip.php:109
+$GLOBALS['__l10n']['By default all these files are always removed from packages : %s'] = 'Pas défaut tous ces fichiers sont toujours exclu des paquetages : %s';
+
+#inc/lib.improve.action.zip.php:113
 $GLOBALS['__l10n']['Remove comments from files'] = 'Retirer les commentaires des fichiers';
 
-#inc/lib.improve.action.zip.php:154
+#inc/lib.improve.action.zip.php:155
 $GLOBALS['__l10n']['Destination filename already exists'] = 'Le fichier de destination existe déjà';
 
-#inc/lib.improve.action.zip.php:159
+#inc/lib.improve.action.zip.php:160
 $GLOBALS['__l10n']['Destination path is not writable'] = 'Le répertoire de destination n\'est pas accessible en écriture';
 
 #index.php:54
@@ -239,4 +291,3 @@ $GLOBALS['__l10n']['Select a module:'] = 'Sélectionner un  module :';
 
 #index.php:188
 $GLOBALS['__l10n']['Fix it'] = 'Corriger';
-

@@ -30,7 +30,7 @@ class ImproveActionGitshields extends ImproveAction
     {
         $this->setProperties([
             'id'       => 'gitshields',
-            'name'     => __('Add shields badges'),
+            'name'     => __('Fix shields badges'),
             'desc'     => __('Add and maintain shields.io badges to the REDAME.md file'),
             'priority' => 380,
             'config'   => true,
@@ -55,7 +55,8 @@ class ImproveActionGitshields extends ImproveAction
         return '
         <p><label for="bloc_action">' . __('Your Github user name :') . '</label>' .
         form::field('username', 60, 100, $this->getPreference('username')) . '
-        </p><p class="form-note">' . __('Used in your Github URL: http://github.com/username/module_id.') . '</p>';
+        </p><p class="form-note">' . __('Used in your Github URL: http://github.com/username/module_id.') . '<br />' .
+        __('If you have badges not created by this tool in the README.md file you should remove them manually.') . '</p>';
     }
 
     public function openModule(string $module_type, array $module_info): ?bool
