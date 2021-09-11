@@ -17,10 +17,11 @@ $core->addBehavior('adminDashboardFavorites', ['ImproveBehaviors', 'adminDashboa
 
 $core->addBehavior('improveAddAction', ['ImproveActionDcstore', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionEndoffile', 'create']);
+$core->addBehavior('improveAddAction', ['ImproveActionGitshields', 'create']);
+$core->addBehavior('improveAddAction', ['ImproveActionLicensefile', 'create']);
 //$core->addBehavior('improveAddAction', ['ImproveActionLicense', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionNewline', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionPhpheader', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionGitshields', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionTab', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionZip', 'create']);
 
