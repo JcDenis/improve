@@ -1,14 +1,14 @@
 # Language: Français
-# Module: improve - 0.0.1
-# Date: 2021-09-11 20:19:34
+# Module: improve - 0.1
+# Date: 2021-09-11 20:59:33
 # Translated with translater 2021.09.02.1
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: improve 0.0.1\n"
+"Project-Id-Version: improve 0.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-11T20:19:34+00:00\n"
+"PO-Revision-Date: 2021-09-11T20:59:33+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -95,30 +95,33 @@ msgstr "Lien de détail non défini"
 msgid "no support URL"
 msgstr "Lien de support non défini"
 
-#: inc/lib.improve.action.gitshields.php:33
+#: inc/lib.improve.action.gitshields.php:34
 msgid "Fix shields badges"
 msgstr "Fixer les badges shields.io"
 
-#: inc/lib.improve.action.gitshields.php:34
+#: inc/lib.improve.action.gitshields.php:35
 msgid "Add and maintain shields.io badges to the REDAME.md file"
 msgstr "Ajoute et maintient à jour les badges shields.io du fichier README.md"
 
-#: inc/lib.improve.action.gitshields.php:56
+#: inc/lib.improve.action.gitshields.php:60
 msgid "Your Github user name :"
 msgstr "Votre \"username\" Github :"
 
-#: inc/lib.improve.action.gitshields.php:58
+#: inc/lib.improve.action.gitshields.php:62
 msgid "Used in your Github URL: http://github.com/username/module_id."
 msgstr "Utilisé dans l'URL Github tel que : http://github.com/username/module_id."
 
-#: inc/lib.improve.action.gitshields.php:59
+#: inc/lib.improve.action.gitshields.php:63
 msgid "If you have badges not created by this tool in the README.md file you should remove them manually."
 msgstr "Si vous avez déjà des badges non créés par cet outil, vous devrez les retirer manuellement."
 
-#: inc/lib.improve.action.gitshields.php:89
-#: inc/lib.improve.action.phpheader.php:153
-msgid "bloc is empty"
-msgstr "le bloc est vide"
+#: inc/lib.improve.action.gitshields.php:67
+msgid "Include Dotaddict badge"
+msgstr "Inclure le badge Dotaddict"
+
+#: inc/lib.improve.action.gitshields.php:68
+msgid "If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict."
+msgstr "Si votre plugin ou theme est sur Dotaddict, vous pouvez ajouter un badge lier à ses détails sur DA."
 
 #: inc/lib.improve.action.licensefile.php:29
 msgid "Fix license file"
@@ -268,6 +271,10 @@ msgstr "Vous pouvez utiliser les jokers suivants :"
 #: inc/lib.improve.action.phpheader.php:93
 msgid "Do not put structural elements to the begining of lines."
 msgstr "Ne pas mettre d'élément de structure en début de ligne"
+
+#: inc/lib.improve.action.phpheader.php:153
+msgid "bloc is empty"
+msgstr "le bloc est vide"
 
 #: inc/lib.improve.action.phpheader.php:182
 msgid "failed to parse bloc"

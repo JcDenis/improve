@@ -19,11 +19,12 @@ class ImproveActionGitshields extends ImproveAction
         'target' => '/^([^\n]+)[\r\n|\n]{1,}/ms'
     ];
     protected $bloc_content = [
-        '[![Release](https://img.shields.io/github/v/release/%username%/%module%)](https://github.com/%username%/%module%/releases)',
-        '[![Date](https://img.shields.io/github/release-date/%username%/%module%)](https://github.com/%username%/%module%/releases)',
-        '[![Issue](https://img.shields.io/github/issues/%username%/%module%)](https://github.com/%username%/%module%/issues)',
-        '[![Dotclear](https://img.shields.io/badge/dotclear-v%dotclear%-blue.svg)](https://fr.dotclear.org/download)',
-        '[![License](https://img.shields.io/github/license/%username%/%module%)](https://github.com/%username%/%module%/blob/master/LICENSE)'
+        'release' => '[![Release](https://img.shields.io/github/v/release/%username%/%module%)](https://github.com/%username%/%module%/releases)',
+        'date' => '[![Date](https://img.shields.io/github/release-date/%username%/%module%)](https://github.com/%username%/%module%/releases)',
+        'issues' => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://github.com/%username%/%module%/issues)',
+        'dotclear' => '[![Dotclear](https://img.shields.io/badge/dotclear-v%dotclear%-blue.svg)](https://fr.dotclear.org/download)',
+        'dotaddict' => '[![Dotclear](https://img.shields.io/badge/dotaddict-official-green.svg)](https://%type%s.dotaddict.org/dc2/details/%module%)',
+        'license' => '[![License](https://img.shields.io/github/license/%username%/%module%)](https://github.com/%username%/%module%/blob/master/LICENSE)'
     ];
 
     protected function init(): bool
@@ -48,15 +49,23 @@ class ImproveActionGitshields extends ImproveAction
     public function configure($url): ?string
     {
         if (!empty($_POST['save']) && !empty($_POST['username'])) {
-            $this->setPreferences('username', (string) $_POST['username']);
+            $this->setPreferences([
+                'username' => (string) $_POST['username'],
+                'dotaddict' => !empty($_POST['dotaddict'])
+            ]);
             $this->redirect($url);
         }
 
         return '
-        <p><label for="bloc_action">' . __('Your Github user name :') . '</label>' .
+        <p><label for="username">' . __('Your Github user name :') . '</label>' .
         form::field('username', 60, 100, $this->getPreference('username')) . '
         </p><p class="form-note">' . __('Used in your Github URL: http://github.com/username/module_id.') . '<br />' .
-        __('If you have badges not created by this tool in the README.md file you should remove them manually.') . '</p>';
+        __('If you have badges not created by this tool in the README.md file you should remove them manually.') . '</p>
+
+        <p><label for="dotaddict">' . 
+        form::checkbox('dotaddict', 1, !empty($this->getPreference('dotaddict'))) . ' '.
+        __('Include Dotaddict badge') . '</label>
+        </p><p class="form-note">' . __('If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict.') . '</p>';
     }
 
     public function openModule(string $module_type, array $module_info): ?bool
@@ -83,22 +92,19 @@ class ImproveActionGitshields extends ImproveAction
 
     private function replaceInfo()
     {
-        $bloc = $this->bloc_content;
-
-        if (empty($bloc)) {
-            self::notice(__('bloc is empty'), false);
-
-            return null;
-        }
-
         $username = $this->getPreference('username');
         $module = $this->module['id'];
+        $type = $this->module['type'];
         $dotclear = $this->getDotclearVersion();
 
-        foreach($bloc as $k => $v) {
+        $bloc = [];
+        foreach($this->bloc_content as $k => $v) {
+            if ($k == 'dotaddict' && empty($this->getPreference('dotaddict'))) {
+                continue;
+            }
             $bloc[$k] = trim(str_replace(
-                ['%username%', '%module%', '%dotclear%', "\r\n", "\n"],
-                [$username, $module, $dotclear, '', ''],
+                ['%username%', '%module%', '%dotclear%', '%type%', "\r\n", "\n"],
+                [$username, $module, $dotclear, $type, '', ''],
                 $v
             ));
         }

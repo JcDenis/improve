@@ -1,10 +1,13 @@
-0.0.2
+0.2 -dev
 - [ ] add global config for file size limit
 - [ ] add function to summarize by action what was done
-- [x] use _requires_ or dc_min in _fixdcstore_
-- [x] fix unwanted translation of module name in _fixdcstore_
-- [x] add modifier _first upper case_ : _\u_ in _fixphpheader_
-- [x] fix whitespace and newline for bloc content in _fixphpheader_
+- [ ] add module to check depracated Dotclear function
+- [ ] add module to check deprecated PHP function
+- [ ] add module to check directory structure
+- [ ] add DA badge to module _gitshields_
 
-0.0.1
+0.1 - 2021.09.11
+- First release
+
+0.0.1 - 2021.09.11
 - First pre-release

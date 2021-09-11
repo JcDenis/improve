@@ -1,7 +1,7 @@
 <?php
 // Language: Français 
-// Module: improve - 0.0.1
-// Date: 2021-09-11 20:19:34 
+// Module: improve - 0.1
+// Date: 2021-09-11 20:59:33 
 // Translated with dcTranslater - 2021.09.02.1 
 
 #inc/class.improve.php:77
@@ -64,24 +64,26 @@ $GLOBALS['__l10n']['no details URL'] = 'Lien de détail non défini';
 #inc/lib.improve.action.dcstore.php:162
 $GLOBALS['__l10n']['no support URL'] = 'Lien de support non défini';
 
-#inc/lib.improve.action.gitshields.php:33
+#inc/lib.improve.action.gitshields.php:34
 $GLOBALS['__l10n']['Fix shields badges'] = 'Fixer les badges shields.io';
 
-#inc/lib.improve.action.gitshields.php:34
+#inc/lib.improve.action.gitshields.php:35
 $GLOBALS['__l10n']['Add and maintain shields.io badges to the REDAME.md file'] = 'Ajoute et maintient à jour les badges shields.io du fichier README.md';
 
-#inc/lib.improve.action.gitshields.php:56
+#inc/lib.improve.action.gitshields.php:60
 $GLOBALS['__l10n']['Your Github user name :'] = 'Votre "username" Github :';
 
-#inc/lib.improve.action.gitshields.php:58
+#inc/lib.improve.action.gitshields.php:62
 $GLOBALS['__l10n']['Used in your Github URL: http://github.com/username/module_id.'] = 'Utilisé dans l\'URL Github tel que : http://github.com/username/module_id.';
 
-#inc/lib.improve.action.gitshields.php:59
+#inc/lib.improve.action.gitshields.php:63
 $GLOBALS['__l10n']['If you have badges not created by this tool in the README.md file you should remove them manually.'] = 'Si vous avez déjà des badges non créés par cet outil, vous devrez les retirer manuellement.';
 
-#inc/lib.improve.action.gitshields.php:89
-#inc/lib.improve.action.phpheader.php:153
-$GLOBALS['__l10n']['bloc is empty'] = 'le bloc est vide';
+#inc/lib.improve.action.gitshields.php:67
+$GLOBALS['__l10n']['Include Dotaddict badge'] = 'Inclure le badge Dotaddict';
+
+#inc/lib.improve.action.gitshields.php:68
+$GLOBALS['__l10n']['If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict.'] = 'Si votre plugin ou theme est sur Dotaddict, vous pouvez ajouter un badge lier à ses détails sur DA.';
 
 #inc/lib.improve.action.licensefile.php:29
 $GLOBALS['__l10n']['Fix license file'] = 'Fixer le fichier de licence';
@@ -194,6 +196,9 @@ $GLOBALS['__l10n']['You can use wildcards %s'] = 'Vous pouvez utiliser les joker
 
 #inc/lib.improve.action.phpheader.php:93
 $GLOBALS['__l10n']['Do not put structural elements to the begining of lines.'] = 'Ne pas mettre d\'élément de structure en début de ligne';
+
+#inc/lib.improve.action.phpheader.php:153
+$GLOBALS['__l10n']['bloc is empty'] = 'le bloc est vide';
 
 #inc/lib.improve.action.phpheader.php:182
 $GLOBALS['__l10n']['failed to parse bloc'] = 'impossible de traiter le bloc';
