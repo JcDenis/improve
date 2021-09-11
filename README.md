@@ -2,8 +2,10 @@
 
 [![Release](https://img.shields.io/github/v/release/JcDenis/improve)](https://github.com/JcDenis/improve/releases)
 [![Date](https://img.shields.io/github/release-date/JcDenis/improve)](https://github.com/JcDenis/improve/releases)
-[![Issues](https://img.shields.io/github/issues/JcDenis/improve)](https://github.com/JcDenis/improve/issues)
-[![License](https://img.shields.io/badge/license-GPL%20v2-blue.svg)](https://github.com/JcDenis/improve/blob/master/LICENSE)
+[![Issue](https://img.shields.io/github/issues/JcDenis/improve)](https://github.com/JcDenis/improve/issues)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.19-blue.svg)](https://fr.dotclear.org/download)
+[![License](https://img.shields.io/github/license/JcDenis/improve)](https://github.com/JcDenis/improve/blob/master/LICENSE)
+
 [![Dotclear version](https://img.shields.io/badge/dotclear-2.19-blue)](https://fr.dotclear.org/download)
 
 ## WHAT IS IMPROVE ?
