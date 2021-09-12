@@ -101,7 +101,7 @@ abstract class ImproveAction
         return $this->preferences[$preference] ?? null;
     }
 
-    final protected function setPreferences $preference, $value = null)
+    final protected function setPreferences($preference, $value = null)
     {
         $preferences = is_array($preference) ? $preference : [$preference => $value];
         foreach($preferences as $k => $v) {
@@ -131,7 +131,8 @@ abstract class ImproveAction
 
     public static function create(arrayObject $o, dcCore $core)
     {
-        $o->append(new ${get_called_class()}($core));
+        $c = get_called_class();
+        $o->append(new $c($core));
     }
 
     public function configure(string $redirect_url): ?string
