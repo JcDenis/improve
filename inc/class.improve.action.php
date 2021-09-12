@@ -72,17 +72,17 @@ abstract class ImproveAction
         return self::$notice[get_called_class()][$error ? 'error' : 'warning'];
     }
 
-    final public function __get(string $property): mixed
+    final public function __get(string $property)
     {
         return $this->getProperty($property);
     }
 
-    final public function getProperty(string $property): mixed
+    final public function getProperty(string $property)
     {
         return $this->properties[$property] ?? null;
     }
 
-    final protected function setProperties(mixed $property, mixed $value = null): bool
+    final protected function setProperties($property, $value = null): bool
     {
         $properties = is_array($property) ? $property : [$property => $value];
         foreach($properties as $k => $v) {
@@ -96,12 +96,12 @@ abstract class ImproveAction
         return true;
     }
 
-    final protected function getPreference(string $preference): mixed
+    final protected function getPreference(string $preference)
     {
         return $this->preferences[$preference] ?? null;
     }
 
-    final protected function setPreferences(mixed $preference, mixed $value = null)
+    final protected function setPreferences $preference, $value = null)
     {
         $preferences = is_array($preference) ? $preference : [$preference => $value];
         foreach($preferences as $k => $v) {
@@ -131,7 +131,7 @@ abstract class ImproveAction
 
     public static function create(arrayObject $o, dcCore $core)
     {
-        $o->append(new (get_called_class())($core));
+        $o->append(new ${get_called_class()}($core));
     }
 
     public function configure(string $redirect_url): ?string

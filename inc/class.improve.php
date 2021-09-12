@@ -167,7 +167,7 @@ class Improve
         return $this->core->adminurl->get('admin.plugin.improve', $params);
     }
 
-    public static function cleanExtensions(mixed $in): array
+    public static function cleanExtensions($in): array
     {
         $out = [];
         if (!is_array($in)) {
