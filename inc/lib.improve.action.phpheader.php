@@ -13,6 +13,17 @@
 
 class ImproveActionPhpheader extends ImproveAction
 {
+    private static $exemple = "
+@brief %module_id%, a %module_type% for Dotclear 2
+
+@package Dotclear
+@subpackage \u%module_type%
+
+@author %module_author%
+
+@copyright %user_cn%
+@copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html";
+
     private $bloc_wildcards = [
         '%year%',
         '%module_id%',
@@ -90,7 +101,8 @@ class ImproveActionPhpheader extends ImproveAction
         sprintf(
             __('You can use wildcards %s') , 
             '%year%, %module_id%, %module_name%, %module_author%, %module_type%, %user_cn%, %user_name%, %user_email%, %user_url%'
-        ) . '<br />' . __('Do not put structural elements to the begining of lines.') . '</p>';
+        ) . '<br />' . __('Do not put structural elements to the begining of lines.') . '</p>' .
+        '<div class="fieldset box"><h4>' . __('Exemple') .'</h4><pre class="code">' . self::$exemple . '</pre></div>';
     }
 
     public function openModule(string $module_type, array $module_info): ?bool

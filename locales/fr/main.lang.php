@@ -1,7 +1,7 @@
 <?php
 // Language: Français 
-// Module: improve - 0.1
-// Date: 2021-09-11 20:59:33 
+// Module: improve - 0.1.1
+// Date: 2021-09-12 21:00:21 
 // Translated with dcTranslater - 2021.09.02.1 
 
 #inc/class.improve.php:77
@@ -14,7 +14,7 @@ $GLOBALS['__l10n']['File content has been removed: %s by %s'] = 'Le contenu du f
 $GLOBALS['__l10n']['Fix dcstore.xml'] = 'Fixer dcstore.xml';
 
 #inc/lib.improve.action.dcstore.php:21
-$GLOBALS['__l10n']['Re-create dcstore.xml file according to _define.php variables'] = 'Re-créer le fichier dcstore.xml suivant les variables du fichier _dephine.php';
+$GLOBALS['__l10n']['Re-create dcstore.xml file according to _define.php variables'] = 'Re-créer le fichier dcstore.xml suivant les variables du fichier _define.php';
 
 #inc/lib.improve.action.dcstore.php:43
 $GLOBALS['__l10n']['File will be overwritten if it exists'] = 'Le fichier sera réécrit si il existe';
@@ -23,7 +23,8 @@ $GLOBALS['__l10n']['File will be overwritten if it exists'] = 'Le fichier sera r
 $GLOBALS['__l10n']['Predictable URL to zip file on the external repository'] = 'URL prédictive du fichier zip sur le dépôt externe';
 
 #inc/lib.improve.action.dcstore.php:49
-$GLOBALS['__l10n']['You can use widcards %s'] = 'Vous pouvez utiliser les jokers %s';
+#inc/lib.improve.action.phpheader.php:102
+$GLOBALS['__l10n']['You can use wildcards %s'] = 'Vous pouvez utiliser les jokers suivants : %s.';
 
 #inc/lib.improve.action.dcstore.php:51
 $GLOBALS['__l10n']['For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip'] = 'Par exemple sur github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip';
@@ -95,7 +96,7 @@ $GLOBALS['__l10n']['Add or remove full license file to module root'] = 'Ajoute o
 $GLOBALS['__l10n']['no version selected'] = 'aucune version selectionnée';
 
 #inc/lib.improve.action.licensefile.php:43
-#inc/lib.improve.action.phpheader.php:44
+#inc/lib.improve.action.phpheader.php:55
 $GLOBALS['__l10n']['Do nothing'] = 'Ne rien faire';
 
 #inc/lib.improve.action.licensefile.php:44
@@ -161,46 +162,43 @@ $GLOBALS['__l10n']['Add a blank line to the end of file'] = 'Ajouter une ligne v
 #inc/lib.improve.action.php:155
 $GLOBALS['__l10n']['PSR2 must have a blank line, whereas PSR12 must not.'] = 'PSR2 doit avoir une ligne vide, alors que PSR12 non.';
 
-#inc/lib.improve.action.phpheader.php:36
+#inc/lib.improve.action.phpheader.php:47
 $GLOBALS['__l10n']['Fix PHP header'] = 'Fixer les enêtes php';
 
-#inc/lib.improve.action.phpheader.php:37
+#inc/lib.improve.action.phpheader.php:48
 $GLOBALS['__l10n']['Add or remove phpdoc header bloc from php file'] = 'Ajouter ou supprimer les bloc d\'entête phpdoc des fichiers php';
 
-#inc/lib.improve.action.phpheader.php:45
+#inc/lib.improve.action.phpheader.php:56
 $GLOBALS['__l10n']['Add bloc if it does not exist'] = 'Ajouter les blocs si ils n\'existent pas déjà';
 
-#inc/lib.improve.action.phpheader.php:46
+#inc/lib.improve.action.phpheader.php:57
 $GLOBALS['__l10n']['Add and overwrite bloc'] = 'Ajouter et écraser les blocs';
 
-#inc/lib.improve.action.phpheader.php:47
+#inc/lib.improve.action.phpheader.php:58
 $GLOBALS['__l10n']['Overwrite bloc only if it exists'] = 'Ecraser les blocs seulement si ils existent';
 
-#inc/lib.improve.action.phpheader.php:48
+#inc/lib.improve.action.phpheader.php:59
 $GLOBALS['__l10n']['Remove existing bloc header'] = 'Retirer les blocs d\'entête existant';
 
-#inc/lib.improve.action.phpheader.php:72
+#inc/lib.improve.action.phpheader.php:83
 $GLOBALS['__l10n']['Action:'] = 'Action :';
 
-#inc/lib.improve.action.phpheader.php:78
+#inc/lib.improve.action.phpheader.php:89
 $GLOBALS['__l10n']['Remove old style bloc header (using #)'] = 'Supprimer les bloc d\'entête ancien (utilisant #)';
 
-#inc/lib.improve.action.phpheader.php:83
+#inc/lib.improve.action.phpheader.php:94
 $GLOBALS['__l10n']['Do not add bloc to files from "locales" and "libs" folder'] = 'Ne pas ajouter les blocs d\'entête aux fichiers des répertoires "locales" et "llibs"';
 
-#inc/lib.improve.action.phpheader.php:86
+#inc/lib.improve.action.phpheader.php:97
 $GLOBALS['__l10n']['Bloc content:'] = 'Contenu du bloc :';
 
-#inc/lib.improve.action.phpheader.php:91
-$GLOBALS['__l10n']['You can use wildcards %s'] = 'Vous pouvez utiliser les jokers suivants :';
-
-#inc/lib.improve.action.phpheader.php:93
+#inc/lib.improve.action.phpheader.php:104
 $GLOBALS['__l10n']['Do not put structural elements to the begining of lines.'] = 'Ne pas mettre d\'élément de structure en début de ligne';
 
-#inc/lib.improve.action.phpheader.php:153
+#inc/lib.improve.action.phpheader.php:165
 $GLOBALS['__l10n']['bloc is empty'] = 'le bloc est vide';
 
-#inc/lib.improve.action.phpheader.php:182
+#inc/lib.improve.action.phpheader.php:194
 $GLOBALS['__l10n']['failed to parse bloc'] = 'impossible de traiter le bloc';
 
 #inc/lib.improve.action.zip.php:42
@@ -296,3 +294,4 @@ $GLOBALS['__l10n']['Select a module:'] = 'Sélectionner un  module :';
 
 #index.php:188
 $GLOBALS['__l10n']['Fix it'] = 'Corriger';
+

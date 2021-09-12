@@ -1,14 +1,14 @@
 # Language: Français
-# Module: improve - 0.1
-# Date: 2021-09-11 20:59:33
+# Module: improve - 0.1.1
+# Date: 2021-09-12 21:00:21
 # Translated with translater 2021.09.02.1
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: improve 0.1\n"
+"Project-Id-Version: improve 0.1.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-11T20:59:33+00:00\n"
+"PO-Revision-Date: 2021-09-12T21:00:21+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,7 +29,7 @@ msgstr "Fixer dcstore.xml"
 
 #: inc/lib.improve.action.dcstore.php:21
 msgid "Re-create dcstore.xml file according to _define.php variables"
-msgstr "Re-créer le fichier dcstore.xml suivant les variables du fichier _dephine.php"
+msgstr "Re-créer le fichier dcstore.xml suivant les variables du fichier _define.php"
 
 #: inc/lib.improve.action.dcstore.php:43
 msgid "File will be overwritten if it exists"
@@ -40,8 +40,9 @@ msgid "Predictable URL to zip file on the external repository"
 msgstr "URL prédictive du fichier zip sur le dépôt externe"
 
 #: inc/lib.improve.action.dcstore.php:49
-msgid "You can use widcards %s"
-msgstr "Vous pouvez utiliser les jokers %s"
+#: inc/lib.improve.action.phpheader.php:102
+msgid "You can use wildcards %s"
+msgstr "Vous pouvez utiliser les jokers suivants : %s."
 
 #: inc/lib.improve.action.dcstore.php:51
 msgid "For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip"
@@ -136,7 +137,7 @@ msgid "no version selected"
 msgstr "aucune version selectionnée"
 
 #: inc/lib.improve.action.licensefile.php:43
-#: inc/lib.improve.action.phpheader.php:44
+#: inc/lib.improve.action.phpheader.php:55
 msgid "Do nothing"
 msgstr "Ne rien faire"
 
@@ -224,59 +225,55 @@ msgstr "Ajouter une ligne vide en fin de fichier"
 msgid "PSR2 must have a blank line, whereas PSR12 must not."
 msgstr "PSR2 doit avoir une ligne vide, alors que PSR12 non."
 
-#: inc/lib.improve.action.phpheader.php:36
+#: inc/lib.improve.action.phpheader.php:47
 msgid "Fix PHP header"
 msgstr "Fixer les enêtes php"
 
-#: inc/lib.improve.action.phpheader.php:37
+#: inc/lib.improve.action.phpheader.php:48
 msgid "Add or remove phpdoc header bloc from php file"
 msgstr "Ajouter ou supprimer les bloc d'entête phpdoc des fichiers php"
 
-#: inc/lib.improve.action.phpheader.php:45
+#: inc/lib.improve.action.phpheader.php:56
 msgid "Add bloc if it does not exist"
 msgstr "Ajouter les blocs si ils n'existent pas déjà"
 
-#: inc/lib.improve.action.phpheader.php:46
+#: inc/lib.improve.action.phpheader.php:57
 msgid "Add and overwrite bloc"
 msgstr "Ajouter et écraser les blocs"
 
-#: inc/lib.improve.action.phpheader.php:47
+#: inc/lib.improve.action.phpheader.php:58
 msgid "Overwrite bloc only if it exists"
 msgstr "Ecraser les blocs seulement si ils existent"
 
-#: inc/lib.improve.action.phpheader.php:48
+#: inc/lib.improve.action.phpheader.php:59
 msgid "Remove existing bloc header"
 msgstr "Retirer les blocs d'entête existant"
 
-#: inc/lib.improve.action.phpheader.php:72
+#: inc/lib.improve.action.phpheader.php:83
 msgid "Action:"
 msgstr "Action :"
 
-#: inc/lib.improve.action.phpheader.php:78
+#: inc/lib.improve.action.phpheader.php:89
 msgid "Remove old style bloc header (using #)"
 msgstr "Supprimer les bloc d'entête ancien (utilisant #)"
 
-#: inc/lib.improve.action.phpheader.php:83
+#: inc/lib.improve.action.phpheader.php:94
 msgid "Do not add bloc to files from \"locales\" and \"libs\" folder"
 msgstr "Ne pas ajouter les blocs d'entête aux fichiers des répertoires \"locales\" et \"llibs\""
 
-#: inc/lib.improve.action.phpheader.php:86
+#: inc/lib.improve.action.phpheader.php:97
 msgid "Bloc content:"
 msgstr "Contenu du bloc :"
 
-#: inc/lib.improve.action.phpheader.php:91
-msgid "You can use wildcards %s"
-msgstr "Vous pouvez utiliser les jokers suivants :"
-
-#: inc/lib.improve.action.phpheader.php:93
+#: inc/lib.improve.action.phpheader.php:104
 msgid "Do not put structural elements to the begining of lines."
 msgstr "Ne pas mettre d'élément de structure en début de ligne"
 
-#: inc/lib.improve.action.phpheader.php:153
+#: inc/lib.improve.action.phpheader.php:165
 msgid "bloc is empty"
 msgstr "le bloc est vide"
 
-#: inc/lib.improve.action.phpheader.php:182
+#: inc/lib.improve.action.phpheader.php:194
 msgid "failed to parse bloc"
 msgstr "impossible de traiter le bloc"
 

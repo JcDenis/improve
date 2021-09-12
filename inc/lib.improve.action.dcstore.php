@@ -46,7 +46,7 @@ class ImproveActionDcstore extends ImproveAction
         form::field('dcstore_pattern', 160, 255, $this->getPreference('pattern')) . '</label>' .
         '</p>' .
         '<p class="form-note">' . 
-        sprintf(__('You can use widcards %s'), '%author%, %type%, %id%, %version%.') . 
+        sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.') . 
         '<br /> ' .
         __('For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip') . 
         '<br />' .
