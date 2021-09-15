@@ -1,10 +1,16 @@
 0.2 -dev
 - [ ] add global config for file size limit
-- [ ] add function to summarize by action what was done
 - [ ] add module to check depracated Dotclear function
 - [ ] add module to check deprecated PHP function
 - [ ] add module to check directory structure
-- [ ] add DA badge to module _gitshields_
+- [ ] write documentation of php class
+
+0.1.2
+- add logs / report systeme
+- add DA badge to module _gitshields_
+- change function args, less is better
+- change interface, lighter names
+- add function to summarize by action what was done
 
 0.1.1
 - fix php < 8.0

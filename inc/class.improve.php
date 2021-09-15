@@ -21,6 +21,8 @@ class Improve
     ];
     private $core;
     private $actions = [];
+    private $logs = [];
+    private $has_log = ['success' => false, 'warning' => false, 'error' => false];
 
     public function __construct(dcCore $core)
     {
@@ -42,6 +44,72 @@ class Improve
         uasort($this->actions, [$this, 'sortModules']);
     }
 
+    public function getLogs(): array
+    {
+        return $this->logs;
+    }
+
+    public function hasLog(string $type): bool
+    {
+        return array_key_exists($type, $this->has_log) && $this->has_log[$type];
+    }
+
+    public function writeLogs(): string
+    {
+        if (empty($this->logs)) {
+            return '';
+        }
+        $cur = $this->core->con->openCursor($this->core->prefix . 'log');
+        $cur->log_msg = serialize($this->logs);
+        $cur->log_table = 'improve';
+        $id = $this->core->log->addLog($cur);
+
+        return $id;
+    }
+
+    public function readLogs(int $id ): array
+    {
+        $rs = $this->core->log->getLogs(['log_table' => 'improve', 'log_id' => $id, 'limit' => 1]);
+        if ($rs->isEmpty()) {
+            return [];
+        }
+        $this->core->log->delLogs($rs->log_id);
+        return unserialize($rs->log_msg);
+    }
+
+    public function parselogs(int $id): array
+    {
+        $logs = $this->readLogs($id);
+        if (empty($logs)) {
+            return [];
+        }
+        $lines = [];
+        foreach($logs['improve'] as $path => $tools) {
+            $l_types = [];
+            foreach(['success', 'warning', 'error'] as $type) {
+                $l_tools = [];
+                foreach($tools as $tool) {
+                    $l_msg = [];
+                    if (!empty($logs[$tool][$type][$path])) {
+                        foreach($logs[$tool][$type][$path] as $msg) {
+                            $l_msg[] = $msg;
+                        }
+                    }
+                    if (!empty($l_msg)) {
+                        $l_tools[$tool] = $l_msg;
+                    }
+                }
+                if (!empty($l_tools)) {
+                    $l_types[$type] = $l_tools;
+                }
+            }
+            if (!empty($l_types)) {
+                $lines[$path] = $l_types;
+            }
+        }
+        return $lines;
+    }
+
     public function module(string $id): ?ImproveAction
     {
         if (empty($id)) {
@@ -58,9 +126,10 @@ class Improve
         return $this->actions[$id] ?? null;
     }
 
-    public function fix(string $type, string $id, array $module, array $actions): int
+    public function fixModule(string $type, string $id, array $properties, array $actions): float
     {
-        $module = ImproveDefinition::clean($id, $module);
+        $time_start = microtime(true);
+        $module = ImproveDefinition::clean($type, $id, $properties);
 
         $workers = [];
         foreach($actions as $action) {
@@ -69,9 +138,13 @@ class Improve
             }
         }
         foreach($workers as $action) {
-            // action: 
-            // open module
-            $action->openModule($type, $module);
+            // trace all path and action in logs
+            $this->logs['improve'][__('Begin')][] = $action->id;
+            // info: set current module
+            $action->setModule($module);
+            $action->setPath(__('Begin'), '', true);
+            // action: open module
+            $action->openModule();
         }
         if (!isset($module['sroot']) || !$module['root_writable'] || !is_writable($module['sroot'])) {
             throw new Exception(__('Module path is not writable'));
@@ -81,25 +154,28 @@ class Improve
             if (!file_exists($file[0])) {
                 continue;
             }
+            foreach($workers as $action) {
+                // trace all path and action in logs
+                $this->logs['improve'][$file[0]][] = $action->id;
+                // info: set current path
+                $action->setPath($file[0], $file[1], $file[2]);
+            }
             if (!$file[2]) {
                 foreach($workers as $action) {
-                    // action: 
-                    // open a directory. full path
-                    $action->openDirectory($file[0]);
+                    // action: open a directory. full path
+                    $action->openDirectory();
                 }
             } else {
                 foreach($workers as $action) {
-                    // action: 
-                    // before openning a file. full path, extension
-                    $action->openFile($file[0], $file[1]);
+                    // action: before openning a file. full path, extension
+                    $action->openFile();
                 }
                 if (in_array($file[1], self::$readfile_extensions)) {
                     if (false !== ($content = file_get_contents($file[0]))) {
                         $no_content = empty($content);
                         foreach($workers as $action) {
-                            // action: 
-                            // read a file content. full path, extension, content
-                            $action->readFile($file[0], $file[1], $content);
+                            // action: read a file content. full path, extension, content
+                            $action->readFile($content);
                             if (empty($content) && !$no_content) {
                                 throw new Exception(sprintf(
                                     __('File content has been removed: %s by %s'), $file[0], $action->name
@@ -109,29 +185,31 @@ class Improve
                         files::putContent($file[0], $content);
                     }
                     foreach($workers as $action) {
-                        // action: 
-                        // after closing a file. full path, extension
-                        $action->closeFile($file[0], $file[1]);
+                        // action: after closing a file. full path, extension
+                        $action->closeFile();
                     }
                 }
             }
         }
-        // action: 
-        // close module
         foreach($workers as $action) {
-            $action->closeModule($type, $module);
+            // trace all path and action in logs
+            $this->logs['improve'][__('End')][] = $action->id;
+            // info: set current module
+            $action->setPath(__('End'), '', true);
+            // action: close module
+            $action->closeModule();
         }
+        // info: get acions reports
         foreach($workers as $action) {
-            if ($action->hasNotice()) {
-                dcPage::addErrorNotice($action->name . ' : ' . implode(', ', $action->getNotice()));
+            $this->logs[$action->id] = $action->getLogs();
+            foreach($this->has_log as $type => $v) {
+                if ($action->hasLog($type)) {
+                    $this->has_log[$type] = true;
+                }
             }
         }
-        foreach($workers as $action) {
-            if ($action->hasNotice(false)) {
-                dcPage::addWarningNotice($action->name . ' : ' . implode(', ', $action->getNotice(false)));
-            }
-        }
-        return count($tree);
+
+        return substr(microtime(true) - $time_start, 0, 5);
     }
 
     private static function getModuleFiles(string $path, string $dir = '', array $res = []): array
@@ -164,7 +242,7 @@ class Improve
 
     public function getURL(array $params = []): string
     {
-        return $this->core->adminurl->get('admin.plugin.improve', $params);
+        return $this->core->adminurl->get('admin.plugin.improve', $params, '&');
     }
 
     public static function cleanExtensions($in): array
@@ -197,11 +275,11 @@ class ImproveDefinition
 {
     private $properties = [];
 
-    public function __construct(string $id, array $properties = [])
+    public function __construct(string $type, string $id, array $properties = [])
     {
         $this->loadDefine($id, $properties['root']);
 
-        $this->properties = array_merge($this->properties, self::sanitizeModule($id, $properties));
+        $this->properties = array_merge($this->properties, self::sanitizeModule($type, $id, $properties));
     }
 
     public function get()
@@ -209,9 +287,9 @@ class ImproveDefinition
         return $this->properties;
     }
 
-    public static function clean($id, $properties)
+    public static function clean(string $type, string $id, array $properties): array
     {
-        $p = new self($id, $properties);
+        $p = new self($type, $id, $properties);
         return $p->get();
     }
 
@@ -255,7 +333,7 @@ class ImproveDefinition
     }
 
     # adapt from lib.moduleslist.php
-    public static function sanitizeModule(string $id, array $properties): array
+    public static function sanitizeModule(string $type, string $id, array $properties): array
     {
         $label = empty($properties['label']) ? $id : $properties['label'];
         $name  = __(empty($properties['name']) ? $label : $properties['name']);
@@ -292,6 +370,7 @@ class ImproveDefinition
             [
                 'id'    => $id,
                 'sid'   => self::sanitizeString($id),
+                'type'  => $type,
                 'label' => $label,
                 'name'  => $name,
                 'oname' => $oname,

@@ -44,7 +44,7 @@ class ImproveActionPhpheader extends ImproveAction
     {
         $this->setProperties([
             'id'       => 'phpheader',
-            'name'     => __('Fix PHP header'),
+            'name'     => __('PHP header'),
             'desc'     => __('Add or remove phpdoc header bloc from php file'),
             'priority' => 340,
             'config'   => true,
@@ -64,13 +64,13 @@ class ImproveActionPhpheader extends ImproveAction
 
     public function isConfigured(): bool
     {
-        return !empty($this->getPreference('bloc_action')) || !empty($this->getPreference('remove_old'));
+        return !empty($this->getSetting('bloc_action')) || !empty($this->getSetting('remove_old'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setPreferences([
+            $this->setSettings([
                 'bloc_action'     => !empty($_POST['bloc_action']) ? $_POST['bloc_action'] : '',
                 'bloc_content'    => !empty($_POST['bloc_content']) ? $_POST['bloc_content'] : '',
                 'remove_old'      => !empty($_POST['remove_old']),
@@ -81,22 +81,22 @@ class ImproveActionPhpheader extends ImproveAction
 
         return '
         <p><label for="bloc_action">' . __('Action:') . '</label>' .
-        form::combo('bloc_action', $this->action_bloc, $this->getPreference('bloc_action')) . '
+        form::combo('bloc_action', $this->action_bloc, $this->getSetting('bloc_action')) . '
         </p>
 
         <p><label class="classic" for="remove_old">' .
-        form::checkbox('remove_old', 1, $this->getPreference('remove_old')) . ' ' .
+        form::checkbox('remove_old', 1, $this->getSetting('remove_old')) . ' ' .
         __('Remove old style bloc header (using #)') .
         '</label></p>
 
         <p><label class="classic" for="exclude_locales">' .
-        form::checkbox('exclude_locales', 1, $this->getPreference('exclude_locales')) . ' ' .
+        form::checkbox('exclude_locales', 1, $this->getSetting('exclude_locales')) . ' ' .
         __('Do not add bloc to files from "locales" and "libs" folder') .
         '</label></p>
 
         <p>' . __('Bloc content:') . '</p>
         <p class="area">' .
-        form::textarea('bloc_content', 50, 10, html::escapeHTML($this->getPreference('bloc_content'))) . '
+        form::textarea('bloc_content', 50, 10, html::escapeHTML($this->getSetting('bloc_content'))) . '
         </p><p class="form-note">' . 
         sprintf(
             __('You can use wildcards %s') , 
@@ -105,49 +105,51 @@ class ImproveActionPhpheader extends ImproveAction
         '<div class="fieldset box"><h4>' . __('Exemple') .'</h4><pre class="code">' . self::$exemple . '</pre></div>';
     }
 
-    public function openModule(string $module_type, array $module_info): ?bool
+    public function openModule(): ?bool
     {
-        $this->type = $module_type;
-        $this->module = $module_info;
         $this->replaceInfo();
 
         return null;
     }
 
-    public function openDirectory(string $path): ?bool
+    public function openDirectory(): ?bool
     {
+        $skipped = $this->stop_scan;
         $this->stop_scan = false;
-        if (!empty($this->getPreference('exclude_locales')) && preg_match('/\/(locales|libs)(\/.*?|)$/', $path)) {
+        if (!empty($this->getSetting('exclude_locales')) && preg_match('/\/(locales|libs)(\/.*?|)$/', $this->path_full)) {
+            if (!$skipped) {
+                $this->setWarning(__('Skip directory'));
+            }
             $this->stop_scan = true;
         }
 
         return null;
     }
 
-    public function readFile($path, $extension, &$content): ?bool
+    public function readFile(&$content): ?bool
     {
-        if ($this->stop_scan || $extension !='php' || self::hasNotice()) {
+        if ($this->stop_scan || $this->path_extension !='php' || $this->hasError()) {
             return null;
         }
 
-        if (!empty($this->getPreference('remove_old'))) {
+        if (!empty($this->getSetting('remove_old'))) {
             $content = $this->deleteOldBloc($content);
         }
-        if (empty($this->getPreference('bloc_action'))) {
+        if (empty($this->getSetting('bloc_action'))) {
 
             return null;
         }
         $clean = $this->deleteDocBloc($content);
-        if ($this->getPreference('bloc_action') == 'remove') {
+        if ($this->getSetting('bloc_action') == 'remove') {
             $content = $clean;
 
             return null;
         }
-        if ($content != $clean && $this->getPreference('bloc_action') == 'create') {
+        if ($content != $clean && $this->getSetting('bloc_action') == 'create') {
 
             return null;
         }
-        if ($content == $clean && $this->getPreference('bloc_action') == 'replace') {
+        if ($content == $clean && $this->getSetting('bloc_action') == 'replace') {
 
             return null;
         }
@@ -159,7 +161,7 @@ class ImproveActionPhpheader extends ImproveAction
 
     private function replaceInfo()
     {
-        $bloc = trim($this->getPreference('bloc_content'));
+        $bloc = trim($this->getSetting('bloc_content'));
 
         if (empty($bloc)) {
             self::notice(__('bloc is empty'), false);
@@ -190,8 +192,9 @@ class ImproveActionPhpheader extends ImproveAction
                     $bloc
                 )
             );
+            $this->setSuccess(__('Prepare header info'));
         } catch (Exception $e) {
-            self::notice(__('failed to parse bloc'));
+            $this->setError(__('Failed to parse bloc'));
 
             return null;
         }
@@ -199,29 +202,46 @@ class ImproveActionPhpheader extends ImproveAction
 
     private function writeDocBloc($content)
     {
-        return preg_replace(
+        $res = preg_replace(
             '/^(\<\?php[\n|\r\n]+)/',
             '<?php' . "\n/**\n * " . str_replace("\n", "\n * ", trim($this->bloc)) . "\n */\n\n",
             $content,
-            1
+            1,
+            $count
         );
+        if ($count) {
+            $this->setSuccess(__('Write new doc bloc content'));
+        }
+        return $res;
     }
 
     private function deleteDocBloc($content)
     {
-        return preg_replace(
+        $res = preg_replace(
             '/^(\<\?php\s*[\n|\r\n]{0,1}\s*\/\*\*.*?\s*\*\/\s*[\n|\r\n]+)/msi',
             "<?php\n",
-            $content
+            $content,
+            -1,
+            $count
         );
+        if ($count) {
+            $this->setSuccess(__('Delete old doc bloc content'));
+        }
+        return $res;
     }
 
     private function deleteOldBloc($content)
     {
-        return preg_replace(
+        $res = preg_replace(
             '/((# -- BEGIN LICENSE BLOCK ([-]+))(.*?)(# -- END LICENSE BLOCK ([-]+))([\n|\r\n]{1,}))/msi',
             "",
-            $content
+            $content,
+            -1,
+            $count
         );
+        if ($count) {
+            $this->setSuccess(__('Delete old style bloc content'));
+        }
+        return $res;
     }
 }

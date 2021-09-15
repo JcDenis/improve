@@ -17,7 +17,7 @@ class ImproveActionDcstore extends ImproveAction
     {
         $this->setProperties([
             'id' => 'dcstore',
-            'name' => __('Fix dcstore.xml'),
+            'name' => __('Store file'),
             'desc' => __('Re-create dcstore.xml file according to _define.php variables'),
             'priority' => 420,
             'config' => true,
@@ -29,13 +29,13 @@ class ImproveActionDcstore extends ImproveAction
 
     public function isConfigured(): bool
     {
-        return !empty($this->getPreference('pattern'));
+        return !empty($this->getSetting('pattern'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save']) && !empty($_POST['dcstore_pattern'])) {
-            $this->setPreferences('pattern', (string) $_POST['dcstore_pattern']);
+            $this->setSettings('pattern', (string) $_POST['dcstore_pattern']);
             $this->redirect($url);
         }
 
@@ -43,7 +43,7 @@ class ImproveActionDcstore extends ImproveAction
         '<p class="info">' . __('File will be overwritten if it exists') . '</p>' .
         '<p><label class="classic" for="dcstore_pattern">' . 
         __('Predictable URL to zip file on the external repository') . '<br />' .
-        form::field('dcstore_pattern', 160, 255, $this->getPreference('pattern')) . '</label>' .
+        form::field('dcstore_pattern', 160, 255, $this->getSetting('pattern')) . '</label>' .
         '</p>' .
         '<p class="form-note">' . 
         sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.') . 
@@ -54,20 +54,17 @@ class ImproveActionDcstore extends ImproveAction
         </p>';
     }
 
-    public function openModule($module_type, $module_info): ?bool
+    public function openModule(): ?bool
     {
-        $this->type = $module_type;
-        $this->module = $module_info;
-
-        $content = self::generateXML($module_info['id'], $module_info, $this->getPreference('pattern'));
-        if (self::hasNotice()) {
-
+        $content = $this->generateXML();
+        if ($this->hasError()) {
             return false;
         }
         try {
-            files::putContent($module_info['sroot'] . '/dcstore.xml', $content);
+            files::putContent($this->module['sroot'] . '/dcstore.xml', $content);
+            $this->setSuccess(__('Write dcstore.xml file.'));
         } catch(Exception $e) {
-            self::notice(__('Failed to write dcstore.xml file'));
+            $this->setError(__('Failed to write dcstore.xml file'));
 
             return false;
         }
@@ -75,97 +72,93 @@ class ImproveActionDcstore extends ImproveAction
         return true;
     }
 
-    public static function generateXML($id, $module, $file_pattern)
+    public function generateXML()
     {
-        if (!is_array($module) || empty($module)) {
-            return false;
-        }
-
         $xml = ['<modules xmlns:da="http://dotaddict.org/da/">'];
 
         # id
-        if (empty($module['id'])) {
-            self::notice(__('unkow module id'));
+        if (empty($this->module['id'])) {
+            $this->setError(__('unkow module id'));
         }
-        $xml[] = sprintf('<module id="%s">', html::escapeHTML($module['id']));
+        $xml[] = sprintf('<module id="%s">', html::escapeHTML($this->module['id']));
 
         # name
-        if (empty($module['oname'])) {
-            self::notice(__('unknow module name'));
+        if (empty($this->module['oname'])) {
+            $this->setError(__('unknow module name'));
         }
-        $xml[] = sprintf('<name>%s</name>', html::escapeHTML($module['name']));
+        $xml[] = sprintf('<name>%s</name>', html::escapeHTML($this->module['name']));
 
         # version
-        if (empty($module['version'])) {
-            self::notice(__('unknow module version'));
+        if (empty($this->module['version'])) {
+            $this->setError(__('unknow module version'));
         }
-        $xml[] = sprintf('<version>%s</version>', html::escapeHTML($module['version']));
+        $xml[] = sprintf('<version>%s</version>', html::escapeHTML($this->module['version']));
 
         # author
-        if (empty($module['author'])) {
-            self::notice(__('unknow module author'));
+        if (empty($this->module['author'])) {
+            $this->setError(__('unknow module author'));
 
         }
-        $xml[] = sprintf('<author>%s</author>', html::escapeHTML($module['author']));
+        $xml[] = sprintf('<author>%s</author>', html::escapeHTML($this->module['author']));
 
         # desc
-        if (empty($module['desc'])) {
-            self::notice(__('unknow module description'));
+        if (empty($this->module['desc'])) {
+            $this->setError(__('unknow module description'));
         }
-        $xml[] = sprintf('<desc>%s</desc>', html::escapeHTML($module['desc']));
+        $xml[] = sprintf('<desc>%s</desc>', html::escapeHTML($this->module['desc']));
 
         # repository
-        if (empty($module['repository'])) {
-            self::notice(__('no repository set in _define.php'));
+        if (empty($this->module['repository'])) {
+            $this->setError(__('no repository set in _define.php'));
         }
 
         # file
-        $file_pattern = self::parseFilePattern($module, $file_pattern);
+        $file_pattern = $this->parseFilePattern();
         if (empty($file_pattern)) {
-            self::notice(__('no zip file pattern set in configuration'));
+            $this->setError(__('no zip file pattern set in configuration'));
         }
         $xml[] = sprintf('<file>%s</file>', html::escapeHTML($file_pattern));
 
         # da dc_min or requires core
-        if (!empty($module['requires']) && is_array($module['requires'])) {
-            foreach ($module['requires'] as $req) {
+        if (!empty($this->module['requires']) && is_array($this->module['requires'])) {
+            foreach ($this->module['requires'] as $req) {
                 if (!is_array($req)) {
                     $req = [$req];
                 }
                 if ($req[0] == 'core') {
-                    $module['dc_min'] = $req[1];
+                    $this->module['dc_min'] = $req[1];
                     break;
                 }
             }
         }
-        if (empty($module['dc_min'])) {
-            self::notice(__('no minimum dotclear version'), false);
+        if (empty($this->module['dc_min'])) {
+            $this->setWarning(__('no minimum dotclear version'));
         } else {
-            $xml[] = sprintf('<da:dcmin>%s</da:dcmin>', html::escapeHTML($module['dc_min']));
+            $xml[] = sprintf('<da:dcmin>%s</da:dcmin>', html::escapeHTML($this->module['dc_min']));
         }
 
         # da details
-        if (empty($module['details'])) {
-            self::notice(__('no details URL'), false);
+        if (empty($this->module['details'])) {
+            $this->setWarning(__('no details URL'));
         } else {
-            $xml[] = sprintf('<da:details>%s</da:details>', html::escapeHTML($module['details']));
+            $xml[] = sprintf('<da:details>%s</da:details>', html::escapeHTML($this->module['details']));
         }
 
         # da sshot
-        //$xml[] = sprintf('<da:sshot>%s</da:sshot>', html::escapeHTML($module['sshot']));
+        //$xml[] = sprintf('<da:sshot>%s</da:sshot>', html::escapeHTML($this->module['sshot']));
 
         # da section
-        //$xml[] = sprintf('<da:section>%s</da:section>', html::escapeHTML($module['section']));
+        //$xml[] = sprintf('<da:section>%s</da:section>', html::escapeHTML($this->module['section']));
 
         # da support
-        if (empty($module['support'])) {
-            self::notice(__('no support URL'), false);
+        if (empty($this->module['support'])) {
+            $this->setWarning(__('no support URL'));
         } else {
-            $xml[] = sprintf('<da:support>%s</da:support>', html::escapeHTML($module['support']));
+            $xml[] = sprintf('<da:support>%s</da:support>', html::escapeHTML($this->module['support']));
         }
 
         # da tags
-        //$xml[] = sprintf('<da:tags>%s</da:tags>', html::escapeHTML($module['tags']));
+        //$xml[] = sprintf('<da:tags>%s</da:tags>', html::escapeHTML($this->module['tags']));
 
         $xml[] = '</module>';
         $xml[] = '</modules>';
@@ -173,7 +166,7 @@ class ImproveActionDcstore extends ImproveAction
         return implode("\n", $xml);
     }
 
-    private static function parseFilePattern($module, $file_pattern)
+    private function parseFilePattern()
     {
         return text::tidyURL(str_replace(
             [
@@ -183,12 +176,12 @@ class ImproveActionDcstore extends ImproveAction
                 '%author%'
             ],
             [
-                $module['type'],
-                $module['id'],
-                $module['version'],
-                $module['author']
+                $this->module['type'],
+                $this->module['id'],
+                $this->module['version'],
+                $this->module['author']
             ],
-            $file_pattern
+            $this->getSetting('pattern')
         ));
     }
 }

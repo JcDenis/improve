@@ -1,6 +1,6 @@
 # Language: Français
 # Module: improve - 0.1.1
-# Date: 2021-09-12 21:00:21
+# Date: 2021-09-14 23:23:55
 # Translated with translater 2021.09.02.1
 
 msgid ""
@@ -8,24 +8,34 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: improve 0.1.1\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-12T21:00:21+00:00\n"
+"PO-Revision-Date: 2021-09-14T23:23:55+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: inc/class.improve.php:77
+#: inc/class.improve.php:142
+#: inc/class.improve.php:145
+msgid "Begin"
+msgstr "Début"
+
+#: inc/class.improve.php:150
 msgid "Module path is not writable"
 msgstr "Le chemin du module n'est pas accessible en écriture"
 
-#: inc/class.improve.php:105
+#: inc/class.improve.php:181
 msgid "File content has been removed: %s by %s"
 msgstr "Le contenu du fichier a été supprimé : %s par %s"
 
+#: inc/class.improve.php:196
+#: inc/class.improve.php:198
+msgid "End"
+msgstr "Fin"
+
 #: inc/lib.improve.action.dcstore.php:20
-msgid "Fix dcstore.xml"
-msgstr "Fixer dcstore.xml"
+msgid "Store file"
+msgstr "Fichier de dépôt"
 
 #: inc/lib.improve.action.dcstore.php:21
 msgid "Re-create dcstore.xml file according to _define.php variables"
@@ -52,53 +62,57 @@ msgstr "Par exemple sur github https://github.com/MyGitName/%id%/releases/downlo
 msgid "Note on github, you must create a release and join to it the module zip file."
 msgstr "Note sur Github, vous devez créer un release et y joindre le fichier zip du module."
 
-#: inc/lib.improve.action.dcstore.php:70
+#: inc/lib.improve.action.dcstore.php:65
+msgid "Write dcstore.xml file."
+msgstr "Ecrire le fichier dcstore.xml"
+
+#: inc/lib.improve.action.dcstore.php:67
 msgid "Failed to write dcstore.xml file"
 msgstr "Impossible d'écrire le fichier dcstore.xml"
 
-#: inc/lib.improve.action.dcstore.php:88
+#: inc/lib.improve.action.dcstore.php:81
 msgid "unkow module id"
 msgstr "Id du module inconu"
 
-#: inc/lib.improve.action.dcstore.php:94
+#: inc/lib.improve.action.dcstore.php:87
 msgid "unknow module name"
 msgstr "nom du module inconnu"
 
-#: inc/lib.improve.action.dcstore.php:100
+#: inc/lib.improve.action.dcstore.php:93
 msgid "unknow module version"
 msgstr "version du module inconnue"
 
-#: inc/lib.improve.action.dcstore.php:106
+#: inc/lib.improve.action.dcstore.php:99
 msgid "unknow module author"
 msgstr "auteur du module inconnu"
 
-#: inc/lib.improve.action.dcstore.php:113
+#: inc/lib.improve.action.dcstore.php:106
 msgid "unknow module description"
 msgstr "description du module inconnue"
 
-#: inc/lib.improve.action.dcstore.php:119
+#: inc/lib.improve.action.dcstore.php:112
 msgid "no repository set in _define.php"
 msgstr "Aucun dépôt défini dans le fichier _define.php"
 
-#: inc/lib.improve.action.dcstore.php:125
+#: inc/lib.improve.action.dcstore.php:118
 msgid "no zip file pattern set in configuration"
 msgstr "Pas de modèle de fichier zip présent dans la configuration"
 
-#: inc/lib.improve.action.dcstore.php:142
+#: inc/lib.improve.action.dcstore.php:135
 msgid "no minimum dotclear version"
 msgstr "pas de version minimum de Dotclear"
 
-#: inc/lib.improve.action.dcstore.php:149
+#: inc/lib.improve.action.dcstore.php:142
 msgid "no details URL"
 msgstr "Lien de détail non défini"
 
-#: inc/lib.improve.action.dcstore.php:162
+#: inc/lib.improve.action.dcstore.php:155
 msgid "no support URL"
 msgstr "Lien de support non défini"
 
 #: inc/lib.improve.action.gitshields.php:34
-msgid "Fix shields badges"
-msgstr "Fixer les badges shields.io"
+msgid "Shields badges"
+msgstr "Badges Shields.io"
 
 #: inc/lib.improve.action.gitshields.php:35
 msgid "Add and maintain shields.io badges to the REDAME.md file"
@@ -124,9 +138,21 @@ msgstr "Inclure le badge Dotaddict"
 msgid "If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict."
 msgstr "Si votre plugin ou theme est sur Dotaddict, vous pouvez ajouter un badge lier à ses détails sur DA."
 
+#: inc/lib.improve.action.gitshields.php:117
+msgid "Prepare custom shield info"
+msgstr "préparer les informations personnalisées"
+
+#: inc/lib.improve.action.gitshields.php:147
+msgid "Write new shield bloc"
+msgstr "Ecrire le nouveau bloc Shield"
+
+#: inc/lib.improve.action.gitshields.php:162
+msgid "Delete old shield bloc"
+msgstr "Effacer l'ancine bloc Shield"
+
 #: inc/lib.improve.action.licensefile.php:29
-msgid "Fix license file"
-msgstr "Fixer le fichier de licence"
+msgid "License file"
+msgstr "Fichier de licence"
 
 #: inc/lib.improve.action.licensefile.php:30
 msgid "Add or remove full license file to module root"
@@ -165,69 +191,89 @@ msgstr "Version de la licence :"
 msgid "Action on file:"
 msgstr "Action sur le fichier :"
 
-#: inc/lib.improve.action.licensefile.php:87
-msgid "no full license type selected"
-msgstr "Aucun type de licence sélectionné"
+#: inc/lib.improve.action.licensefile.php:84
+msgid "No full license type selected"
+msgstr "Pas de type de licence seletionné"
 
-#: inc/lib.improve.action.licensefile.php:100
-msgid "failed to load full license"
-msgstr "Impossible de charger le fichier de licence"
+#: inc/lib.improve.action.licensefile.php:97
+msgid "Failed to load license content"
+msgstr "Impossible de charger le contenu de la licence"
 
-#: inc/lib.improve.action.licensefile.php:106
-msgid "failed to write full license"
-msgstr "Impossible d'écrire le fichier de license"
+#: inc/lib.improve.action.licensefile.php:102
+msgid "Write new license file \"LICENSE\""
+msgstr "Écrire le nouveau fichier \"LICENSE\" de licence"
+
+#: inc/lib.improve.action.licensefile.php:104
+msgid "Failed to write new license file"
+msgstr "Impossible d'écrire le nouveau fichier de licence"
+
+#: inc/lib.improve.action.licensefile.php:118
+msgid "Old license file is not deletable (%s)"
+msgstr "L'ancien fichier de licence n'est pas supprimable (%s)"
 
 #: inc/lib.improve.action.licensefile.php:120
-msgid "full license is not deletable (%s)"
-msgstr "Le fichier de licence n'est pas supprimable (%s)"
+msgid "Failed to delete old license file (%s)"
+msgstr "Impossible de supprimer l'ancien fichier de licence (%s)"
 
-#: inc/lib.improve.action.licensefile.php:123
-msgid "failed to delete full license (%s)"
-msgstr "Impossible de supprimer le fichier de licence (%s)"
+#: inc/lib.improve.action.licensefile.php:122
+msgid "Delete old license file \"%s\""
+msgstr "Effacer l'ancien fichier de Licence \"%s\""
 
 #: inc/lib.improve.action.php:20
-msgid "Fix tabulation"
-msgstr "Fixer les tabulations"
+msgid "Tabulations"
+msgstr "Tabulations"
 
 #: inc/lib.improve.action.php:21
 msgid "Replace tabulation by four space in php files"
 msgstr "Remplace les tabulation par quatre espaces dans les fichiers php"
 
-#: inc/lib.improve.action.php:53
-msgid "Fix newline"
-msgstr "Fixer les retours à la ligne"
+#: inc/lib.improve.action.php:36
+msgid "Replace tabulation by spaces"
+msgstr "Remplacer les tabulations"
 
-#: inc/lib.improve.action.php:54
+#: inc/lib.improve.action.php:57
+msgid "Newlines"
+msgstr "Retour à la ligne"
+
+#: inc/lib.improve.action.php:58
 msgid "Replace bad and repetitive and empty newline by single newline in files"
 msgstr "Remplace les mauvais ou répétitifs retour à la ligne par une seule nouvelle ligne"
 
-#: inc/lib.improve.action.php:91
+#: inc/lib.improve.action.php:95
 msgid "List of files extension to work on:"
 msgstr "Liste des extensions de fichier à corriger:"
 
-#: inc/lib.improve.action.php:94
+#: inc/lib.improve.action.php:98
 msgid "Use comma separated list of extensions without dot, recommand \"php,js,xml,txt,md\"."
 msgstr "Utiliser une liste d'extensions séparé par des virgules et sans le point, recommandation: \"php,js,xml,txt,md\"."
 
-#: inc/lib.improve.action.php:128
-msgid "Fix end of file"
-msgstr "Fixer les fins de fichiers"
+#: inc/lib.improve.action.php:122
+msgid "Replace bad new lines"
+msgstr "Remplacer les retours à la ligne"
 
-#: inc/lib.improve.action.php:129
+#: inc/lib.improve.action.php:138
+msgid "End of files"
+msgstr "Fin de fichiers"
+
+#: inc/lib.improve.action.php:139
 msgid "Remove php tag and empty lines from end of files"
-msgstr "Supprimer le tag PHP et els lignes vides de fin de fichiers"
+msgstr "Supprimer le tag PHP et les lignes vides de fin de fichiers"
 
-#: inc/lib.improve.action.php:153
+#: inc/lib.improve.action.php:163
 msgid "Add a blank line to the end of file"
 msgstr "Ajouter une ligne vide en fin de fichier"
 
-#: inc/lib.improve.action.php:155
+#: inc/lib.improve.action.php:165
 msgid "PSR2 must have a blank line, whereas PSR12 must not."
 msgstr "PSR2 doit avoir une ligne vide, alors que PSR12 non."
 
+#: inc/lib.improve.action.php:180
+msgid "Replace end of file"
+msgstr "Remplacer les fins de fichiers"
+
 #: inc/lib.improve.action.phpheader.php:47
-msgid "Fix PHP header"
-msgstr "Fixer les enêtes php"
+msgid "PHP header"
+msgstr "Entête de fichier PHP"
 
 #: inc/lib.improve.action.phpheader.php:48
 msgid "Add or remove phpdoc header bloc from php file"
@@ -269,13 +315,33 @@ msgstr "Contenu du bloc :"
 msgid "Do not put structural elements to the begining of lines."
 msgstr "Ne pas mettre d'élément de structure en début de ligne"
 
-#: inc/lib.improve.action.phpheader.php:165
+#: inc/lib.improve.action.phpheader.php:121
+msgid "Skip directory"
+msgstr "Ignorer le répertoire"
+
+#: inc/lib.improve.action.phpheader.php:167
 msgid "bloc is empty"
 msgstr "le bloc est vide"
 
-#: inc/lib.improve.action.phpheader.php:194
-msgid "failed to parse bloc"
-msgstr "impossible de traiter le bloc"
+#: inc/lib.improve.action.phpheader.php:195
+msgid "Prepare header info"
+msgstr "Préparer les informations d'entête"
+
+#: inc/lib.improve.action.phpheader.php:197
+msgid "Failed to parse bloc"
+msgstr "Impossible de préparer le bloc"
+
+#: inc/lib.improve.action.phpheader.php:213
+msgid "Write new doc bloc content"
+msgstr "Ecrire le nouveau contenu de bloc"
+
+#: inc/lib.improve.action.phpheader.php:228
+msgid "Delete old doc bloc content"
+msgstr "Effacer l'ancien contenu de type phpdoc"
+
+#: inc/lib.improve.action.phpheader.php:243
+msgid "Delete old style bloc content"
+msgstr "Effacer l'ancien contenu de type ancien"
 
 #: inc/lib.improve.action.zip.php:42
 msgid "Zip module"
@@ -332,13 +398,25 @@ msgstr "Pas défaut tous ces fichiers sont toujours exclu des paquetages : %s"
 msgid "Remove comments from files"
 msgstr "Retirer les commentaires des fichiers"
 
-#: inc/lib.improve.action.zip.php:155
+#: inc/lib.improve.action.zip.php:124
+msgid "Prepare excluded files \"%s\""
+msgstr "Préparer les fichiers à exclure \"%s\""
+
+#: inc/lib.improve.action.zip.php:127
+msgid "Prepare comment removal"
+msgstr "Préparer le retrait des commentaires"
+
+#: inc/lib.improve.action.zip.php:157
 msgid "Destination filename already exists"
 msgstr "Le fichier de destination existe déjà"
 
-#: inc/lib.improve.action.zip.php:160
+#: inc/lib.improve.action.zip.php:162
 msgid "Destination path is not writable"
 msgstr "Le répertoire de destination n'est pas accessible en écriture"
+
+#: inc/lib.improve.action.zip.php:186
+msgid "Zip module into \"%s\""
+msgstr "Zipper le module vers \"%s\""
 
 #: index.php:54
 msgid "Select a module"
@@ -352,51 +430,63 @@ msgstr "Aucune action sélectionné"
 msgid "No module selected"
 msgstr "Aucun module sélectionné"
 
-#: index.php:87
-msgid "Fix of %s complete in %s secondes"
-msgstr "Correction de %s complété en %s secondes"
+#: index.php:85
+msgid "Fix of \"%s\" complete in %s secondes with errors"
+msgstr "Fixe de \"%s\" complété en %s secondes avec des erreurs"
 
-#: index.php:102
-#: index.php:108
-#: index.php:109
-#: index.php:146
+#: index.php:87
+msgid "Fix of \"%s\" complete in %s secondes with warnings"
+msgstr "Fixe de \"%s\" complété en %s secondes avec des avertissements"
+
+#: index.php:89
+msgid "Fix of \"%s\" complete in %s secondes"
+msgstr "Fixe de \"%s\" complété en %s secondes"
+
+#: index.php:91
+msgid "Fix of \"%s\" complete in %s secondes without messages"
+msgstr "Fixe de \"%s\" complété en %s secondes sans message"
+
+#: index.php:105
+#: index.php:111
+#: index.php:112
+#: index.php:149
 msgid "Themes"
 msgstr "Thèmes"
 
-#: index.php:104
-#: index.php:174
+#: index.php:107
+#: index.php:177
 msgid "Configure module"
 msgstr "Configurer le module"
 
-#: index.php:127
+#: index.php:130
 msgid "Configure module \"%s\""
 msgstr "Configurer le module \"%s\""
 
-#: index.php:131
+#: index.php:134
 msgid "Nothing to configure"
 msgstr "Rien à configurer"
 
-#: index.php:140
+#: index.php:143
 msgid "Unknow module"
 msgstr "Module inconnu"
 
-#: index.php:149
+#: index.php:152
 msgid "No module to manage"
 msgstr "Aucun module à gérer"
 
-#: index.php:174
+#: index.php:177
 msgid "Configure action '%s'"
 msgstr "Configurer l'action \"%s\""
 
-#: index.php:184
+#: index.php:187
 msgid "Save fields selection as preference"
 msgstr "Enregistrer la sélection comme préférence"
 
-#: index.php:185
+#: index.php:188
 msgid "Select a module:"
 msgstr "Sélectionner un  module :"
 
-#: index.php:188
+#: index.php:191
 msgid "Fix it"
 msgstr "Corriger"
 

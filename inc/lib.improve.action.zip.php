@@ -51,13 +51,13 @@ class ImproveActionZip extends ImproveAction
 
     public function isConfigured(): bool
     {
-        return !empty($this->getPreference('pack_repository')) && !empty($this->getPreference('pack_filename'));
+        return !empty($this->getSetting('pack_repository')) && !empty($this->getSetting('pack_filename'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setPreferences([
+            $this->setSettings([
                 'pack_repository'     => !empty($_POST['pack_repository']) ? $_POST['pack_repository'] : '',
                 'pack_filename'       => !empty($_POST['pack_filename']) ? $_POST['pack_filename'] : '',
                 'secondpack_filename' => !empty($_POST['secondpack_filename']) ? $_POST['secondpack_filename'] : '',
@@ -73,7 +73,7 @@ class ImproveActionZip extends ImproveAction
         <h4>' . __('Root') . '</h4>
 
         <p><label for="pack_repository">' . __('Path to repository:') . ' ' .
-        form::field('pack_repository', 65, 255, $this->getPreference('pack_repository'), 'maximal') .
+        form::field('pack_repository', 65, 255, $this->getSetting('pack_repository'), 'maximal') .
         '</label></p>' .
         '<p class="form-note">' . sprintf(__('Preconization: %s'), $this->core->blog->public_path ?
             path::real($this->core->blog->public_path) : __("Blog's public directory")
@@ -84,17 +84,17 @@ class ImproveActionZip extends ImproveAction
         <h4>' . __('Files') . '</h4>
 
         <p><label for="pack_filename">' . __('Name of exported package:') . ' ' .
-        form::field('pack_filename', 65, 255, $this->getPreference('pack_filename'), 'maximal') .
-        '</label></p>
-        <p class="form-note">' . sprintf(__('Preconization: %s'), '%type%-%id%-%version%') . '</p>
-
-        <p><label for="secondpack_filename">' . __('Name of second exported package:') . ' ' .
-        form::field('secondpack_filename', 65, 255, $this->getPreference('secondpack_filename'), 'maximal') .
+        form::field('pack_filename', 65, 255, $this->getSetting('pack_filename'), 'maximal') .
         '</label></p>
         <p class="form-note">' . sprintf(__('Preconization: %s'), '%type%-%id%') . '</p>
 
+        <p><label for="secondpack_filename">' . __('Name of second exported package:') . ' ' .
+        form::field('secondpack_filename', 65, 255, $this->getSetting('secondpack_filename'), 'maximal') .
+        '</label></p>
+        <p class="form-note">' . sprintf(__('Preconization: %s'), '%type%-%id%-%version%') . '</p>
+
         <p><label class="classic" for="pack_overwrite">'.
-        form::checkbox('pack_overwrite', 1, !empty($this->getPreference('pack_overwrite'))) . ' ' .
+        form::checkbox('pack_overwrite', 1, !empty($this->getSetting('pack_overwrite'))) . ' ' .
         __('Overwrite existing package') . '</label></p>
 
         </div>
@@ -103,32 +103,34 @@ class ImproveActionZip extends ImproveAction
         <h4>' . __('Content') . '</h4>
 
         <p><label for="pack_excludefiles">' . __('Extra files to exclude from package:') . ' ' .
-        form::field('pack_excludefiles', 65, 255, $this->getPreference('pack_excludefiles'), 'maximal') .
+        form::field('pack_excludefiles', 65, 255, $this->getSetting('pack_excludefiles'), 'maximal') .
         '</label></p>
         <p class="form-note">' . sprintf(__('Preconization: %s'), '*.zip,*.tar,*.tar.gz') . '<br />' .
         sprintf(__('By default all these files are always removed from packages : %s'), implode(', ', self::$exclude)) . '</p>
 
         <p><label class="classic" for="pack_nocomment">' .
-        form::checkbox('pack_nocomment', 1, $this->getPreference('pack_nocomment')) . ' ' .
+        form::checkbox('pack_nocomment', 1, $this->getSetting('pack_nocomment')) . ' ' .
         __('Remove comments from files') . '</label></p>
 
         </div>';
     }
 
-    public function closeModule(string $module_type, array $module_info): ?bool
+    public function closeModule(): ?bool
     {
         $exclude = array_merge(
             self::$exclude, 
-            explode(',', $this->getPreference('pack_excludefiles'))
+            explode(',', $this->getSetting('pack_excludefiles'))
         );
-        if (!empty($this->getPreference('pack_nocomment'))) {
+        $this->setSuccess(sprintf(__('Prepare excluded files "%s"'), implode(', ', $exclude)));
+        if (!empty($this->getSetting('pack_nocomment'))) {
             ImproveZipFileZip::$remove_comment = true;
+            $this->setSuccess(__('Prepare comment removal'));
         }
-        if (!empty($this->getPreference('pack_filename'))) {
-            $this->zipModule($this->getPreference('pack_filename'), $exclude);
+        if (!empty($this->getSetting('pack_filename'))) {
+            $this->zipModule($this->getSetting('pack_filename'), $exclude);
         }
-        if (!empty($this->getPreference('secondpack_filename'))) {
-            $this->zipModule($this->getPreference('secondpack_filename'), $exclude);
+        if (!empty($this->getSetting('secondpack_filename'))) {
+            $this->zipModule($this->getSetting('secondpack_filename'), $exclude);
         }
         return null;
     }
@@ -150,14 +152,16 @@ class ImproveActionZip extends ImproveAction
         foreach($parts as $i => $part) {
             $parts[$i] = files::tidyFileName($part);
         }
-        $path = $this->getPreference('pack_repository') . '/' . implode('/', $parts) . '.zip';
-        if (file_exists($path) && empty($this->getPreference('pack_overwrite'))) {
-            self::notice(__('Destination filename already exists'), false);
+        $path = $this->getSetting('pack_repository') . '/' . implode('/', $parts) . '.zip';
+        if (file_exists($path) && empty($this->getSetting('pack_overwrite'))) {
+            $this->setWarning(__('Destination filename already exists'));
 
             return null;
         }
         if (!is_dir(dirname($path)) || !is_writable(dirname($path))) {
-            self::notice(__('Destination path is not writable'));
+            $this->setError(__('Destination path is not writable'));
+
+            return null;
         }
         @set_time_limit(300);
         $fp = fopen($path, 'wb');
@@ -178,6 +182,8 @@ class ImproveActionZip extends ImproveAction
         $zip->write();
         $zip->close();
         unset($zip);
+
+        $this->setSuccess(sprintf(__('Zip module into "%s"'), $path));
 
         return null;
     }

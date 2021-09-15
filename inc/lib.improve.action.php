@@ -17,7 +17,7 @@ class ImproveActionTab extends ImproveAction
     {
         $this->setProperties([
             'id' => 'tab',
-            'name' => __('Fix tabulation'),
+            'name' => __('Tabulations'),
             'desc' => __('Replace tabulation by four space in php files'),
             'priority' => 820,
             'types' => ['plugin', 'theme']
@@ -26,12 +26,16 @@ class ImproveActionTab extends ImproveAction
         return true;
     }
 
-    public function readFile($path, $extension, &$content): ?bool
+    public function readFile(&$content): ?bool
     {
-        if (!in_array($extension, ['php', 'md'])) {
+        if (!in_array($this->path_extension, ['php', 'md'])) {
             return null;
         }
-        $content = preg_replace('/(\t)/', '    ', $content)."\n";
+        $clean = preg_replace('/(\t)/', '    ', $content);// . "\n";
+        if ($content != $clean) {
+            $this->setSuccess(__('Replace tabulation by spaces'));
+            $content = $clean;
+        }
 
         return true;
     }
@@ -50,7 +54,7 @@ class ImproveActionNewline extends ImproveAction
     {
         $this->setProperties([
             'id' => 'newline',
-            'name' => __('Fix newline'),
+            'name' => __('Newlines'),
             'desc' => __('Replace bad and repetitive and empty newline by single newline in files'),
             'priority' => 840,
             'config' => true,
@@ -68,20 +72,20 @@ class ImproveActionNewline extends ImproveAction
 
     public function isConfigured(): bool
     {
-        return !empty($this->getPreference('extensions'));
+        return !empty($this->getSetting('extensions'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save']) && !empty($_POST['newline_extensions'])) {
-            $this->setPreferences(
+            $this->setSettings(
                 'extensions', 
                 Improve::cleanExtensions($_POST['newline_extensions'])
             );
             $this->redirect($url);
         }
 
-        $ext = $this->getPreference('extensions');
+        $ext = $this->getSetting('extensions');
         if (!is_array($ext)) {
             $ext = [];
         }
@@ -95,13 +99,13 @@ class ImproveActionNewline extends ImproveAction
          '</p>';
     }
 
-    public function readFile($path, $extension, &$content): ?bool
+    public function readFile(&$content): ?bool
     {
-        $ext = $this->getPreference('extensions');
-        if (!is_array($ext) || !in_array($extension, $ext)) {
+        $ext = $this->getSetting('extensions');
+        if (!is_array($ext) || !in_array($this->path_extension, $ext)) {
             return null;
         }
-        $content = preg_replace(
+        $clean = preg_replace(
             '/(\n\s+\n)/', 
             "\n\n", 
             preg_replace(
@@ -111,7 +115,13 @@ class ImproveActionNewline extends ImproveAction
                     ["\r\n", "\r"], 
                     "\n", 
                     $content
-        )));
+                )
+            )
+        );
+        if ($content != $clean) {
+            $this->setSuccess(__('Replace bad new lines'));
+            $content = $clean;
+        }
 
         return true;
     }
@@ -125,7 +135,7 @@ class ImproveActionEndoffile extends ImproveAction
     {
         $this->setProperties([
             'id' => 'endoffile',
-            'name' => __('Fix end of file'),
+            'name' => __('End of files'),
             'desc' => __('Remove php tag and empty lines from end of files'),
             'priority' => 860,
             'config' => true,
@@ -143,29 +153,33 @@ class ImproveActionEndoffile extends ImproveAction
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setPreferences('psr2', !empty($_POST['endoffile_psr2']));
+            $this->setSettings('psr2', !empty($_POST['endoffile_psr2']));
             $this->redirect($url);
         }
 
         return 
         '<p><label class="classic" for="endoffile_psr2">' .
-        form::checkbox('endoffile_psr2', 255, $this->getPreference('psr2')) . 
+        form::checkbox('endoffile_psr2', 255, $this->getSetting('psr2')) . 
         __('Add a blank line to the end of file') . 
         '</label></p><p class="form-note">' . 
         __('PSR2 must have a blank line, whereas PSR12 must not.') . 
         '</p>';
     }
 
-    public function readFile($path, $extension, &$content): ?bool
+    public function readFile(&$content): ?bool
     {
-        if (!in_array($extension, ['php', 'md'])) {
+        if (!in_array($this->path_extension, ['php', 'md'])) {
             return null;
         }
-        $content = preg_replace(
+        $clean = preg_replace(
             ['/(\s*)(\?>\s*)$/', '/\n+$/'], 
             '', 
             $content
-        ) . ($this->getPreference('psr2') ? "\n" : '');
+        ) . ($this->getSetting('psr2') ? "\n" : '');
+        if ($content != $clean) {
+            $this->setSuccess(__('Replace end of file'));
+            $content = $clean;
+        }
 
         return true;
     }

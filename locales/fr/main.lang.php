@@ -1,17 +1,25 @@
 <?php
 // Language: Français 
 // Module: improve - 0.1.1
-// Date: 2021-09-12 21:00:21 
+// Date: 2021-09-14 23:23:55 
 // Translated with dcTranslater - 2021.09.02.1 
 
-#inc/class.improve.php:77
+#inc/class.improve.php:142
+#inc/class.improve.php:145
+$GLOBALS['__l10n']['Begin'] = 'Début';
+
+#inc/class.improve.php:150
 $GLOBALS['__l10n']['Module path is not writable'] = 'Le chemin du module n\'est pas accessible en écriture';
 
-#inc/class.improve.php:105
+#inc/class.improve.php:181
 $GLOBALS['__l10n']['File content has been removed: %s by %s'] = 'Le contenu du fichier a été supprimé : %s par %s';
 
+#inc/class.improve.php:196
+#inc/class.improve.php:198
+$GLOBALS['__l10n']['End'] = 'Fin';
+
 #inc/lib.improve.action.dcstore.php:20
-$GLOBALS['__l10n']['Fix dcstore.xml'] = 'Fixer dcstore.xml';
+$GLOBALS['__l10n']['Store file'] = 'Fichier de dépôt';
 
 #inc/lib.improve.action.dcstore.php:21
 $GLOBALS['__l10n']['Re-create dcstore.xml file according to _define.php variables'] = 'Re-créer le fichier dcstore.xml suivant les variables du fichier _define.php';
@@ -32,41 +40,44 @@ $GLOBALS['__l10n']['For exemple on github https://github.com/MyGitName/%id%/rele
 #inc/lib.improve.action.dcstore.php:53
 $GLOBALS['__l10n']['Note on github, you must create a release and join to it the module zip file.'] = 'Note sur Github, vous devez créer un release et y joindre le fichier zip du module.';
 
-#inc/lib.improve.action.dcstore.php:70
+#inc/lib.improve.action.dcstore.php:65
+$GLOBALS['__l10n']['Write dcstore.xml file.'] = 'Ecrire le fichier dcstore.xml';
+
+#inc/lib.improve.action.dcstore.php:67
 $GLOBALS['__l10n']['Failed to write dcstore.xml file'] = 'Impossible d\'écrire le fichier dcstore.xml';
 
-#inc/lib.improve.action.dcstore.php:88
+#inc/lib.improve.action.dcstore.php:81
 $GLOBALS['__l10n']['unkow module id'] = 'Id du module inconu';
 
-#inc/lib.improve.action.dcstore.php:94
+#inc/lib.improve.action.dcstore.php:87
 $GLOBALS['__l10n']['unknow module name'] = 'nom du module inconnu';
 
-#inc/lib.improve.action.dcstore.php:100
+#inc/lib.improve.action.dcstore.php:93
 $GLOBALS['__l10n']['unknow module version'] = 'version du module inconnue';
 
-#inc/lib.improve.action.dcstore.php:106
+#inc/lib.improve.action.dcstore.php:99
 $GLOBALS['__l10n']['unknow module author'] = 'auteur du module inconnu';
 
-#inc/lib.improve.action.dcstore.php:113
+#inc/lib.improve.action.dcstore.php:106
 $GLOBALS['__l10n']['unknow module description'] = 'description du module inconnue';
 
-#inc/lib.improve.action.dcstore.php:119
+#inc/lib.improve.action.dcstore.php:112
 $GLOBALS['__l10n']['no repository set in _define.php'] = 'Aucun dépôt défini dans le fichier _define.php';
 
-#inc/lib.improve.action.dcstore.php:125
+#inc/lib.improve.action.dcstore.php:118
 $GLOBALS['__l10n']['no zip file pattern set in configuration'] = 'Pas de modèle de fichier zip présent dans la configuration';
 
-#inc/lib.improve.action.dcstore.php:142
+#inc/lib.improve.action.dcstore.php:135
 $GLOBALS['__l10n']['no minimum dotclear version'] = 'pas de version minimum de Dotclear';
 
-#inc/lib.improve.action.dcstore.php:149
+#inc/lib.improve.action.dcstore.php:142
 $GLOBALS['__l10n']['no details URL'] = 'Lien de détail non défini';
 
-#inc/lib.improve.action.dcstore.php:162
+#inc/lib.improve.action.dcstore.php:155
 $GLOBALS['__l10n']['no support URL'] = 'Lien de support non défini';
 
 #inc/lib.improve.action.gitshields.php:34
-$GLOBALS['__l10n']['Fix shields badges'] = 'Fixer les badges shields.io';
+$GLOBALS['__l10n']['Shields badges'] = 'Badges Shields.io';
 
 #inc/lib.improve.action.gitshields.php:35
 $GLOBALS['__l10n']['Add and maintain shields.io badges to the REDAME.md file'] = 'Ajoute et maintient à jour les badges shields.io du fichier README.md';
@@ -86,8 +97,17 @@ $GLOBALS['__l10n']['Include Dotaddict badge'] = 'Inclure le badge Dotaddict';
 #inc/lib.improve.action.gitshields.php:68
 $GLOBALS['__l10n']['If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict.'] = 'Si votre plugin ou theme est sur Dotaddict, vous pouvez ajouter un badge lier à ses détails sur DA.';
 
+#inc/lib.improve.action.gitshields.php:117
+$GLOBALS['__l10n']['Prepare custom shield info'] = 'préparer les informations personnalisées';
+
+#inc/lib.improve.action.gitshields.php:147
+$GLOBALS['__l10n']['Write new shield bloc'] = 'Ecrire le nouveau bloc Shield';
+
+#inc/lib.improve.action.gitshields.php:162
+$GLOBALS['__l10n']['Delete old shield bloc'] = 'Effacer l\'ancine bloc Shield';
+
 #inc/lib.improve.action.licensefile.php:29
-$GLOBALS['__l10n']['Fix license file'] = 'Fixer le fichier de licence';
+$GLOBALS['__l10n']['License file'] = 'Fichier de licence';
 
 #inc/lib.improve.action.licensefile.php:30
 $GLOBALS['__l10n']['Add or remove full license file to module root'] = 'Ajoute ou supprime le fichier de licence';
@@ -117,53 +137,68 @@ $GLOBALS['__l10n']['License version:'] = 'Version de la licence :';
 #inc/lib.improve.action.licensefile.php:72
 $GLOBALS['__l10n']['Action on file:'] = 'Action sur le fichier :';
 
-#inc/lib.improve.action.licensefile.php:87
-$GLOBALS['__l10n']['no full license type selected'] = 'Aucun type de licence sélectionné';
+#inc/lib.improve.action.licensefile.php:84
+$GLOBALS['__l10n']['No full license type selected'] = 'Pas de type de licence seletionné';
 
-#inc/lib.improve.action.licensefile.php:100
-$GLOBALS['__l10n']['failed to load full license'] = 'Impossible de charger le fichier de licence';
+#inc/lib.improve.action.licensefile.php:97
+$GLOBALS['__l10n']['Failed to load license content'] = 'Impossible de charger le contenu de la licence';
 
-#inc/lib.improve.action.licensefile.php:106
-$GLOBALS['__l10n']['failed to write full license'] = 'Impossible d\'écrire le fichier de license';
+#inc/lib.improve.action.licensefile.php:102
+$GLOBALS['__l10n']['Write new license file "LICENSE"'] = 'Écrire le nouveau fichier "LICENSE" de licence';
+
+#inc/lib.improve.action.licensefile.php:104
+$GLOBALS['__l10n']['Failed to write new license file'] = 'Impossible d\'écrire le nouveau fichier de licence';
+
+#inc/lib.improve.action.licensefile.php:118
+$GLOBALS['__l10n']['Old license file is not deletable (%s)'] = 'L\'ancien fichier de licence n\'est pas supprimable (%s)';
 
 #inc/lib.improve.action.licensefile.php:120
-$GLOBALS['__l10n']['full license is not deletable (%s)'] = 'Le fichier de licence n\'est pas supprimable (%s)';
+$GLOBALS['__l10n']['Failed to delete old license file (%s)'] = 'Impossible de supprimer l\'ancien fichier de licence (%s)';
 
-#inc/lib.improve.action.licensefile.php:123
-$GLOBALS['__l10n']['failed to delete full license (%s)'] = 'Impossible de supprimer le fichier de licence (%s)';
+#inc/lib.improve.action.licensefile.php:122
+$GLOBALS['__l10n']['Delete old license file "%s"'] = 'Effacer l\'ancien fichier de Licence "%s"';
 
 #inc/lib.improve.action.php:20
-$GLOBALS['__l10n']['Fix tabulation'] = 'Fixer les tabulations';
+$GLOBALS['__l10n']['Tabulations'] = 'Tabulations';
 
 #inc/lib.improve.action.php:21
 $GLOBALS['__l10n']['Replace tabulation by four space in php files'] = 'Remplace les tabulation par quatre espaces dans les fichiers php';
 
-#inc/lib.improve.action.php:53
-$GLOBALS['__l10n']['Fix newline'] = 'Fixer les retours à la ligne';
+#inc/lib.improve.action.php:36
+$GLOBALS['__l10n']['Replace tabulation by spaces'] = 'Remplacer les tabulations';
 
-#inc/lib.improve.action.php:54
+#inc/lib.improve.action.php:57
+$GLOBALS['__l10n']['Newlines'] = 'Retour à la ligne';
+
+#inc/lib.improve.action.php:58
 $GLOBALS['__l10n']['Replace bad and repetitive and empty newline by single newline in files'] = 'Remplace les mauvais ou répétitifs retour à la ligne par une seule nouvelle ligne';
 
-#inc/lib.improve.action.php:91
+#inc/lib.improve.action.php:95
 $GLOBALS['__l10n']['List of files extension to work on:'] = 'Liste des extensions de fichier à corriger:';
 
-#inc/lib.improve.action.php:94
+#inc/lib.improve.action.php:98
 $GLOBALS['__l10n']['Use comma separated list of extensions without dot, recommand "php,js,xml,txt,md".'] = 'Utiliser une liste d\'extensions séparé par des virgules et sans le point, recommandation: "php,js,xml,txt,md".';
 
-#inc/lib.improve.action.php:128
-$GLOBALS['__l10n']['Fix end of file'] = 'Fixer les fins de fichiers';
+#inc/lib.improve.action.php:122
+$GLOBALS['__l10n']['Replace bad new lines'] = 'Remplacer les retours à la ligne';
 
-#inc/lib.improve.action.php:129
-$GLOBALS['__l10n']['Remove php tag and empty lines from end of files'] = 'Supprimer le tag PHP et els lignes vides de fin de fichiers';
+#inc/lib.improve.action.php:138
+$GLOBALS['__l10n']['End of files'] = 'Fin de fichiers';
 
-#inc/lib.improve.action.php:153
+#inc/lib.improve.action.php:139
+$GLOBALS['__l10n']['Remove php tag and empty lines from end of files'] = 'Supprimer le tag PHP et les lignes vides de fin de fichiers';
+
+#inc/lib.improve.action.php:163
 $GLOBALS['__l10n']['Add a blank line to the end of file'] = 'Ajouter une ligne vide en fin de fichier';
 
-#inc/lib.improve.action.php:155
+#inc/lib.improve.action.php:165
 $GLOBALS['__l10n']['PSR2 must have a blank line, whereas PSR12 must not.'] = 'PSR2 doit avoir une ligne vide, alors que PSR12 non.';
 
+#inc/lib.improve.action.php:180
+$GLOBALS['__l10n']['Replace end of file'] = 'Remplacer les fins de fichiers';
+
 #inc/lib.improve.action.phpheader.php:47
-$GLOBALS['__l10n']['Fix PHP header'] = 'Fixer les enêtes php';
+$GLOBALS['__l10n']['PHP header'] = 'Entête de fichier PHP';
 
 #inc/lib.improve.action.phpheader.php:48
 $GLOBALS['__l10n']['Add or remove phpdoc header bloc from php file'] = 'Ajouter ou supprimer les bloc d\'entête phpdoc des fichiers php';
@@ -195,11 +230,26 @@ $GLOBALS['__l10n']['Bloc content:'] = 'Contenu du bloc :';
 #inc/lib.improve.action.phpheader.php:104
 $GLOBALS['__l10n']['Do not put structural elements to the begining of lines.'] = 'Ne pas mettre d\'élément de structure en début de ligne';
 
-#inc/lib.improve.action.phpheader.php:165
+#inc/lib.improve.action.phpheader.php:121
+$GLOBALS['__l10n']['Skip directory'] = 'Ignorer le répertoire';
+
+#inc/lib.improve.action.phpheader.php:167
 $GLOBALS['__l10n']['bloc is empty'] = 'le bloc est vide';
 
-#inc/lib.improve.action.phpheader.php:194
-$GLOBALS['__l10n']['failed to parse bloc'] = 'impossible de traiter le bloc';
+#inc/lib.improve.action.phpheader.php:195
+$GLOBALS['__l10n']['Prepare header info'] = 'Préparer les informations d\'entête';
+
+#inc/lib.improve.action.phpheader.php:197
+$GLOBALS['__l10n']['Failed to parse bloc'] = 'Impossible de préparer le bloc';
+
+#inc/lib.improve.action.phpheader.php:213
+$GLOBALS['__l10n']['Write new doc bloc content'] = 'Ecrire le nouveau contenu de bloc';
+
+#inc/lib.improve.action.phpheader.php:228
+$GLOBALS['__l10n']['Delete old doc bloc content'] = 'Effacer l\'ancien contenu de type phpdoc';
+
+#inc/lib.improve.action.phpheader.php:243
+$GLOBALS['__l10n']['Delete old style bloc content'] = 'Effacer l\'ancien contenu de type ancien';
 
 #inc/lib.improve.action.zip.php:42
 $GLOBALS['__l10n']['Zip module'] = 'Zipper le module';
@@ -243,11 +293,20 @@ $GLOBALS['__l10n']['By default all these files are always removed from packages 
 #inc/lib.improve.action.zip.php:113
 $GLOBALS['__l10n']['Remove comments from files'] = 'Retirer les commentaires des fichiers';
 
-#inc/lib.improve.action.zip.php:155
+#inc/lib.improve.action.zip.php:124
+$GLOBALS['__l10n']['Prepare excluded files "%s"'] = 'Préparer les fichiers à exclure "%s"';
+
+#inc/lib.improve.action.zip.php:127
+$GLOBALS['__l10n']['Prepare comment removal'] = 'Préparer le retrait des commentaires';
+
+#inc/lib.improve.action.zip.php:157
 $GLOBALS['__l10n']['Destination filename already exists'] = 'Le fichier de destination existe déjà';
 
-#inc/lib.improve.action.zip.php:160
+#inc/lib.improve.action.zip.php:162
 $GLOBALS['__l10n']['Destination path is not writable'] = 'Le répertoire de destination n\'est pas accessible en écriture';
+
+#inc/lib.improve.action.zip.php:186
+$GLOBALS['__l10n']['Zip module into "%s"'] = 'Zipper le module vers "%s"';
 
 #index.php:54
 $GLOBALS['__l10n']['Select a module'] = 'Sélectionner un module';
@@ -258,40 +317,48 @@ $GLOBALS['__l10n']['No action selected'] = 'Aucune action sélectionné';
 #index.php:72
 $GLOBALS['__l10n']['No module selected'] = 'Aucun module sélectionné';
 
-#index.php:87
-$GLOBALS['__l10n']['Fix of %s complete in %s secondes'] = 'Correction de %s complété en %s secondes';
+#index.php:85
+$GLOBALS['__l10n']['Fix of "%s" complete in %s secondes with errors'] = 'Fixe de "%s" complété en %s secondes avec des erreurs';
 
-#index.php:102
-#index.php:108
-#index.php:109
-#index.php:146
+#index.php:87
+$GLOBALS['__l10n']['Fix of "%s" complete in %s secondes with warnings'] = 'Fixe de "%s" complété en %s secondes avec des avertissements';
+
+#index.php:89
+$GLOBALS['__l10n']['Fix of "%s" complete in %s secondes'] = 'Fixe de "%s" complété en %s secondes';
+
+#index.php:91
+$GLOBALS['__l10n']['Fix of "%s" complete in %s secondes without messages'] = 'Fixe de "%s" complété en %s secondes sans message';
+
+#index.php:105
+#index.php:111
+#index.php:112
+#index.php:149
 $GLOBALS['__l10n']['Themes'] = 'Thèmes';
 
-#index.php:104
-#index.php:174
+#index.php:107
+#index.php:177
 $GLOBALS['__l10n']['Configure module'] = 'Configurer le module';
 
-#index.php:127
+#index.php:130
 $GLOBALS['__l10n']['Configure module "%s"'] = 'Configurer le module "%s"';
 
-#index.php:131
+#index.php:134
 $GLOBALS['__l10n']['Nothing to configure'] = 'Rien à configurer';
 
-#index.php:140
+#index.php:143
 $GLOBALS['__l10n']['Unknow module'] = 'Module inconnu';
 
-#index.php:149
+#index.php:152
 $GLOBALS['__l10n']['No module to manage'] = 'Aucun module à gérer';
 
-#index.php:174
+#index.php:177
 $GLOBALS['__l10n']['Configure action \'%s\''] = 'Configurer l\'action "%s"';
 
-#index.php:184
+#index.php:187
 $GLOBALS['__l10n']['Save fields selection as preference'] = 'Enregistrer la sélection comme préférence';
 
-#index.php:185
+#index.php:188
 $GLOBALS['__l10n']['Select a module:'] = 'Sélectionner un  module :';
 
-#index.php:188
+#index.php:191
 $GLOBALS['__l10n']['Fix it'] = 'Corriger';
-

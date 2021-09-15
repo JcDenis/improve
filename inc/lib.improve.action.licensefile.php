@@ -26,7 +26,7 @@ class ImproveActionLicensefile extends ImproveAction
     {
         $this->setProperties([
             'id'       => 'license',
-            'name'     => __('Fix license file'),
+            'name'     => __('License file'),
             'desc'     => __('Add or remove full license file to module root'),
             'priority' => 330,
             'config'   => true,
@@ -57,7 +57,7 @@ class ImproveActionLicensefile extends ImproveAction
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setPreferences([
+            $this->setSettings([
                 'action_version'  => !empty($_POST['action_version']) ? $_POST['action_version'] : '',
                 'action_full'     => !empty($_POST['action_full']) ? $_POST['action_full'] : ''
             ]);
@@ -66,25 +66,22 @@ class ImproveActionLicensefile extends ImproveAction
 
         return '
         <p class="field"><label for="action_version">' . __('License version:') . '</label>' .
-        form::combo('action_version', $this->action_version, $this->getPreference('action_version')) . '
+        form::combo('action_version', $this->action_version, $this->getSetting('action_version')) . '
         </p>
 
         <p class="field"><label for="action_full">' . __('Action on file:') . '</label>' .
-        form::combo('action_full', $this->action_full, $this->getPreference('action_full')) . 
+        form::combo('action_full', $this->action_full, $this->getSetting('action_full')) . 
         '</p>';
     }
 
-    public function openModule(string $module_type, array $module_info): ?bool
+    public function openModule(): ?bool
     {
-        $this->type = $module_type;
-        $this->module = $module_info;
-
-        if (in_array($this->getPreference('action_full'), ['remove', 'full','overwrite'])) {
-            $this->deleteFullLicense(($this->getPreference('action_full') == 'overwrite'));
+        if (in_array($this->getSetting('action_full'), ['remove', 'full','overwrite'])) {
+            $this->deleteFullLicense(($this->getSetting('action_full') == 'overwrite'));
         }
-        if (in_array($this->getPreference('action_full'), ['create', 'overwrite', 'full'])) {
-            if (empty($this->getPreference('action_version'))) {
-                self::notice(__('no full license type selected'), false);
+        if (in_array($this->getSetting('action_full'), ['create', 'overwrite', 'full'])) {
+            if (empty($this->getSetting('action_version'))) {
+                $this->setWarning(__('No full license type selected'));
             } else {
                 $this->writeFullLicense();
             }
@@ -95,15 +92,16 @@ class ImproveActionLicensefile extends ImproveAction
     private function writeFullLicense()
     {
         try {
-            $full = file_get_contents(dirname(__FILE__) . '/license/' . $this->getPreference('action_version') . '.full.txt');
+            $full = file_get_contents(dirname(__FILE__) . '/license/' . $this->getSetting('action_version') . '.full.txt');
             if (empty($full)) {
-                self::notice(__('failed to load full license'));
+                $this->setError(__('Failed to load license content'));
 
                 return null;
             }
-            files::putContent($this->module['root'] . '/LICENSE', str_replace("\r\n","\n",$full));
+            files::putContent($this->module['root'] . '/LICENSE', str_replace("\r\n", "\n", $full));
+            $this->setSuccess(__('Write new license file "LICENSE"'));
         } catch (Exception $e) {
-            self::notice(__('failed to write full license'));
+            $this->setError(__('Failed to write new license file'));
 
             return null;
         }
@@ -113,14 +111,15 @@ class ImproveActionLicensefile extends ImproveAction
     private function deleteFullLicense($only_one = false)
     {
         foreach(self::fileExists($this->module['root']) as $file) {
-            if ($only_one && $file != 'license') {
+            if ($only_one && $file != 'LICENSE') {
                 continue;
             }
             if (!files::isDeletable($this->module['root'] . '/' . $file)) {
-                self::notice(sprintf(__('full license is not deletable (%s)'), $file), false);
-            }
-            if (!@unlink($this->module['root'] . '/' . $file)) {
-                self::notice(sprintf(__('failed to delete full license (%s)'), $file), false);
+                $this->setWarning(sprintf(__('Old license file is not deletable (%s)'), $file));
+            } elseif (!@unlink($this->module['root'] . '/' . $file)) {
+                $this->setError(sprintf(__('Failed to delete old license file (%s)'), $file));
+            } else {
+                $this->setSuccess(sprintf(__('Delete old license file "%s"'), $file));
             }
         }
         return true;
