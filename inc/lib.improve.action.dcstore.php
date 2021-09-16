@@ -86,7 +86,7 @@ class ImproveActionDcstore extends ImproveAction
         if (empty($this->module['oname'])) {
             $this->setError(__('unknow module name'));
         }
-        $xml[] = sprintf('<name>%s</name>', html::escapeHTML($this->module['name']));
+        $xml[] = sprintf('<name>%s</name>', html::escapeHTML($this->module['oname']));
 
         # version
         if (empty($this->module['version'])) {
