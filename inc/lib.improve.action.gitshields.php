@@ -130,6 +130,8 @@ class ImproveActionGitshields extends ImproveAction
                     break;
                 }
             }
+        } elseif (!empty($this->module['dc_min'])) {
+            $version = $this->module['dc_min'];
         }
         return $version ?: $this->core->getVersion('core');
     }
