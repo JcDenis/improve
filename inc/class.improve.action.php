@@ -188,7 +188,7 @@ abstract class ImproveAction
             true
         );
         $this->core->blog->triggerBlog();
-        dcPage::addSuccessNotice(__('Configuration successfully updated.'));
+        dcPage::addSuccessNotice(__('Configuration successfully updated'));
         http::redirect($url);
     }
 

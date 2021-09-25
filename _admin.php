@@ -15,6 +15,7 @@ $core->blog->settings->addNamespace('improve');
 
 $core->addBehavior('adminDashboardFavorites', ['ImproveBehaviors', 'adminDashboardFavorites']);
 
+$core->addBehavior('improveAddAction', ['ImproveActionDcdeprecated', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionDcstore', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionEndoffile', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionGitshields', 'create']);

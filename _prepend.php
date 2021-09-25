@@ -15,16 +15,21 @@ if (!defined('DC_RC_PATH')) {
     return;
 }
 
-$d = dirname(__FILE__) . '/inc/';
-$__autoload['Improve']                = $d . 'class.improve.php';
-$__autoload['ImproveAction']          = $d . 'class.improve.action.php';
+$improve_libs = [
+    'Improve'                   => 'class.improve.php',
+    'ImproveAction'             => 'class.improve.action.php',
 
-$__autoload['ImproveActionDcstore']   = $d . 'lib.improve.action.dcstore.php';
-$__autoload['ImproveActionEndoffile'] = $d . 'lib.improve.action.php';
-$__autoload['ImproveActionGitshields'] = $d . 'lib.improve.action.gitshields.php';
-$__autoload['ImproveActionLicensefile'] = $d . 'lib.improve.action.licensefile.php';
-$__autoload['ImproveActionNewline']   = $d . 'lib.improve.action.php';
-$__autoload['ImproveActionPhpheader'] = $d . 'lib.improve.action.phpheader.php';
-$__autoload['ImproveActionTab']       = $d . 'lib.improve.action.php';
-$__autoload['ImproveActionZip']       = $d . 'lib.improve.action.zip.php';
-$__autoload['ImproveZipFileZip']      = $d . 'lib.improve.action.zip.php';
+    'ImproveActionDcdeprecated' => 'lib.improve.action.dcdeprecated.php',
+    'ImproveActionDcstore'      => 'lib.improve.action.dcstore.php',
+    'ImproveActionEndoffile'    => 'lib.improve.action.php',
+    'ImproveActionGitshields'   => 'lib.improve.action.gitshields.php',
+    'ImproveActionLicensefile'  => 'lib.improve.action.licensefile.php',
+    'ImproveActionNewline'      => 'lib.improve.action.php',
+    'ImproveActionPhpheader'    => 'lib.improve.action.phpheader.php',
+    'ImproveActionTab'          => 'lib.improve.action.php',
+    'ImproveActionZip'          => 'lib.improve.action.zip.php',
+    'ImproveZipFileZip'         => 'lib.improve.action.zip.php'
+];
+foreach($improve_libs as $class => $file) {
+    $__autoload[$class] = dirname(__FILE__) . '/inc/' . $file;
+}
