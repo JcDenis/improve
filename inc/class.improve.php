@@ -359,7 +359,7 @@ class ImproveDefinition
                 'sshot'             => '',
                 'score'             => 0,
                 'type'              => null,
-                'require'           => [],
+                'requires'          => [],
                 'settings'          => [],
                 'repository'        => '',
                 'dc_min'            => 0
