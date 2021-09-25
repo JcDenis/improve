@@ -38,6 +38,7 @@ if (!empty($_POST['save_preferences'])) {
         }
     }
     $core->blog->settings->improve->put('preferences', serialize($preferences), 'string', null, true, true);
+    dcPage::addSuccessNotice(__('Configuration successfully updated'));
 }
 
 $allow_distrib = (boolean) $core->blog->settings->improve->allow_distrib;
