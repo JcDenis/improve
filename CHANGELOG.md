@@ -1,9 +1,11 @@
-0.2 -dev
+0.2.1 - dev
 - [ ] add global config for file size limit
 - [ ] add module to check deprecated PHP function
 - [ ] add module to check directory structure
 - [ ] write documentation of php class
-- [x] add module to check deprecated Dotclear function
+
+0.2 - 2021.09.25
+- add module to check deprecated Dotclear function
 
 0.1.2
 - add logs / report systeme
