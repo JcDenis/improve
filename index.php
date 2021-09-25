@@ -60,7 +60,7 @@ foreach($modules as $id => $m) {
     }
     $combo_modules[$m['name']] = $id;
 }
-$module = $_POST['module'] ?? '';
+$module = $_REQUEST['module'] ?? '';
 if (!in_array($module, $combo_modules)) {
     $module = '-';
 }
@@ -68,8 +68,7 @@ if (!in_array($module, $combo_modules)) {
 if (!empty($_POST['fix'])) {
     if (empty($_POST['actions'])) {
         dcPage::addWarningNotice(__('No action selected'));
-    }
-    if ($module == '-') {
+    } elseif ($module == '-') {
         dcPage::addWarningNotice(__('No module selected'));
     } else {
         try {
@@ -93,7 +92,7 @@ if (!empty($_POST['fix'])) {
             }
             dcPage::addNotice($notice['type'], sprintf($notice['msg'], $module, $time));
 
-            $core->adminurl->redirect('admin.plugin.improve', ['type' => $type, 'upd' => $log_id]);
+            $core->adminurl->redirect('admin.plugin.improve', ['type' => $type, 'module' => $module, 'upd' => $log_id]);
         } catch (Exception $e) {
             $core->error->add($e->getMessage());
         }
