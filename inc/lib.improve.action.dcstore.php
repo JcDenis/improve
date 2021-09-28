@@ -75,37 +75,38 @@ class ImproveActionDcstore extends ImproveAction
     public function generateXML()
     {
         $xml = ['<modules xmlns:da="http://dotaddict.org/da/">'];
+        $rsp = new xmlTag('module');
 
         # id
         if (empty($this->module['id'])) {
             $this->setError(__('unkow module id'));
         }
-        $xml[] = sprintf('<module id="%s">', html::escapeHTML($this->module['id']));
+        $rsp->id = $this->module['id'];
 
         # name
         if (empty($this->module['oname'])) {
             $this->setError(__('unknow module name'));
         }
-        $xml[] = sprintf('<name>%s</name>', html::escapeHTML($this->module['oname']));
+        $rsp->name($this->module['oname']);
 
         # version
         if (empty($this->module['version'])) {
             $this->setError(__('unknow module version'));
         }
-        $xml[] = sprintf('<version>%s</version>', html::escapeHTML($this->module['version']));
+        $rsp->version($this->module['version']);
 
         # author
         if (empty($this->module['author'])) {
             $this->setError(__('unknow module author'));
 
         }
-        $xml[] = sprintf('<author>%s</author>', html::escapeHTML($this->module['author']));
+        $rsp->author($this->module['author']);
 
         # desc
         if (empty($this->module['desc'])) {
             $this->setError(__('unknow module description'));
         }
-        $xml[] = sprintf('<desc>%s</desc>', html::escapeHTML($this->module['desc']));
+        $rsp->desc($this->module['desc']);
 
         # repository
         if (empty($this->module['repository'])) {
@@ -117,7 +118,7 @@ class ImproveActionDcstore extends ImproveAction
         if (empty($file_pattern)) {
             $this->setError(__('no zip file pattern set in configuration'));
         }
-        $xml[] = sprintf('<file>%s</file>', html::escapeHTML($file_pattern));
+        $rsp->file($file_pattern);
 
         # da dc_min or requires core
         if (!empty($this->module['requires']) && is_array($this->module['requires'])) {
@@ -134,36 +135,38 @@ class ImproveActionDcstore extends ImproveAction
         if (empty($this->module['dc_min'])) {
             $this->setWarning(__('no minimum dotclear version'));
         } else {
-            $xml[] = sprintf('<da:dcmin>%s</da:dcmin>', html::escapeHTML($this->module['dc_min']));
+            $rsp->insertNode(new xmlTag('da:dcmin', $this->module['dc_min']));
         }
 
         # da details
         if (empty($this->module['details'])) {
             $this->setWarning(__('no details URL'));
         } else {
-            $xml[] = sprintf('<da:details>%s</da:details>', html::escapeHTML($this->module['details']));
+            $rsp->insertNode(new xmlTag('da:details', $this->module['details']));
         }
 
         # da sshot
-        //$xml[] = sprintf('<da:sshot>%s</da:sshot>', html::escapeHTML($this->module['sshot']));
+        //$rsp->insertNode(new xmlTag('da:sshot', $this->module['sshot']));
 
         # da section
-        //$xml[] = sprintf('<da:section>%s</da:section>', html::escapeHTML($this->module['section']));
+        if (!empty($this->module['section'])) {
+            $rsp->insertNode(new xmlTag('da:section', $this->module['section']));
+        }
 
         # da support
         if (empty($this->module['support'])) {
             $this->setWarning(__('no support URL'));
         } else {
-            $xml[] = sprintf('<da:support>%s</da:support>', html::escapeHTML($this->module['support']));
+            $rsp->insertNode(new xmlTag('da:support', $this->module['support']));
         }
 
         # da tags
-        //$xml[] = sprintf('<da:tags>%s</da:tags>', html::escapeHTML($this->module['tags']));
+        //$rsp->insertNode(new xmlTag('da:tags', $this->module['tags']));
 
-        $xml[] = '</module>';
-        $xml[] = '</modules>';
+        $res = new xmlTag('modules', $rsp);
+        $res->insertAttr('xmlns:da', 'http://dotaddict.org/da/');
 
-        return implode("\n", $xml);
+        return str_replace('><', ">\n<", $res->toXML());
     }
 
     private function parseFilePattern()
