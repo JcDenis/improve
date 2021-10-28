@@ -3,6 +3,7 @@
 - [ ] add module to check deprecated PHP function
 - [ ] add module to check directory structure
 - [ ] write documentation of php class
+- use of xmlTag to generate dcstore.xml contents
 
 0.2 - 2021.09.25
 - add module to check deprecated Dotclear function

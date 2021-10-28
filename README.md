@@ -42,12 +42,12 @@ Configure actions. Select actions and module to work with, then click fix.
  * Fix license file
  * Fix dcstore.xml file
  * Fix README.md shields.io badges
+ * Check deprecated Dotclear functions
  * Create package
 
 ## NEXT
 
  * Scan for missing files
- * Scan for deprecated function
  * ...
 
  Hope some of you have idea to complete function of this plugin 
