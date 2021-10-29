@@ -163,7 +163,7 @@ abstract class ImproveAction
      */
     final protected function setSettings($settings, $value = null)
     {
-        $settings = is_array($settings) ? $settings : [$setting => $value];
+        $settings = is_array($settings) ? $settings : [$settings => $value];
         foreach($settings as $k => $v) {
             $this->settings[$k] = $v;
         }
