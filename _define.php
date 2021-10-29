@@ -21,11 +21,11 @@ $this->registerModule(
     'Jean-Christian Denis and contributors',
     '0.2',
     [
-        'requires' => [['core', '2.19']],
+        'requires'    => [['core', '2.19']],
         'permissions' => null,
-        'type' => 'plugin',
-        'support' => 'https://github.com/JcDenis/improve',
-        'details' => 'https://github.com/JcDenis/improve',
-        'repository' => 'https://raw.githubusercontent.com/JcDenis/improve/master/dcstore.xml'
+        'type'        => 'plugin',
+        'support'     => 'https://github.com/JcDenis/improve',
+        'details'     => 'https://github.com/JcDenis/improve',
+        'repository'  => 'https://raw.githubusercontent.com/JcDenis/improve/master/dcstore.xml'
     ]
 );
