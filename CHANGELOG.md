@@ -1,9 +1,13 @@
-0.2.1 - dev
+dev
 - [ ] add global config for file size limit
 - [ ] add module to check deprecated PHP function
 - [ ] add module to check directory structure
 - [ ] write documentation of php class
+
+0.3 - 2021.10.29
 - use of xmlTag to generate dcstore.xml contents
+- complete readme file
+- fix module update (thanks Gvx)
 
 0.2 - 2021.09.25
 - add module to check deprecated Dotclear function
