@@ -1,10 +1,9 @@
-
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: improve 0.2\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-09-25T21:17:00+00:00\n"
+"PO-Revision-Date: 2021-10-29T21:10:23+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -234,7 +233,7 @@ msgid "Remove old style bloc header (using #)"
 msgstr "Supprimer les bloc d'entête ancien (utilisant #)"
 
 msgid "Do not add bloc to files from \"locales\" and \"libs\" folder"
-msgstr "Ne pas ajouter les blocs d'entête aux fichiers des répertoires \"locales\" et \"llibs\""
+msgstr "Ne pas ajouter les blocs d'entête aux fichiers des répertoires \"locales\" et \"libs\""
 
 msgid "Bloc content:"
 msgstr "Contenu du bloc :"
@@ -367,9 +366,6 @@ msgstr "Sélectionner un  module :"
 
 msgid "Fix it"
 msgstr "Corriger"
-
-msgid "nothing"
-msgstr "rien ?"
 
 msgid "Tiny tools to fix things for module devs"
 msgstr "Outils simple pour aider les développeurs à fignoler leurs modules"
