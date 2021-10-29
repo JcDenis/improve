@@ -53,8 +53,14 @@ Configure actions. Select actions and module to work with, then click fix.
  Hope some of you have idea to complete function of this plugin 
  and help devs to maintain their plugins and themes.
 
-## MORE
+## LINKS
 
- * License : GNU GPL v2
+ * License : [GNU GPL v2](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)
  * Source & contribution : [GitHub Page](https://github.com/JcDenis/improve)
  * Packages & details:  [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/improve)
+
+## CONTRIBUTORS
+
+ * Jean-Christian Denis
+
+ You are welcome to contribute to this code.
