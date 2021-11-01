@@ -51,14 +51,17 @@ if (!isset($core->themes)) {
     $core->themes->loadModules($core->blog->themes_path, null);
 }
 
-$combo_modules = [__('Select a module') => '-'];
+$combo_modules = [];
 $modules       = $type == 'plugin' ? $core->plugins->getModules() : $core->themes->getModules();
 foreach ($modules as $id => $m) {
     if (!$m['root_writable'] || !$allow_distrib && in_array($id, $official[$type])) {
         continue;
     }
-    $combo_modules[$m['name']] = $id;
+    $combo_modules[__($m['name'])] = $id;
 }
+dcUtils::lexicalKeySort($combo_modules);
+$combo_modules = array_merge([__('Select a module') => '-'], $combo_modules);
+
 $module = $_REQUEST['module'] ?? '';
 if (!in_array($module, $combo_modules)) {
     $module = '-';
