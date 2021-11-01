@@ -3,6 +3,7 @@ dev
 - [ ] add module to check deprecated PHP function
 - [ ] add module to check directory structure
 - [ ] write documentation of php class
+- add module to use external php-cs-fixer
 
 0.3 - 2021.10.29
 - use of xmlTag to generate dcstore.xml contents
