@@ -101,20 +101,30 @@ if (!empty($_POST['fix'])) {
 $breadcrumb = [];
 if (!empty($_REQUEST['config'])) {
     $breadcrumb = [
-        ($type == 'plugin' ? __('Plugins') : __('Themes'))               => $core->adminurl->get('admin.plugin.improve', ['type' => ($type == 'plugin' ? 'plugin' : 'theme')]),
-        '<span class="page-title">' . __('Configure module') . '</span>' => ''
-    ];
-} else {
-    $breadcrumb = [
-        '<span class="page-title">' . ($type == 'plugin' ? __('Plugins') : __('Themes')) . '</span>' => '',
-        ($type == 'theme' ? __('Plugins') : __('Themes'))                                            => $core->adminurl->get('admin.plugin.improve', ['type' => ($type == 'theme' ? 'plugin' : 'theme')])
+        __('Configure module') => ''
     ];
 }
 
 # display header
-echo '<html><head><title>' . __('improve') . '</title></head><body>' .
-dcPage::breadcrumb(array_merge([__('improve') => ''], $breadcrumb), ['hl' => false]) .
+echo '<html><head><title>' . __('improve') . '</title>' .
+dcPage::jsLoad(dcPage::getPF('improve/js/index.js')) .
+'</head><body>' .
+dcPage::breadcrumb(array_merge([
+    __('Plugins') => '',
+    __('improve') => ''
+], $breadcrumb)) .
 dcPage::notices();
+
+# Menu list
+if (empty($_REQUEST['config'])) {
+    echo
+    '<form method="get" action="' . $core->adminurl->get('admin.plugin.improve') . '" id="improve_menu">' .
+    '<p class="anchor-nav"><label for="type" class="classic">' . __('Goto:') . ' </label>' .
+    form::combo('type', [__('Plugins') => 'plugin', __('Themes') => 'theme'], $type) . ' ' .
+    '<input type="submit" value="' . __('Ok') . '" />' .
+    form::hidden('p', 'improve') . '</p>' .
+    '</form>';
+}
 
 if (!empty($_REQUEST['config'])) {
     $back_url = $_REQUEST['redir'] ?? $core->adminurl->get('admin.plugin.improve', ['type' => $type]);
