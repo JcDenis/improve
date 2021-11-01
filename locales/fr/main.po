@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: improve 0.2\n"
+"Project-Id-Version: improve 0.3\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-10-29T21:10:23+00:00\n"
+"PO-Revision-Date: 2021-11-01T21:15:23+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -207,6 +207,30 @@ msgstr "PSR2 doit avoir une ligne vide, alors que PSR12 non."
 
 msgid "Replace end of file"
 msgstr "Remplacer les fins de fichiers"
+
+msgid "Fix PSR coding style using Php CS Fixer"
+msgstr "Corrige le style du code suivant les règles PSR en utilisant Php CS Fixer"
+
+msgid "You must have installed %s to use this tool"
+msgstr "Vous devez avoir installé %s pour utiliser ce module"
+
+msgid "Root directory of PHP executable:"
+msgstr "Chemin complet du répertoire de l'exécutable PHP :"
+
+msgid "If this server is under unix, leave it empty."
+msgstr "Si ce server est sous Unix, laisser ce champ vide."
+
+msgid "If this server is under Windows, put here directory to php executable (without executable file name)."
+msgstr "Si ce serveur est sous Windows, mettre ici le chemin complet du répertoire de l'exécutable PHP (sans le nom du fichier exécutable)."
+
+msgid "Root directory to \"friendsofphp php-cs-fixer\":"
+msgstr "Chemin complet vers \"friendsofphp php-cs-fixer\" :"
+
+msgid "Do not add file name to the end of path."
+msgstr "Ne pas ajouter le nom du fichier à la fin du chemin."
+
+msgid "Failed to run php-cs-fixer"
+msgstr "Impossible d'exécuter php-cs-fixer"
 
 msgid "PHP header"
 msgstr "Entête de fichier PHP"
