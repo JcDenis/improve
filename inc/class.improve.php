@@ -1,12 +1,12 @@
 <?php
 /**
  * @brief improve, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
@@ -21,7 +21,7 @@ class Improve
     ];
     private $core;
     private $actions = [];
-    private $logs = [];
+    private $logs    = [];
     private $has_log = ['success' => false, 'warning' => false, 'error' => false];
 
     public function __construct(dcCore $core)
@@ -33,8 +33,8 @@ class Improve
         try {
             $this->core->callBehavior('improveAddAction', $list, $this->core);
 
-            foreach($list as $action) {
-                if ($action instanceOf ImproveAction && !isset($this->actions[$action->id])) {
+            foreach ($list as $action) {
+                if ($action instanceof ImproveAction && !isset($this->actions[$action->id])) {
                     $this->actions[$action->id] = $action;
                 }
             }
@@ -59,21 +59,22 @@ class Improve
         if (empty($this->logs)) {
             return '';
         }
-        $cur = $this->core->con->openCursor($this->core->prefix . 'log');
-        $cur->log_msg = serialize($this->logs);
+        $cur            = $this->core->con->openCursor($this->core->prefix . 'log');
+        $cur->log_msg   = serialize($this->logs);
         $cur->log_table = 'improve';
-        $id = $this->core->log->addLog($cur);
+        $id             = $this->core->log->addLog($cur);
 
         return $id;
     }
 
-    public function readLogs(int $id ): array
+    public function readLogs(int $id): array
     {
         $rs = $this->core->log->getLogs(['log_table' => 'improve', 'log_id' => $id, 'limit' => 1]);
         if ($rs->isEmpty()) {
             return [];
         }
         $this->core->log->delLogs($rs->log_id);
+
         return unserialize($rs->log_msg);
     }
 
@@ -84,14 +85,14 @@ class Improve
             return [];
         }
         $lines = [];
-        foreach($logs['improve'] as $path => $tools) {
+        foreach ($logs['improve'] as $path => $tools) {
             $l_types = [];
-            foreach(['success', 'warning', 'error'] as $type) {
+            foreach (['success', 'warning', 'error'] as $type) {
                 $l_tools = [];
-                foreach($tools as $tool) {
+                foreach ($tools as $tool) {
                     $l_msg = [];
                     if (!empty($logs[$tool][$type][$path])) {
-                        foreach($logs[$tool][$type][$path] as $msg) {
+                        foreach ($logs[$tool][$type][$path] as $msg) {
                             $l_msg[] = $msg;
                         }
                     }
@@ -107,6 +108,7 @@ class Improve
                 $lines[$path] = $l_types;
             }
         }
+
         return $lines;
     }
 
@@ -115,6 +117,7 @@ class Improve
         if (empty($id)) {
             return $this->actions;
         }
+
         return $this->actions[$id] ?? null;
     }
 
@@ -123,21 +126,22 @@ class Improve
         if (empty($id)) {
             return $this->actions;
         }
+
         return $this->actions[$id] ?? null;
     }
 
     public function fixModule(string $type, string $id, array $properties, array $actions): float
     {
         $time_start = microtime(true);
-        $module = ImproveDefinition::clean($type, $id, $properties);
+        $module     = ImproveDefinition::clean($type, $id, $properties);
 
         $workers = [];
-        foreach($actions as $action) {
+        foreach ($actions as $action) {
             if (isset($this->actions[$action]) && $this->actions[$action]->isConfigured()) {
                 $workers[] = $this->actions[$action];
             }
         }
-        foreach($workers as $action) {
+        foreach ($workers as $action) {
             // trace all path and action in logs
             $this->logs['improve'][__('Begin')][] = $action->id;
             // info: set current module
@@ -150,48 +154,50 @@ class Improve
             throw new Exception(__('Module path is not writable'));
         }
         $tree = self::getModuleFiles($module['sroot']);
-        foreach($tree as $file) {
+        foreach ($tree as $file) {
             if (!file_exists($file[0])) {
                 continue;
             }
-            foreach($workers as $action) {
+            foreach ($workers as $action) {
                 // trace all path and action in logs
                 $this->logs['improve'][$file[0]][] = $action->id;
                 // info: set current path
                 $action->setPath($file[0], $file[1], $file[2]);
             }
             if (!$file[2]) {
-                foreach($workers as $action) {
+                foreach ($workers as $action) {
                     // action: open a directory. full path
                     $action->openDirectory();
                 }
             } else {
-                foreach($workers as $action) {
+                foreach ($workers as $action) {
                     // action: before openning a file. full path, extension
                     $action->openFile();
                 }
                 if (in_array($file[1], self::$readfile_extensions)) {
                     if (false !== ($content = file_get_contents($file[0]))) {
                         $no_content = empty($content);
-                        foreach($workers as $action) {
+                        foreach ($workers as $action) {
                             // action: read a file content. full path, extension, content
                             $action->readFile($content);
                             if (empty($content) && !$no_content) {
                                 throw new Exception(sprintf(
-                                    __('File content has been removed: %s by %s'), $file[0], $action->name
+                                    __('File content has been removed: %s by %s'),
+                                    $file[0],
+                                    $action->name
                                 ));
                             }
                         }
                         files::putContent($file[0], $content);
                     }
-                    foreach($workers as $action) {
+                    foreach ($workers as $action) {
                         // action: after closing a file. full path, extension
                         $action->closeFile();
                     }
                 }
             }
         }
-        foreach($workers as $action) {
+        foreach ($workers as $action) {
             // trace all path and action in logs
             $this->logs['improve'][__('End')][] = $action->id;
             // info: set current module
@@ -200,9 +206,9 @@ class Improve
             $action->closeModule();
         }
         // info: get acions reports
-        foreach($workers as $action) {
+        foreach ($workers as $action) {
             $this->logs[$action->id] = $action->getLogs();
-            foreach($this->has_log as $type => $v) {
+            foreach ($this->has_log as $type => $v) {
                 if ($action->hasLog($type)) {
                     $this->has_log[$type] = true;
                 }
@@ -224,19 +230,21 @@ class Improve
         $res[] = [$dir, '', false];
         $files = files::scandir($path);
 
-        foreach($files AS $file) {
+        foreach ($files as $file) {
             if (substr($file, 0, 1) == '.') {
                 continue;
             }
             if (is_dir($path . '/' . $file)) {
                 $res = self::getModuleFiles(
-                    $path . '/' . $file, $dir . '/' . $file,
+                    $path . '/' . $file,
+                    $dir . '/' . $file,
                     $res
                 );
             } else {
                 $res[] = [empty($dir) ? $file : $dir . '/' . $file, files::getExtension($file), true];
             }
         }
+
         return $res;
     }
 
@@ -252,13 +260,14 @@ class Improve
             $in = explode(',', $in);
         }
         if (!empty($in)) {
-            foreach($in as $v) {
+            foreach ($in as $v) {
                 $v = trim(files::getExtension('a.' . $v));
                 if (!empty($v)) {
                     $out[] = $v;
                 }
             }
         }
+
         return $out;
     }
 
@@ -267,6 +276,7 @@ class Improve
         if ($a->priority == $b->priority) {
             return strcasecmp($a->name, $b->name);
         }
+
         return $a->priority < $b->priority ? -1 : 1;
     }
 }
@@ -290,6 +300,7 @@ class ImproveDefinition
     public static function clean(string $type, string $id, array $properties): array
     {
         $p = new self($type, $id, $properties);
+
         return $p->get();
     }
 
@@ -314,7 +325,7 @@ class ImproveDefinition
                 $properties['permissions'] = $args[4];
             }
             if (isset($args[5])) {
-                $properties['priority'] = (integer) $args[5];
+                $properties['priority'] = (int) $args[5];
             }
         }
 
@@ -328,7 +339,8 @@ class ImproveDefinition
                 'requires'          => [],
                 'settings'          => [],
                 'repository'        => ''
-            ], $properties
+            ],
+            $properties
         );
     }
 
@@ -337,7 +349,7 @@ class ImproveDefinition
     {
         $label = empty($properties['label']) ? $id : $properties['label'];
         $name  = __(empty($properties['name']) ? $label : $properties['name']);
-        $oname  = empty($properties['name']) ? $label : $properties['name'];
+        $oname = empty($properties['name']) ? $label : $properties['name'];
 
         return array_merge(
             # Default values

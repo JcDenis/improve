@@ -1,16 +1,15 @@
 <?php
 /**
  * @brief improve, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 class ImproveActionLicensefile extends ImproveAction
 {
     protected static $license_filenames = [
@@ -19,8 +18,8 @@ class ImproveActionLicensefile extends ImproveAction
         'license.txt'
     ];
     private $action_version = [];
-    private $action_full = [];
-    private $stop_scan = false;
+    private $action_full    = [];
+    private $stop_scan      = false;
 
     protected function init(): bool
     {
@@ -46,6 +45,7 @@ class ImproveActionLicensefile extends ImproveAction
             __('Add file and remove others')    => 'full',
             __('Remove license files')          => 'remove'
         ];
+
         return true;
     }
 
@@ -58,8 +58,8 @@ class ImproveActionLicensefile extends ImproveAction
     {
         if (!empty($_POST['save'])) {
             $this->setSettings([
-                'action_version'  => !empty($_POST['action_version']) ? $_POST['action_version'] : '',
-                'action_full'     => !empty($_POST['action_full']) ? $_POST['action_full'] : ''
+                'action_version' => !empty($_POST['action_version']) ? $_POST['action_version'] : '',
+                'action_full'    => !empty($_POST['action_full']) ? $_POST['action_full'] : ''
             ]);
             $this->redirect($url);
         }
@@ -70,7 +70,7 @@ class ImproveActionLicensefile extends ImproveAction
         </p>
 
         <p class="field"><label for="action_full">' . __('Action on file:') . '</label>' .
-        form::combo('action_full', $this->action_full, $this->getSetting('action_full')) . 
+        form::combo('action_full', $this->action_full, $this->getSetting('action_full')) .
         '</p>';
     }
 
@@ -86,6 +86,7 @@ class ImproveActionLicensefile extends ImproveAction
                 $this->writeFullLicense();
             }
         }
+
         return null;
     }
 
@@ -105,12 +106,13 @@ class ImproveActionLicensefile extends ImproveAction
 
             return null;
         }
+
         return true;
     }
 
     private function deleteFullLicense($only_one = false)
     {
-        foreach(self::fileExists($this->module['root']) as $file) {
+        foreach (self::fileExists($this->module['root']) as $file) {
             if ($only_one && $file != 'LICENSE') {
                 continue;
             }
@@ -122,17 +124,19 @@ class ImproveActionLicensefile extends ImproveAction
                 $this->setSuccess(sprintf(__('Delete old license file "%s"'), $file));
             }
         }
+
         return true;
     }
 
     private static function fileExists($root)
     {
         $existing = [];
-        foreach(self::$license_filenames as $file) {
+        foreach (self::$license_filenames as $file) {
             if (file_exists($root . '/' . strtolower($file))) {
                 $existing[] = strtolower($file);
             }
         }
+
         return $existing;
     }
 }

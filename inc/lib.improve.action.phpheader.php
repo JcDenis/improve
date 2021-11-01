@@ -1,16 +1,15 @@
 <?php
 /**
  * @brief improve, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 class ImproveActionPhpheader extends ImproveAction
 {
     private static $exemple = "
@@ -38,7 +37,7 @@ class ImproveActionPhpheader extends ImproveAction
     private $bloc_action = [];
 
     private $bloc_content = '';
-    private $stop_scan = false;
+    private $stop_scan    = false;
 
     protected function init(): bool
     {
@@ -54,7 +53,7 @@ class ImproveActionPhpheader extends ImproveAction
         $this->action_bloc = [
             __('Do nothing')                       => 0,
             __('Add bloc if it does not exist')    => 'create',
-            __('Add and overwrite bloc')           => 'overwrite' ,
+            __('Add and overwrite bloc')           => 'overwrite',
             __('Overwrite bloc only if it exists') => 'replace',
             __('Remove existing bloc header')      => 'remove'
         ];
@@ -97,12 +96,12 @@ class ImproveActionPhpheader extends ImproveAction
         <p>' . __('Bloc content:') . '</p>
         <p class="area">' .
         form::textarea('bloc_content', 50, 10, html::escapeHTML($this->getSetting('bloc_content'))) . '
-        </p><p class="form-note">' . 
+        </p><p class="form-note">' .
         sprintf(
-            __('You can use wildcards %s') , 
+            __('You can use wildcards %s'),
             '%year%, %module_id%, %module_name%, %module_author%, %module_type%, %user_cn%, %user_name%, %user_email%, %user_url%'
         ) . '<br />' . __('Do not put structural elements to the begining of lines.') . '</p>' .
-        '<div class="fieldset box"><h4>' . __('Exemple') .'</h4><pre class="code">' . self::$exemple . '</pre></div>';
+        '<div class="fieldset box"><h4>' . __('Exemple') . '</h4><pre class="code">' . self::$exemple . '</pre></div>';
     }
 
     public function openModule(): ?bool
@@ -114,7 +113,7 @@ class ImproveActionPhpheader extends ImproveAction
 
     public function openDirectory(): ?bool
     {
-        $skipped = $this->stop_scan;
+        $skipped         = $this->stop_scan;
         $this->stop_scan = false;
         if (!empty($this->getSetting('exclude_locales')) && preg_match('/\/(locales|libs)(\/.*?|)$/', $this->path_full)) {
             if (!$skipped) {
@@ -128,7 +127,7 @@ class ImproveActionPhpheader extends ImproveAction
 
     public function readFile(&$content): ?bool
     {
-        if ($this->stop_scan || $this->path_extension !='php' || $this->hasError()) {
+        if ($this->stop_scan || $this->path_extension != 'php' || $this->hasError()) {
             return null;
         }
 
@@ -136,7 +135,6 @@ class ImproveActionPhpheader extends ImproveAction
             $content = $this->deleteOldBloc($content);
         }
         if (empty($this->getSetting('bloc_action'))) {
-
             return null;
         }
         $clean = $this->deleteDocBloc($content);
@@ -146,11 +144,9 @@ class ImproveActionPhpheader extends ImproveAction
             return null;
         }
         if ($content != $clean && $this->getSetting('bloc_action') == 'create') {
-
             return null;
         }
         if ($content == $clean && $this->getSetting('bloc_action') == 'replace') {
-
             return null;
         }
 
@@ -174,8 +170,10 @@ class ImproveActionPhpheader extends ImproveAction
         try {
             $this->bloc = preg_replace_callback(
                 // use \u in bloc content for first_upper_case
-                '/(\\\u([a-z]{1}))/', 
-                function($str) { return ucfirst($str[2]); }, 
+                '/(\\\u([a-z]{1}))/',
+                function ($str) {
+                    return ucfirst($str[2]);
+                },
                 str_replace(
                     $this->bloc_wildcards,
                     [
@@ -213,6 +211,7 @@ class ImproveActionPhpheader extends ImproveAction
             $res = str_replace("\n * \n", "\n *\n", $res);
             $this->setSuccess(__('Write new doc bloc content'));
         }
+
         return $res;
     }
 
@@ -228,6 +227,7 @@ class ImproveActionPhpheader extends ImproveAction
         if ($count) {
             $this->setSuccess(__('Delete old doc bloc content'));
         }
+
         return $res;
     }
 
@@ -235,7 +235,7 @@ class ImproveActionPhpheader extends ImproveAction
     {
         $res = preg_replace(
             '/((# -- BEGIN LICENSE BLOCK ([-]+))(.*?)(# -- END LICENSE BLOCK ([-]+))([\n|\r\n]{1,}))/msi',
-            "",
+            '',
             $content,
             -1,
             $count
@@ -243,6 +243,7 @@ class ImproveActionPhpheader extends ImproveAction
         if ($count) {
             $this->setSuccess(__('Delete old style bloc content'));
         }
+
         return $res;
     }
 }

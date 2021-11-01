@@ -1,27 +1,26 @@
 <?php
 /**
  * @brief improve, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 class ImproveActionDcstore extends ImproveAction
 {
     protected function init(): bool
     {
         $this->setProperties([
-            'id' => 'dcstore',
-            'name' => __('Store file'),
-            'desc' => __('Re-create dcstore.xml file according to _define.php variables'),
+            'id'       => 'dcstore',
+            'name'     => __('Store file'),
+            'desc'     => __('Re-create dcstore.xml file according to _define.php variables'),
             'priority' => 420,
-            'config' => true,
-            'types' => ['plugin', 'theme']
+            'config'   => true,
+            'types'    => ['plugin', 'theme']
         ]);
 
         return true;
@@ -39,16 +38,16 @@ class ImproveActionDcstore extends ImproveAction
             $this->redirect($url);
         }
 
-        return  
+        return
         '<p class="info">' . __('File will be overwritten if it exists') . '</p>' .
-        '<p><label class="classic" for="dcstore_pattern">' . 
+        '<p><label class="classic" for="dcstore_pattern">' .
         __('Predictable URL to zip file on the external repository') . '<br />' .
         form::field('dcstore_pattern', 160, 255, $this->getSetting('pattern')) . '</label>' .
         '</p>' .
-        '<p class="form-note">' . 
-        sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.') . 
+        '<p class="form-note">' .
+        sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.') .
         '<br /> ' .
-        __('For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip') . 
+        __('For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip') .
         '<br />' .
         __('Note on github, you must create a release and join to it the module zip file.') . '
         </p>';
@@ -60,10 +59,11 @@ class ImproveActionDcstore extends ImproveAction
         if ($this->hasError()) {
             return false;
         }
+
         try {
             files::putContent($this->module['sroot'] . '/dcstore.xml', $content);
             $this->setSuccess(__('Write dcstore.xml file.'));
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->setError(__('Failed to write dcstore.xml file'));
 
             return false;
@@ -98,7 +98,6 @@ class ImproveActionDcstore extends ImproveAction
         # author
         if (empty($this->module['author'])) {
             $this->setError(__('unknow module author'));
-
         }
         $rsp->author($this->module['author']);
 
@@ -128,6 +127,7 @@ class ImproveActionDcstore extends ImproveAction
                 }
                 if ($req[0] == 'core') {
                     $this->module['dc_min'] = $req[1];
+
                     break;
                 }
             }

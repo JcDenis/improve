@@ -1,16 +1,15 @@
 <?php
 /**
  * @brief improve, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 class ImproveActionZip extends ImproveAction
 {
     public static $exclude = [
@@ -38,12 +37,12 @@ class ImproveActionZip extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id' => 'zip',
-            'name' => __('Zip module'),
-            'desc' => __('Compress module into a ready to install package'),
+            'id'       => 'zip',
+            'name'     => __('Zip module'),
+            'desc'     => __('Compress module into a ready to install package'),
             'priority' => 980,
-            'config' => true,
-            'types' => ['plugin', 'theme']
+            'config'   => true,
+            'types'    => ['plugin', 'theme']
         ]);
 
         return true;
@@ -75,7 +74,9 @@ class ImproveActionZip extends ImproveAction
         <p><label for="pack_repository">' . __('Path to repository:') . ' ' .
         form::field('pack_repository', 65, 255, $this->getSetting('pack_repository'), 'maximal') .
         '</label></p>' .
-        '<p class="form-note">' . sprintf(__('Preconization: %s'), $this->core->blog->public_path ?
+        '<p class="form-note">' . sprintf(
+            __('Preconization: %s'),
+            $this->core->blog->public_path ?
             path::real($this->core->blog->public_path) : __("Blog's public directory")
         ) . '</p>
         </div>
@@ -93,7 +94,7 @@ class ImproveActionZip extends ImproveAction
         '</label></p>
         <p class="form-note">' . sprintf(__('Preconization: %s'), '%type%-%id%-%version%') . '</p>
 
-        <p><label class="classic" for="pack_overwrite">'.
+        <p><label class="classic" for="pack_overwrite">' .
         form::checkbox('pack_overwrite', 1, !empty($this->getSetting('pack_overwrite'))) . ' ' .
         __('Overwrite existing package') . '</label></p>
 
@@ -118,7 +119,7 @@ class ImproveActionZip extends ImproveAction
     public function closeModule(): ?bool
     {
         $exclude = array_merge(
-            self::$exclude, 
+            self::$exclude,
             explode(',', $this->getSetting('pack_excludefiles'))
         );
         $this->setSuccess(sprintf(__('Prepare excluded files "%s"'), implode(', ', $exclude)));
@@ -132,6 +133,7 @@ class ImproveActionZip extends ImproveAction
         if (!empty($this->getSetting('secondpack_filename'))) {
             $this->zipModule($this->getSetting('secondpack_filename'), $exclude);
         }
+
         return null;
     }
 
@@ -149,7 +151,7 @@ class ImproveActionZip extends ImproveAction
             $file
         );
         $parts = explode('/', $file);
-        foreach($parts as $i => $part) {
+        foreach ($parts as $i => $part) {
             $parts[$i] = files::tidyFileName($part);
         }
         $path = $this->getSetting('pack_repository') . '/' . implode('/', $parts) . '.zip';
@@ -164,9 +166,9 @@ class ImproveActionZip extends ImproveAction
             return null;
         }
         @set_time_limit(300);
-        $fp = fopen($path, 'wb');
+        $fp  = fopen($path, 'wb');
         $zip = new ImproveZipFileZip($fp);
-        foreach($exclude as $e) {
+        foreach ($exclude as $e) {
             $e = '#(^|/)(' . str_replace(
                 ['.', '*'],
                 ['\.', '.*?'],
@@ -209,9 +211,9 @@ class ImproveZipFileZip extends fileZip
         }
 
         $unc_len = strlen($content);
-        $crc = crc32($content);
-        $zdata = gzdeflate($content);
-        $c_len = strlen($zdata);
+        $crc     = crc32($content);
+        $zdata   = gzdeflate($content);
+        $c_len   = strlen($zdata);
 
         unset($content);
 
@@ -219,8 +221,7 @@ class ImproveZipFileZip extends fileZip
         $mtime = $this->makeTime($mtime);
 
         # Data descriptor
-        $data_desc =
-        "\x50\x4b\x03\x04" .
+        $data_desc = "\x50\x4b\x03\x04" .
         "\x14\x00" .               # ver needed to extract
         "\x00\x00" .               # gen purpose bit flag
         "\x08\x00" .               # compression method
@@ -243,8 +244,7 @@ class ImproveZipFileZip extends fileZip
         $new_offset = $this->old_offset + strlen($data_desc);
 
         # Add to central directory record
-        $cdrec =
-        "\x50\x4b\x01\x02" .
+        $cdrec = "\x50\x4b\x01\x02" .
         "\x00\x00" .                  # version made by
         "\x14\x00" .                  # version needed to extract
         "\x00\x00" .                  # gen purpose bit flag
@@ -260,7 +260,7 @@ class ImproveZipFileZip extends fileZip
         pack('v', 0) .                # disk number start
         pack('v', 0) .                # internal file attributes
         pack('V', 32) .               # external file attributes - 'archive' bit set
-        pack('V', $this->old_offset). # relative offset of local header
+        pack('V', $this->old_offset) . # relative offset of local header
         $name;
 
         $this->old_offset = $new_offset;
@@ -291,6 +291,7 @@ class ImproveZipFileZip extends fileZip
                 $newStr .= $token;
             }
         }
+
         return $newStr;
     }
 }

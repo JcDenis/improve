@@ -1,16 +1,15 @@
 <?php
 /**
  * @brief improve, a plugin for Dotclear 2
- * 
+ *
  * @package Dotclear
  * @subpackage Plugin
- * 
+ *
  * @author Jean-Christian Denis and contributors
- * 
+ *
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-
 class ImproveActionDcdeprecated extends ImproveAction
 {
     /** @var array Deprecated functions [filetype [pattern, deprecated, replacement, version]] */
@@ -63,11 +62,11 @@ class ImproveActionDcdeprecated extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id' => 'dcdeprecated',
-            'name' => __('Dotclear deprecated'),
-            'desc' => __('Search for use of deprecated Dotclear functions'),
+            'id'       => 'dcdeprecated',
+            'name'     => __('Dotclear deprecated'),
+            'desc'     => __('Search for use of deprecated Dotclear functions'),
             'priority' => 520,
-            'types' => ['plugin', 'theme']
+            'types'    => ['plugin', 'theme']
         ]);
 
         return true;
@@ -83,7 +82,7 @@ class ImproveActionDcdeprecated extends ImproveAction
         if (!in_array($this->path_extension, array_keys(self::$deprecated))) {
             return null;
         }
-        foreach(self::$deprecated[$this->path_extension] as $d) {
+        foreach (self::$deprecated[$this->path_extension] as $d) {
             if (preg_match('/' . $d[0] . '/i', $content)) {
                 $this->setWarning(sprintf(__('Use of deprecated "%s", you should use "%s" instead.'), $d[1], __($d[2])));
             }
