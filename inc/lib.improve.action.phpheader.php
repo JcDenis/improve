@@ -204,12 +204,13 @@ class ImproveActionPhpheader extends ImproveAction
     {
         $res = preg_replace(
             '/^(\<\?php[\n|\r\n]+)/',
-            '<?php' . "\n/**\n * " . str_replace("\n", "\n * ", trim($this->bloc)) . "\n */\n\n",
+            '<?php' . "\n/**\n * " . str_replace("\n", "\n * ", trim($this->bloc)) . "\n */\n",
             $content,
             1,
             $count
         );
         if ($count) {
+            $res = str_replace("\n * \n", "\n *\n", $res);
             $this->setSuccess(__('Write new doc bloc content'));
         }
         return $res;
