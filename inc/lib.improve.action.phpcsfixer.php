@@ -80,7 +80,7 @@ class ImproveActionPhpcsfixer extends ImproveAction
         $phpcsf_path = path::real($this->getSetting('phpcsf_path'));
 
         $command = sprintf(
-            '%sphp %s/php-cs-fixer fix %s --config=%s/dc.phpcsfixer.rules.php',
+            '%sphp %s/php-cs-fixer fix %s --config=%s/dc.phpcsfixer.rules.php --using-cache=no',
             $phpexe_path,
             $phpcsf_path,
             $this->module['sroot'],
