@@ -56,14 +56,13 @@ class ImproveActionPhpcsfixer extends ImproveAction
         form::field('phpexe_path', 160, 255, $this->getSetting('phpexe_path')) . '</label>' .
         '</p>' .
         '<p class="form-note">' .
-            __('If this server is under unix, leave it empty.') . ' ' .
-            __('If this server is under Windows, put here directory to php executable (without executable file name).') .
+            __('If this module does not work you can try to put here directory to php executable (without executable file name).') .
         ' C:\path_to\php</p>';
     }
 
     public function closeModule(): ?bool
     {
-        $phpexe_path = path::real($this->getSetting('phpexe_path'));
+        $phpexe_path = $this->getPhpPath();
         if (!empty($phpexe_path)) {
             $phpexe_path .= '/';
         }
@@ -95,5 +94,15 @@ class ImproveActionPhpcsfixer extends ImproveAction
 
             return false;
         }
+    }
+
+    private function getPhpPath()
+    {
+        $phpexe_path = $this->getSetting('phpexe_path');
+        if (empty($phpexe_path) && !empty(PHP_BINDIR)) {
+            $phpexe_path = PHP_BINDIR;
+        }
+
+        return path::real($phpexe_path);
     }
 }
