@@ -38,24 +38,19 @@ class ImproveActionPhpcsfixer extends ImproveAction
 
     public function isConfigured(): bool
     {
-        return !empty($this->getSetting('phpcsf_path'));
+        return true;
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
             $this->setSettings([
-                'phpexe_path' => !empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : '',
-                'phpcsf_path' => !empty($_POST['phpcsf_path']) ? $_POST['phpcsf_path'] : ''
+                'phpexe_path' => !empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : ''
             ]);
             $this->redirect($url);
         }
 
         return
-        '<p class="info">' . sprintf(
-            __('You must have installed %s to use this tool'),
-            '<a href="https://github.com/FriendsOfPHP/PHP-CS-Fixer">php-cs-fixer</a>'
-        ) . '</p>' .
         '<p><label class="classic" for="phpexe_path">' .
         __('Root directory of PHP executable:') . '<br />' .
         form::field('phpexe_path', 160, 255, $this->getSetting('phpexe_path')) . '</label>' .
@@ -63,12 +58,7 @@ class ImproveActionPhpcsfixer extends ImproveAction
         '<p class="form-note">' .
             __('If this server is under unix, leave it empty.') . ' ' .
             __('If this server is under Windows, put here directory to php executable (without executable file name).') .
-        ' C:\path_to\php</p>' .
-        '<p><label class="classic" for="phpcsf_path">' .
-        __('Root directory to "friendsofphp php-cs-fixer":') . '<br />' .
-        form::field('phpcsf_path', 160, 255, $this->getSetting('phpcsf_path')) . '</label>' .
-        '</p>' .
-        '<p class="form-note">' . __('Do not add file name to the end of path.') . ' \path_to\tools\php-cs-fixer\vendor\friendsofphp\php-cs-fixer</p>';
+        ' C:\path_to\php</p>';
     }
 
     public function closeModule(): ?bool
@@ -77,12 +67,11 @@ class ImproveActionPhpcsfixer extends ImproveAction
         if (!empty($phpexe_path)) {
             $phpexe_path .= '/';
         }
-        $phpcsf_path = path::real($this->getSetting('phpcsf_path'));
 
         $command = sprintf(
-            '%sphp %s/php-cs-fixer fix %s --config=%s/dc.phpcsfixer.rules.php --using-cache=no',
+            '%sphp %s/libs/php-cs-fixer.phar fix %s --config=%s/libs/dc.phpcsfixer.rules.php --using-cache=no',
             $phpexe_path,
-            $phpcsf_path,
+            dirname(__FILE__),
             $this->module['sroot'],
             dirname(__FILE__)
         );
