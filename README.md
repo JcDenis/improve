@@ -16,7 +16,7 @@ It helps dev to clean up plugin or theme before publishing code.
 
  * Open to third party plugin
  * Easy and fast to use
- * Esay and fast to extend
+ * Easy and fast to extend
 
 ## REQUIREMENTS
 
@@ -32,23 +32,6 @@ Dotaddict repository. (See Dotclear's documentation to know how do this)
 
 Manage tools from sidebar plugin menu **improve**.
 Configure actions. Select actions and module to work with, then click fix.
-
-## DEFAULT FEATURES
-
- * Fix Tab to Space
- * Fix End Of Line
- * Fix End Of File on php files
- * Fix header (phpdoc) on php files
- * Fix license file
- * Fix dcstore.xml file
- * Fix README.md shields.io badges
- * Check deprecated Dotclear functions
- * Create package
-
-## NEXT
-
- * Scan for missing files
- * ...
 
  Hope some of you have idea to complete function of this plugin 
  and help devs to maintain their plugins and themes.
