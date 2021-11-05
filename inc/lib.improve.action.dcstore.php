@@ -60,6 +60,8 @@ class ImproveActionDcstore extends ImproveAction
             return false;
         }
 
+        $content = $this->prettyXML($content);
+
         try {
             files::putContent($this->module['sroot'] . '/dcstore.xml', $content);
             $this->setSuccess(__('Write dcstore.xml file.'));
@@ -166,7 +168,21 @@ class ImproveActionDcstore extends ImproveAction
         $res = new xmlTag('modules', $rsp);
         $res->insertAttr('xmlns:da', 'http://dotaddict.org/da/');
 
-        return str_replace('><', ">\n<", $res->toXML());
+        return self::prettyXML($res->toXML());
+    }
+
+    private static function prettyXML(string $str): string
+    {
+        if (class_exists('DOMDocument')) {
+            $dom                     = new DOMDocument('1.0');
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput       = true;
+            $dom->loadXML($str);
+
+            return $dom->saveXML();
+        }
+
+        return str_replace('><', ">\n<", $str);
     }
 
     private function parseFilePattern()
