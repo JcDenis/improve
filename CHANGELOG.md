@@ -4,6 +4,10 @@ dev
 - [ ] add module to check directory structure
 - [ ] write documentation of php class
 
+0.5 - 2021.11.05
+- add settings to disable (hide) modules
+- fix dcstore xml rendering (thanks Franck Paul)
+
 0.4 - 2021.11.02
 - add module to use php-cs-fixer
 

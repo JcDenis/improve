@@ -19,22 +19,28 @@ class Improve
         'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md'
     ];
     private $core;
-    private $actions = [];
-    private $logs    = [];
-    private $has_log = ['success' => false, 'warning' => false, 'error' => false];
+    private $actions  = [];
+    private $disabled = [];
+    private $logs     = [];
+    private $has_log  = ['success' => false, 'warning' => false, 'error' => false];
 
     public function __construct(dcCore $core)
     {
         $this->core = &$core;
         $core->blog->settings->addNamespace('improve');
-        $list = new arrayObject();
+        $disabled = explode(';', (string) $core->blog->settings->improve->disabled);
+        $list     = new arrayObject();
 
         try {
             $this->core->callBehavior('improveAddAction', $list, $this->core);
 
             foreach ($list as $action) {
                 if ($action instanceof ImproveAction && !isset($this->actions[$action->id])) {
-                    $this->actions[$action->id] = $action;
+                    if (in_array($action->id, $disabled)) {
+                        $this->disabled[$action->id] = $action->name;
+                    } else {
+                        $this->actions[$action->id] = $action;
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -127,6 +133,11 @@ class Improve
         }
 
         return $this->actions[$id] ?? null;
+    }
+
+    public function disabled(): array
+    {
+        return $this->disabled;
     }
 
     public function fixModule(string $type, string $id, array $properties, array $actions): float
