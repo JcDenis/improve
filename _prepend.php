@@ -26,6 +26,7 @@ $improve_libs = [
     'ImproveActionNewline'      => 'lib.improve.action.php',
     'ImproveActionPhpcsfixer'   => 'lib.improve.action.phpcsfixer.php',
     'ImproveActionPhpheader'    => 'lib.improve.action.phpheader.php',
+    'ImproveActionPhpstan'      => 'lib.improve.action.phpstan.php',
     'ImproveActionTab'          => 'lib.improve.action.php',
     'ImproveActionZip'          => 'lib.improve.action.zip.php',
     'ImproveZipFileZip'         => 'lib.improve.action.zip.php'

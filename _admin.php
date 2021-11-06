@@ -23,6 +23,7 @@ $core->addBehavior('improveAddAction', ['ImproveActionLicensefile', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionNewline', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionPhpcsfixer', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionPhpheader', 'create']);
+$core->addBehavior('improveAddAction', ['ImproveActionPhpstan', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionTab', 'create']);
 $core->addBehavior('improveAddAction', ['ImproveActionZip', 'create']);
 
