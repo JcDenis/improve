@@ -4,7 +4,12 @@ dev
 - [ ] add module to check directory structure
 - [ ] add module to create full README file
 - [ ] write documentation of php class
+
+0.6 - 2021.11.06
 - add header for modules configuration
+- add options to hide details of executed actions
+- show configuration file in phpcsfixer module
+- use table in ui
 
 0.5 - 2021.11.05
 - add settings to disable (hide) modules
