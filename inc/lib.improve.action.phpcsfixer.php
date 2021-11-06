@@ -21,6 +21,8 @@ class ImproveActionPhpcsfixer extends ImproveAction
         32 => 'Configuration error of a Fixer.',
         64 => 'Exception raised within the application'
     ];
+    protected static $user_ui_colorsyntax       = false;
+    protected static $user_ui_colorsyntax_theme = 'default';
 
     protected function init(): bool
     {
@@ -33,12 +35,25 @@ class ImproveActionPhpcsfixer extends ImproveAction
             'types'    => ['plugin', 'theme']
         ]);
 
+        $this->core->auth->user_prefs->addWorkspace('interface');
+        self::$user_ui_colorsyntax       = $this->core->auth->user_prefs->interface->colorsyntax;
+        self::$user_ui_colorsyntax_theme = $this->core->auth->user_prefs->interface->colorsyntax_theme;
+
         return true;
     }
 
     public function isConfigured(): bool
     {
         return true;
+    }
+
+    public function header(): ?string
+    {
+        if (self::$user_ui_colorsyntax) {
+            return dcPage::jsLoadCodeMirror(self::$user_ui_colorsyntax_theme);
+        }
+
+        return null;
     }
 
     public function configure($url): ?string
@@ -49,6 +64,7 @@ class ImproveActionPhpcsfixer extends ImproveAction
             ]);
             $this->redirect($url);
         }
+        $content = file_get_contents(dirname(__FILE__) . '/libs/dc.phpcsfixer.rules.php');
 
         return
         '<p><label class="classic" for="phpexe_path">' .
@@ -57,7 +73,19 @@ class ImproveActionPhpcsfixer extends ImproveAction
         '</p>' .
         '<p class="form-note">' .
             __('If this module does not work you can try to put here directory to php executable (without executable file name).') .
-        ' C:\path_to\php</p>';
+        ' C:\path_to\php</p>' .
+
+        '<p><label for="file_content">' . __('PHP CS Fixer configuration file:') . '</strong></label></p>' .
+        '<p>' . form::textarea('file_content', 120, 60, [
+            'default'    => html::escapeHTML($content),
+            'class'      => 'maximal',
+            'extra_html' => 'readonly="true"'
+        ]) . '</p>' .
+        (
+            !self::$user_ui_colorsyntax ? '' :
+            dcPage::jsLoad(dcPage::getPF('improve/inc/lib.improve.action.phpcsfixer.js')) .
+            dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
+        );
     }
 
     public function closeModule(): ?bool

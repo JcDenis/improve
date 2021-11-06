@@ -3,6 +3,7 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('node_modules')
     ->exclude('vendor')
+    ->exclude('libs')
     ->in(__DIR__);
 
 $config = new PhpCsFixer\Config();
