@@ -2,7 +2,9 @@ dev
 - [ ] add global config for file size limit
 - [ ] add module to check deprecated PHP function
 - [ ] add module to check directory structure
+- [ ] add module to create full README file
 - [ ] write documentation of php class
+- add header for modules configuration
 
 0.5 - 2021.11.05
 - add settings to disable (hide) modules

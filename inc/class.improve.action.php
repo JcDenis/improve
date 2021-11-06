@@ -201,6 +201,16 @@ abstract class ImproveAction
     abstract public function isConfigured(): bool;
 
     /**
+     * Get action configuration page header
+     *
+     * @return string Headers
+     */
+    public function header(): ?string
+    {
+        return null;
+    }
+
+    /**
      * Get configuraton gui
      *
      * If action class uses internal configuration,

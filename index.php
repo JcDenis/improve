@@ -101,16 +101,22 @@ if (!empty($_POST['fix'])) {
     }
 }
 
+$action     = null;
+$header     = '';
 $breadcrumb = [];
 if (!empty($_REQUEST['config'])) {
     $breadcrumb = [
         __('Configure module') => ''
     ];
+    if (null !== ($action = $improve->module($_REQUEST['config']))) {
+        $header = $action->header();
+    }
 }
 
 # display header
 echo '<html><head><title>' . __('improve') . '</title>' .
 dcPage::jsLoad(dcPage::getPF('improve/js/index.js')) .
+$header .
 '</head><body>' .
 dcPage::breadcrumb(array_merge([
     __('Plugins') => '',
@@ -132,7 +138,7 @@ if (empty($_REQUEST['config'])) {
 if (!empty($_REQUEST['config'])) {
     $back_url = $_REQUEST['redir'] ?? $core->adminurl->get('admin.plugin.improve', ['type' => $type]);
 
-    if (null !== ($action = $improve->module($_REQUEST['config']))) {
+    if (null !== $action) {
         $redir = $_REQUEST['redir'] ?? $core->adminurl->get('admin.plugin.improve', ['type' => $type, 'config' => $action->id]);
         $res   = $action->configure($redir);
 
