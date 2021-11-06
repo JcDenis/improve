@@ -111,6 +111,8 @@ if (!empty($_REQUEST['config'])) {
     if (null !== ($action = $improve->module($_REQUEST['config']))) {
         $header = $action->header();
     }
+} else {
+    $breadcrumb[$type == 'theme' ? __('Themes actions') : __('Plugins actions')] = '';
 }
 
 # display header
@@ -153,27 +155,30 @@ if (!empty($_REQUEST['config'])) {
         form::hidden('config', $action->id) .
         form::hidden('redir', $redir) .
         $core->formNonce() . '</p>' .
-        '<form>';
+        '</form>';
     } else {
         echo '
         <p class="warning">' . __('Unknow module') . '</p>
         <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>';
     }
 } else {
-    echo '<h3>' . ($type == 'plugin' ? __('Plugins') : __('Themes')) . '</h3>';
-
     if (count($combo_modules) == 1) {
         echo '<p class="message">' . __('No module to manage') . '</p>';
     } else {
-        echo '<form action="' . $core->adminurl->get('admin.plugin.improve') . '" method="post" id="form-actions">';
+        echo '<form action="' . $core->adminurl->get('admin.plugin.improve') . '" method="post" id="form-actions">' .
+        '<table><caption class="hidden">' . __('Actions') . '</caption><thead><tr>' .
+        '<th colspan="2" class="first">' . __('Action') . '</td>' .
+        '<th scope="col">' . __('Description') . '</td>' .
+        '<th scope="col">' . __('Configuration') . '</td>' .
+        (DC_DEBUG ? '<th scope="col">' . __('Priority') . '</td>' : '') .
+        '</tr></thead><tbody>';
         foreach ($improve->modules() as $action) {
             if (!in_array($type, $action->types)) {
                 continue;
             }
-            $p = DC_DEBUG ? '<span class="debug">' . $action->priority . '</span> ' : '';
             echo
-            '<p class="modules">' . $p . '<label for="action_' . $action->id . '" class="classic">' .
-            form::checkbox(
+            '<tr class="line' . ($action->isConfigured() ? '' : ' offline') . '">' .
+            '<td class="minimal">' . form::checkbox(
                 ['actions[]',
                     'action_' . $action->id],
                 $action->id,
@@ -181,28 +186,29 @@ if (!empty($_REQUEST['config'])) {
                 '',
                 '',
                 !$action->isConfigured()
-            ) .
-            $action->name . '</label>';
-
-            if (false !== $action->config) {
-                echo
-                ' - <a class="module-config" href="' .
+            ) . '</td>' .
+            '<td class="minimal nowrap">' .
+                '<label for="action_' . $action->id . '" class="classic">' . html::escapeHTML($action->name) . '</label>' .
+            '</td>' .
+            '<td class="maximal">' . $action->desc . '</td>' .
+            '<td class="minimal nowrap modules">' . (
+                false === $action->config ? '' :
+                '<a class="module-config" href="' .
                 (true === $action->config ? $core->adminurl->get('admin.plugin.improve', ['type' => $type, 'config' => $action->id]) : $action->config) .
-                '" title="' . sprintf(__("Configure action '%s'"), $action->name) . '">' . __('Configure module') . '</a>';
-            }
-            echo  '</p>';
+                '" title="' . sprintf(__("Configure action '%s'"), $action->name) . '">' . __('Configure') . '</a>'
+            ) . '</td>' .
+            (DC_DEBUG ? '<td class="minimal"><span class="debug">' . $action->priority . '</span></td>' : '') .
+            '</tr>';
         }
 
-        echo '
-        <div>
-        <hr />
-        <p><label for="save_preferences" class="classic">' .
+        echo '</tbody></table>
+        <div class="two-cols">
+        <p class="col left"><label for="save_preferences" class="classic">' .
         form::checkbox('save_preferences', 1, !empty($_POST['save_preferences'])) .
         __('Save fields selection as preference') . '</label></p>
-        <p class="field"><label for="module" class="classic">' . __('Select a module:') . '</label>' .
-        form::combo('module', $combo_modules, $module) . '
-        </p></p>
-        <input type="submit" name="fix" value="' . __('Fix it') . '" />' .
+        <p class="col right"><label for="module" class="classic">' . __('Select a module:') . ' </label>' .
+        form::combo('module', $combo_modules, $module) .
+        ' <input type="submit" name="fix" value="' . __('Fix it') . '" />' .
         form::hidden(['type'], $type) .
         $core->formNonce() . '
         </p>
@@ -210,9 +216,7 @@ if (!empty($_REQUEST['config'])) {
         <br class="clear" />
         </form>';
 
-        $logs = $lines = [];
-
-        if (!empty($_REQUEST['upd'])) {
+        if (!empty($_REQUEST['upd']) && !$core->blog->settings->improve->nodetails) {
             $logs = $improve->parseLogs($_REQUEST['upd']);
 
             if (!empty($logs)) {

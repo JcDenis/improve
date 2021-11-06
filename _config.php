@@ -35,7 +35,8 @@ if (!empty($_POST['save'])) {
             $pdisabled = implode(';', $_POST['disabled']);
         }
         $core->blog->settings->improve->put('disabled', $pdisabled);
-        dcPage::addSuccessNotice(__('Configuration successfully updated.'));
+        $core->blog->settings->improve->put('nodetails', !empty($_POST['nodetails']));
+        dcPage::addSuccessNotice(__('Configuration successfully updated'));
 
         $core->adminurl->redirect(
             'admin.plugins',
@@ -54,4 +55,9 @@ foreach ($combo_actions as $name => $id) {
     form::checkbox(['disabled[]'], $id, ['checked' => isset($disabled[$id])]) .
     __($name) . '</label></p>';
 }
-echo '</div>';
+echo
+'</div><div class="fieldset"><h4>' . __('Options') . '</h4>' .
+'<p><label class="classic">' .
+form::checkbox('nodetails', '1', ['checked' => $core->blog->settings->improve->nodetails]) .
+__('Hide details of rendered actions') . '</label></p>' .
+'</div>';
