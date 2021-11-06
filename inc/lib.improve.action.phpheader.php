@@ -117,7 +117,7 @@ class ImproveActionPhpheader extends ImproveAction
         $this->stop_scan = false;
         if (!empty($this->getSetting('exclude_locales')) && preg_match('/\/(locales|libs)(\/.*?|)$/', $this->path_full)) {
             if (!$skipped) {
-                $this->setWarning(__('Skip directory'));
+                $this->setSuccess(__('Skip directory'));
             }
             $this->stop_scan = true;
         }
@@ -160,7 +160,7 @@ class ImproveActionPhpheader extends ImproveAction
         $bloc = trim($this->getSetting('bloc_content'));
 
         if (empty($bloc)) {
-            self::notice(__('bloc is empty'), false);
+            $this->setWarning(__('bloc is empty'));
 
             return null;
         }
