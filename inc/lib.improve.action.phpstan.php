@@ -36,7 +36,8 @@ class ImproveActionPhpstan extends ImproveAction
         if (!empty($_POST['save'])) {
             $this->setSettings([
                 'phpexe_path' => (!empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : ''),
-                'run_level' => (integer) $_POST['run_level']
+                'run_level' => (integer) $_POST['run_level'],
+                'ignored_vars' => (!empty($_POST['ignored_vars']) ? $_POST['ignored_vars'] : '')
             ]);
             $this->redirect($url);
         }
@@ -51,6 +52,14 @@ class ImproveActionPhpstan extends ImproveAction
         ' C:\path_to\php</p>' .
         '<p><label class="classic" for="run_level">' . __('Level:') . ' </label>' .
         form::number('run_level', ['min' => 0, 'max' => 9, 'default' => (integer) $this->getSetting('run_level')]) . '</p>' .
+        '<p><label class="classic" for="ignored_vars">' .
+        __('List of ignored variables:') . '<br />' .
+        form::field('ignored_vars', 160, 255, $this->getSetting('ignored_vars')) . '</label>' .
+        '</p>' .
+        '<p class="form-note">' . sprintf(
+            __('If you have errors like "%s", you can add this var here. Use ; as separator and do not put $ ahead.'), 
+            'Variable $var might not be defined'
+        ) . ' ' . __('For exemple: var;_othervar;avar') . '<br />' . __('Some variables like core, _menu, are already set in ignored list.') . '</p>' .
         '<p class="info">' . __('You must enable improve details to view analyse results !') . '</p>';
     }
 
@@ -93,17 +102,17 @@ class ImproveActionPhpstan extends ImproveAction
         }
     }
 
-    private function getPhpPath()
+    private function getPhpPath(): string
     {
         $phpexe_path = $this->getSetting('phpexe_path');
         if (empty($phpexe_path) && !empty(PHP_BINDIR)) {
             $phpexe_path = PHP_BINDIR;
         }
 
-        return path::real($phpexe_path);
+        return (string) path::real($phpexe_path);
     }
 
-    private function writeConf()
+    private function writeConf(): bool
     {
         $content = 
             "parameters:\n" .
@@ -117,15 +126,24 @@ class ImproveActionPhpstan extends ImproveAction
             "  excludePaths:\n" .
             "    - " . $this->module['sroot'] . "/*/libs/*\n\n" .
             "  bootstrapFiles:\n" .
-            "    - " . dirname(__FILE__) . "/libs/dc.phpstan.bootstrap.php\n\n" .
-            "  fileExtensions:\n" .
-            "    - php\n" .
-            "    - in\n\n" .
-            // extra
-            "  checkMissingIterableValueType: false\n" .
-            "  checkGenericClassInNonGenericObjectType: false\n";
+            "    - " . dirname(__FILE__) . "/libs/dc.phpstan.bootstrap.php\n\n";
 
-        return file_put_contents(DC_VAR . '/phpstan.neon', $content);
+        // common
+        $content .= file_get_contents(dirname(__FILE__) . "/libs/dc.phpstan.neon.conf");
 
+        $ignored = explode(';', $this->getSetting('ignored_vars'));
+        foreach($ignored as $var) {
+            $var = trim($var);
+            if (empty($var)) {
+                continue;
+            }
+
+            $content .=
+                '    # $' . $var .' variable may not be defined (globally)' . "\n" .
+                '    - message: \'#Variable \$' . $var . ' might not be defined#\'' . "\n" .
+                '      path: *' . "\n\n";
+        }  
+
+        return (boolean) file_put_contents(DC_VAR . '/phpstan.neon', $content);
     }
 }
