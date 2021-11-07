@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: improve 0.5\n"
+"Project-Id-Version: improve 0.6\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-06T12:55:33+00:00\n"
+"PO-Revision-Date: 2021-11-07T17:50:41+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -282,6 +282,36 @@ msgstr "Effacer l'ancien contenu de type phpdoc"
 
 msgid "Delete old style bloc content"
 msgstr "Effacer l'ancien contenu de type ancien"
+
+msgid "Analyse php code using PHPStan"
+msgstr "Analyse le code PHP en utilisant PHPStan"
+
+msgid "Level:"
+msgstr "Niveau :"
+
+msgid "List of ignored variables:"
+msgstr "Listes des variables ignorées :"
+
+msgid "If you have errors like \"%s\", you can add this var here. Use ; as separator and do not put $ ahead."
+msgstr "Si vous avez des erreurs comme \"%s\", vous pouvez ajouter ces variables ici. Utiliser ; comme séparateur et ne pas mettre $ devant."
+
+msgid "For exemple: var;_othervar;avar"
+msgstr "Par exemple: var;othervar;avar"
+
+msgid "Some variables like core, _menu, are already set in ignored list."
+msgstr "Ceraines variables comme core, _menu, ... sont déjà dans la liste des variables ignorées."
+
+msgid "Split report by file rather than all in the end."
+msgstr "Scinder le rapport par fichier plutôt qu'un seul à la fin."
+
+msgid "Enable this can cause timeout."
+msgstr "Activer ceci peut causer de Timeout."
+
+msgid "You must enable improve details to view analyse results !"
+msgstr "Vous devez activer l'affichage des détails de l'analyse dans les paramètres d'improve."
+
+msgid "No errors found"
+msgstr "Aucune erreur trouvé"
 
 msgid "Zip module"
 msgstr "Zipper le module"
