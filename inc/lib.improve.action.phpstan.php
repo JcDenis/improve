@@ -37,7 +37,8 @@ class ImproveActionPhpstan extends ImproveAction
             $this->setSettings([
                 'phpexe_path' => (!empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : ''),
                 'run_level' => (integer) $_POST['run_level'],
-                'ignored_vars' => (!empty($_POST['ignored_vars']) ? $_POST['ignored_vars'] : '')
+                'ignored_vars' => (!empty($_POST['ignored_vars']) ? $_POST['ignored_vars'] : ''),
+                'split_report' => !empty($_POST['split_report'])
             ]);
             $this->redirect($url);
         }
@@ -60,24 +61,59 @@ class ImproveActionPhpstan extends ImproveAction
             __('If you have errors like "%s", you can add this var here. Use ; as separator and do not put $ ahead.'), 
             'Variable $var might not be defined'
         ) . ' ' . __('For exemple: var;_othervar;avar') . '<br />' . __('Some variables like core, _menu, are already set in ignored list.') . '</p>' .
+        '<p><label class="classic" for="split_report">' .
+        form::checkbox('split_report', 1, $this->getSetting('split_report')) .
+        __('Split report by file rather than all in the end.') . '</label></p>' .
+        '<p class="form-note">' . __('Enable this can cause timeout.') . '</p>' .
         '<p class="info">' . __('You must enable improve details to view analyse results !') . '</p>';
     }
 
-    public function closeModule(): ?bool
+    public function openModule(): bool
     {
-        $phpexe_path = $this->getPhpPath();
-        if (!empty($phpexe_path)) {
-            $phpexe_path .= '/';
-        }
-
         if (!$this->writeConf()) {
             $this->setError(__('Failed to write phpstan configuration'));
 
             return false;
         }
 
+        return true;
+    }
+
+    public function closeFile(): ?bool
+    {
+        if (!$this->getSetting('split_report') 
+            || !in_array($this->path_extension, ['php', 'in'])
+        ) {
+            return null;
+        }
+
+        return $this->execFixer($this->path_full);
+    }
+
+    public function closeModule(): ?bool
+    {
+        if ($this->getSetting('split_report')) {
+            return null;
+        }
+        if ($this->hasError()) {
+            return false;
+        }
+
+        return $this->execFixer();
+    }
+
+    private function execFixer(string $path = null): bool
+    {
+        $phpexe_path = $this->getPhpPath();
+        if (!empty($phpexe_path)) {
+            $phpexe_path .= '/';
+        }
+        if (!empty($path)) {
+            $path .= ' ';
+        }
+
         $command = sprintf(
-            '%sphp %s/libs/phpstan.phar analyse --configuration=%s',
+            '%sphp %s/libs/phpstan.phar analyse ' . $path . '--configuration=%s',
             $phpexe_path,
             dirname(__FILE__),
             DC_VAR . '/phpstan.neon'
@@ -89,10 +125,11 @@ class ImproveActionPhpstan extends ImproveAction
             if (!empty($error) && empty($output)) {
                 throw new Exception('oops');
             }
-            if (empty($output)) {
-                $output[] = __('No errors found');
+            if (count($output) < 4) {
+                $this->setSuccess(__('No errors found'));
+            } else {
+                $this->setWarning(sprintf('<pre>%s</pre>', implode('<br />', $output)));
             }
-            $this->setSuccess(sprintf('<pre>%s</pre>', implode('<br />', $output)));
 
             return true;
         } catch (Exception $e) {
