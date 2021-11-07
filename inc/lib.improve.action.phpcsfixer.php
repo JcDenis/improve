@@ -12,6 +12,7 @@
  */
 class ImproveActionPhpcsfixer extends ImproveAction
 {
+    /** @var array<int,string> Type of runtime errors */
     protected static $errors = [
         0  => 'OK.',
         1  => 'General error (or PHP minimal requirement not matched).',
@@ -21,7 +22,11 @@ class ImproveActionPhpcsfixer extends ImproveAction
         32 => 'Configuration error of a Fixer.',
         64 => 'Exception raised within the application'
     ];
-    protected static $user_ui_colorsyntax       = false;
+
+    /** @var boolean User pref to use colored synthax */
+    protected static $user_ui_colorsyntax = false;
+
+    /** @var string User pref for colored synthax theme */
     protected static $user_ui_colorsyntax_theme = 'default';
 
     protected function init(): bool
@@ -64,7 +69,7 @@ class ImproveActionPhpcsfixer extends ImproveAction
             ]);
             $this->redirect($url);
         }
-        $content = file_get_contents(dirname(__FILE__) . '/libs/dc.phpcsfixer.rules.php');
+        $content = (string) file_get_contents(dirname(__FILE__) . '/libs/dc.phpcsfixer.rules.php');
 
         return
         '<p><label class="classic" for="phpexe_path">' .
@@ -124,13 +129,18 @@ class ImproveActionPhpcsfixer extends ImproveAction
         }
     }
 
-    private function getPhpPath()
+    /**
+     * Get php executable path
+     *
+     * @return string   The path
+     */
+    private function getPhpPath(): string
     {
         $phpexe_path = $this->getSetting('phpexe_path');
         if (empty($phpexe_path) && !empty(PHP_BINDIR)) {
             $phpexe_path = PHP_BINDIR;
         }
 
-        return path::real($phpexe_path);
+        return (string) path::real($phpexe_path);
     }
 }

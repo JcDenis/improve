@@ -74,7 +74,7 @@ class ImproveActionDcstore extends ImproveAction
         return true;
     }
 
-    public function generateXML()
+    public function generateXML(): string
     {
         $xml = ['<modules xmlns:da="http://dotaddict.org/da/">'];
         $rsp = new xmlTag('module');
@@ -179,13 +179,13 @@ class ImproveActionDcstore extends ImproveAction
             $dom->formatOutput       = true;
             $dom->loadXML($str);
 
-            return $dom->saveXML();
+            return (string) $dom->saveXML();
         }
 
         return str_replace('><', ">\n<", $str);
     }
 
-    private function parseFilePattern()
+    private function parseFilePattern(): string
     {
         return text::tidyURL(str_replace(
             [

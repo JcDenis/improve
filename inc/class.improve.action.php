@@ -28,14 +28,31 @@
  */
 abstract class ImproveAction
 {
+    /** @var dcCore     dcCore instance */
     protected $core;
-    protected $module         = [];
-    protected $path_full      = '';
-    protected $path_extension = '';
-    protected $path_is_dir    = null;
 
-    private $logs       = ['success' => [], 'warning' => [], 'error' => []];
-    private $settings   = [];
+    /** @var array<string>  Current module */
+    protected $module = [];
+
+    /** @var string     Current full path */
+    protected $path_full = '';
+
+    /** @var string     Current file extension */
+    protected $path_extension = '';
+
+    /** @var boolean    Current path is directory */
+    protected $path_is_dir = null;
+
+    /** @var string The child class name */
+    private $class_name = '';
+
+    /** @var array<string, array>  Messages logs */
+    private $logs = ['success' => [], 'warning' => [], 'error' => []];
+
+    /** @var array<string>  Action module settings */
+    private $settings = [];
+
+    /** @var array<mixed>   Action module properties */
     private $properties = [
         'id'       => '',
         'name'     => '',
@@ -48,33 +65,35 @@ abstract class ImproveAction
     /**
      * ImproveAction constructor inits properpties and settings of a child class.
      *
-     * @param      string  $core    dcCore instance
+     * @param      dcCore  $core        dcCore instance
      */
     final public function __construct(dcCore $core)
     {
-        $this->core = $core;
+        $this->core       = $core;
+        $this->class_name = get_called_class();
 
-        $settings       = @unserialize($core->blog->settings->improve->get('settings_' . get_called_class()));
+        $settings       = @unserialize($core->blog->settings->improve->get('settings_' . $this->class_name));
         $this->settings = is_array($settings) ? $settings : [];
 
         $this->init();
 
         // can overload priority by settings
-        if (1 < ($p = (int) $core->blog->settings->improve->get('priority_' . get_called_class()))) {
-            $this->priority = $p;
+        if (1 < ($p = (int) $core->blog->settings->improve->get('priority_' . $this->class_name))) {
+            $this->properties['priority'] = $p;
         }
     }
 
     /**
      * Helper to create an instance of a ImproveAction child class.
      *
-     * @param      string  $o       ArrayObject of actions list
-     * @param      string  $core    dcCore instance
+     * @param      ArrayObject  $list    ArrayObject of actions list
+     * @param      dcCore       $core    dcCore instance
      */
-    public static function create(arrayObject $o, dcCore $core)
+    final public static function create(arrayObject $list, dcCore $core): void
     {
-        $c = get_called_class();
-        $o->append(new $c($core));
+        $child = static::class;
+        $class = new $child($core);
+        $list->append($class);
     }
 
     /**
@@ -90,11 +109,21 @@ abstract class ImproveAction
     /// @name Properties methods
     //@{
     /**
-     * @see getProperty();
+     * Get a definition property of action class
+     *
+     * @param      string   $key     a property or setting id
+     *
+     * @return     mixed    Value of property or setting of action.
      */
-    final public function __get(string $property)
+    final public function get(string $key)
     {
-        return $this->getProperty($property);
+        if (isset($this->properties[$key])) {
+            return $this->properties[$key];
+        } elseif (isset($this->settings[$key])) {
+            return $this->settings[$key];
+        }
+
+        return null;
     }
 
     /**
@@ -118,10 +147,10 @@ abstract class ImproveAction
      *  - config :      as configuration gui, false = none, true = internal, string = ext url
      *  - types :       array of supported type of module, can : be plugins and/or themes
      *
-     * @param      mixed  $property     one or more definition
-     * @param      dtring $value        value for a single property
+     * @param      mixed    $property   one or more definition
+     * @param      mixed    $value      value for a single property
      *
-     * @return     mixed  A property of action definition.
+     * @return     boolean              Success
      */
     final protected function setProperties($property, $value = null): bool
     {
@@ -157,7 +186,7 @@ abstract class ImproveAction
      * Set one or more setting of action class
      *
      * @param      mixed  $settings     one or more settings
-     * @param      string  $value        value for a single setting
+     * @param      mixed  $value        value for a single setting
      *
      * @return     mixed  A setting of action.
      */
@@ -178,10 +207,10 @@ abstract class ImproveAction
      *
      * @param      string $url      redirect url after settings update
      */
-    final protected function redirect(string $url)
+    final protected function redirect(string $url): bool
     {
         $this->core->blog->settings->improve->put(
-            'settings_' . get_called_class(),
+            'settings_' . $this->class_name,
             serialize($this->settings),
             'string',
             null,
@@ -191,6 +220,8 @@ abstract class ImproveAction
         $this->core->blog->triggerBlog();
         dcPage::addSuccessNotice(__('Configuration successfully updated'));
         http::redirect($url);
+
+        return true;
     }
 
     /**
@@ -219,9 +250,9 @@ abstract class ImproveAction
      * This function is also called to redirect form
      * after validation with $this->redirect($url);
      *
-     * @param      string $url     post form redirect url
+     * @param      string   $url    post form redirect url
      *
-     * @return     mixed  A setting of action.
+     * @return     string|null      A setting of action.
      */
     public function configure(string $url): ?string
     {
@@ -234,25 +265,29 @@ abstract class ImproveAction
      *
      * @see Improve::sanitizeModule()
      *
-     * @param      array $module      Full array of module definitons
+     * @param      array<string> $module      Full array of module definitons
      */
-    final public function setModule(array $module)
+    final public function setModule(array $module): bool
     {
         $this->module = $module;
+
+        return true;
     }
 
     /**
      * Set in class var current path definitons.
      *
-     * @param      string $path_full        Full path
-     * @param      string $path_extension   Path extension (if it is a file)
-     * @param      string $path_is_dir      True if path is a directory
+     * @param      string   $path_full          Full path
+     * @param      string   $path_extension     Path extension (if it is a file)
+     * @param      boolean  $path_is_dir        True if path is a directory
      */
-    final public function setPath(string $path_full, string $path_extension, bool $path_is_dir)
+    final public function setPath(string $path_full, string $path_extension, bool $path_is_dir): bool
     {
         $this->path_full      = $path_full;
         $this->path_extension = $path_extension;
         $this->path_is_dir    = $path_is_dir;
+
+        return true;
     }
 
     /// @name Fix methods
@@ -372,9 +407,9 @@ abstract class ImproveAction
     /**
      * Set a log of type error.
      */
-    final public function setError(string $message)
+    final public function setError(string $message): bool
     {
-        $this->setLog('error', $message);
+        return $this->setLog('error', $message);
     }
 
     /**
@@ -396,9 +431,9 @@ abstract class ImproveAction
     /**
      * Set a log of type warning.
      */
-    final public function setWarning(string $message)
+    final public function setWarning(string $message): bool
     {
-        $this->setLog('warning', $message);
+        return $this->setLog('warning', $message);
     }
 
     /**
@@ -420,9 +455,9 @@ abstract class ImproveAction
     /**
      * Set a log of type success.
      */
-    final public function setSuccess(string $message)
+    final public function setSuccess(string $message): bool
     {
-        $this->setLog('success', $message);
+        return $this->setLog('success', $message);
     }
 
     /**

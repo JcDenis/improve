@@ -15,31 +15,47 @@
  */
 class Improve
 {
+    /** @var array  Allowed file extensions to open */
     public static $readfile_extensions = [
         'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md'
     ];
-    private $core;
-    private $actions  = [];
-    private $disabled = [];
-    private $logs     = [];
-    private $has_log  = ['success' => false, 'warning' => false, 'error' => false];
 
+    /** @var dcCore     dcCore instance */
+    private $core;
+
+    /** @var ImproveAction[]   Loaded actions modules */
+    private $actions = [];
+
+    /** @var array<string>  Disabled actions modules */
+    private $disabled = [];
+
+    /** @var array<string, array>   Logs by actions modules */
+    private $logs = [];
+
+    /** @var array<string, boolean>     Has log of given type */
+    private $has_log = ['success' => false, 'warning' => false, 'error' => false];
+
+    /**
+     * Constructor
+     *
+     * @param dcCore $core dcCore instance
+     */
     public function __construct(dcCore $core)
     {
-        $this->core = &$core;
         $core->blog->settings->addNamespace('improve');
-        $disabled = explode(';', (string) $core->blog->settings->improve->disabled);
-        $list     = new arrayObject();
+        $this->core = &$core;
+        $disabled   = explode(';', (string) $core->blog->settings->improve->disabled);
+        $list       = new arrayObject();
 
         try {
             $this->core->callBehavior('improveAddAction', $list, $this->core);
 
             foreach ($list as $action) {
-                if ($action instanceof ImproveAction && !isset($this->actions[$action->id])) {
-                    if (in_array($action->id, $disabled)) {
-                        $this->disabled[$action->id] = $action->name;
+                if (is_a($action, 'ImproveAction') && !isset($this->actions[$action->get('id')])) {
+                    if (in_array($action->get('id'), $disabled)) {
+                        $this->disabled[$action->get('id')] = $action->get('name');
                     } else {
-                        $this->actions[$action->id] = $action;
+                        $this->actions[$action->get('id')] = $action;
                     }
                 }
             }
@@ -117,24 +133,37 @@ class Improve
         return $lines;
     }
 
+    /**
+     * Get a loaded action module
+     *
+     * @param  string $id Module id
+     *
+     * @return ImproveAction     ImproveAction instance
+     */
     public function module(string $id): ?ImproveAction
     {
         if (empty($id)) {
-            return $this->actions;
+            return null;
         }
 
         return $this->actions[$id] ?? null;
     }
 
-    public function modules(): ?array
+    /**
+     * Get all loaded action modules
+     *
+     * @return ImproveAction[]     ImproveAction instance
+     */
+    public function modules(): array
     {
-        if (empty($id)) {
-            return $this->actions;
-        }
-
-        return $this->actions[$id] ?? null;
+        return $this->actions;
     }
 
+    /**
+     * Get disabled action modules
+     *
+     * @return array    Array of id/name modules
+     */
     public function disabled(): array
     {
         return $this->disabled;
@@ -153,7 +182,7 @@ class Improve
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs['improve'][__('Begin')][] = $action->id;
+            $this->logs['improve'][__('Begin')][] = $action->get('id');
             // info: set current module
             $action->setModule($module);
             $action->setPath(__('Begin'), '', true);
@@ -170,7 +199,7 @@ class Improve
             }
             foreach ($workers as $action) {
                 // trace all path and action in logs
-                $this->logs['improve'][$file[0]][] = $action->id;
+                $this->logs['improve'][$file[0]][] = $action->get('id');
                 // info: set current path
                 $action->setPath($file[0], $file[1], $file[2]);
             }
@@ -194,7 +223,7 @@ class Improve
                                 throw new Exception(sprintf(
                                     __('File content has been removed: %s by %s'),
                                     $file[0],
-                                    $action->name
+                                    $action->get('name')
                                 ));
                             }
                         }
@@ -209,7 +238,7 @@ class Improve
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs['improve'][__('End')][] = $action->id;
+            $this->logs['improve'][__('End')][] = $action->get('id');
             // info: set current module
             $action->setPath(__('End'), '', true);
             // action: close module
@@ -217,7 +246,7 @@ class Improve
         }
         // info: get acions reports
         foreach ($workers as $action) {
-            $this->logs[$action->id] = $action->getLogs();
+            $this->logs[$action->get('id')] = $action->getLogs();
             foreach ($this->has_log as $type => $v) {
                 if ($action->hasLog($type)) {
                     $this->has_log[$type] = true;
@@ -225,12 +254,15 @@ class Improve
             }
         }
 
-        return substr(microtime(true) - $time_start, 0, 5);
+        return round(microtime(true) - $time_start, 5);
     }
 
     private static function getModuleFiles(string $path, string $dir = '', array $res = []): array
     {
         $path = path::real($path);
+        if (!$path) {
+            return [];
+        }
         if (!is_dir($path) || !is_readable($path)) {
             return [];
         }
@@ -251,7 +283,7 @@ class Improve
                     $res
                 );
             } else {
-                $res[] = [empty($dir) ? $file : $dir . '/' . $file, files::getExtension($file), true];
+                $res[] = [$dir . '/' . $file, files::getExtension($file), true];
             }
         }
 
@@ -263,7 +295,7 @@ class Improve
         return $this->core->adminurl->get('admin.plugin.improve', $params, '&');
     }
 
-    public static function cleanExtensions($in): array
+    public static function cleanExtensions(string|array $in): array
     {
         $out = [];
         if (!is_array($in)) {
@@ -281,32 +313,61 @@ class Improve
         return $out;
     }
 
-    private function sortModules(improveAction $a, improveAction $b): int
+    /**
+     * Sort modules by priority then name
+     *
+     * @param  ImproveAction    $a  ImproveAction instance
+     * @param  ImproveAction    $b  ImproveAction instance
+     *
+     * @return integer              Is higher
+     */
+    private function sortModules(ImproveAction $a, ImproveAction $b): int
     {
-        if ($a->priority == $b->priority) {
-            return strcasecmp($a->name, $b->name);
+        if ($a->get('priority') == $b->get('priority')) {
+            return strcasecmp($a->get('name'), $b->get('name'));
         }
 
-        return $a->priority < $b->priority ? -1 : 1;
+        return $a->get('priority') < $b->get('priority') ? -1 : 1;
     }
 }
 
 class ImproveDefinition
 {
+    /** @var array  Current module properties */
     private $properties = [];
 
+    /**
+     * Constructor
+     *
+     * @param string    $type           Module type, plugin or theme
+     * @param string    $id             Module id
+     * @param array     $properties     Module properties
+     */
     public function __construct(string $type, string $id, array $properties = [])
     {
         $this->loadDefine($id, $properties['root']);
-
         $this->properties = array_merge($this->properties, self::sanitizeModule($type, $id, $properties));
     }
 
-    public function get()
+    /**
+     * Get module properties
+     *
+     * @return array    The properties
+     */
+    public function get(): array
     {
         return $this->properties;
     }
 
+    /**
+     * Get clean properties of registered module
+     *
+     * @param string    $type           Module type, plugin or theme
+     * @param string    $id             Module id
+     * @param array     $properties     Module properties
+     *
+     * @return array                    Module properties
+     */
     public static function clean(string $type, string $id, array $properties): array
     {
         $p = new self($type, $id, $properties);
@@ -314,19 +375,37 @@ class ImproveDefinition
         return $p->get();
     }
 
-    private function loadDefine($id, $root)
+    /**
+     * Replicate dcModule::loadDefine
+     *
+     * @param  string $id   Module id
+     * @param  string $root Module path
+     *
+     * @return boolean      Success
+     */
+    private function loadDefine(string $id, string $root): bool
     {
         if (file_exists($root . '/_define.php')) {
-            $this->id    = $id;
-            $this->mroot = $root;
             ob_start();
             require $root . '/_define.php';
             ob_end_clean();
         }
+
+        return true;
     }
 
-    # adapt from class.dc.modules.php
-    private function registerModule($name, $desc, $author, $version, $properties = [])
+    /**
+     * Replicate dcModule::registerModule
+     *
+     * @param   string          $name           The module name
+     * @param   string          $desc           The module description
+     * @param   string          $author         The module author
+     * @param   string          $version        The module version
+     * @param   string|array    $properties     The properties
+     *
+     * @return  boolean                 Success
+     */
+    private function registerModule(string $name, string $desc, string $author, string $version, string|array $properties = []): bool // @phpstan-ignore-line
     {
         if (!is_array($properties)) {
             $args       = func_get_args();
@@ -352,9 +431,19 @@ class ImproveDefinition
             ],
             $properties
         );
+
+        return true;
     }
 
-    # adapt from lib.moduleslist.php
+    /**
+     * Replicate adminModulesList::sanitizeModule
+     *
+     * @param  string $type       Module type
+     * @param  string $id         Module id
+     * @param  array  $properties Module properties
+     *
+     * @return array              Sanitized module properties
+     */
     public static function sanitizeModule(string $type, string $id, array $properties): array
     {
         $label = empty($properties['label']) ? $id : $properties['label'];
@@ -402,9 +491,15 @@ class ImproveDefinition
         );
     }
 
-    # taken from lib.moduleslist.php
+    /**
+     * Replicate adminModulesList::sanitizeString
+     *
+     * @param  string   $str    String to sanitize
+     *
+     * @return string           Sanitized string
+     */
     public static function sanitizeString(string $str): string
     {
-        return preg_replace('/[^A-Za-z0-9\@\#+_-]/', '', strtolower($str));
+        return (string) preg_replace('/[^A-Za-z0-9\@\#+_-]/', '', strtolower($str));
     }
 }

@@ -12,11 +12,19 @@
  */
 class ImproveActionGitshields extends ImproveAction
 {
-    private $stop_scan      = false;
+    /** @var boolean Stop scaning files */
+    private $stop_scan = false;
+
+    /** @var array Parsed bloc */
+    private $blocs = [];
+
+    /** @var array Search patterns */
     protected $bloc_pattern = [
         'remove' => '/\[!\[Release(.*)LICENSE\)/ms',
         'target' => '/^([^\n]+)[\r\n|\n]{1,}/ms'
     ];
+
+    /** @var array Shields patterns */
     protected $bloc_content = [
         'release'   => '[![Release](https://img.shields.io/github/v/release/%username%/%module%)](https://github.com/%username%/%module%/releases)',
         'date'      => '[![Date](https://img.shields.io/github/release-date/%username%/%module%)](https://github.com/%username%/%module%/releases)',
@@ -87,14 +95,14 @@ class ImproveActionGitshields extends ImproveAction
         return true;
     }
 
-    private function replaceInfo()
+    private function replaceInfo(): void
     {
-        $bloc = [];
+        $blocs = [];
         foreach ($this->bloc_content as $k => $v) {
             if ($k == 'dotaddict' && empty($this->getSetting('dotaddict'))) {
                 continue;
             }
-            $bloc[$k] = trim(str_replace(
+            $blocs[$k] = trim(str_replace(
                 [
                     '%username%',
                     '%module%',
@@ -112,11 +120,11 @@ class ImproveActionGitshields extends ImproveAction
                 $v
             ));
         }
-        $this->bloc = $bloc;
+        $this->blocs = $blocs;
         $this->setSuccess(__('Prepare custom shield info'));
     }
 
-    private function getDotclearVersion()
+    private function getDotclearVersion(): string
     {
         $version = null;
         if (!empty($this->module['requires']) && is_array($this->module['requires'])) {
@@ -137,23 +145,23 @@ class ImproveActionGitshields extends ImproveAction
         return $version ?: $this->core->getVersion('core');
     }
 
-    private function writeShieldsBloc($content)
+    private function writeShieldsBloc(string $content): string
     {
         $res = preg_replace(
             $this->bloc_pattern['target'],
-            '$1' . "\n\n" . trim(implode("\n", $this->bloc)) . "\n\n",
+            '$1' . "\n\n" . trim(implode("\n", $this->blocs)) . "\n\n",
             $content,
             1,
             $count
         );
-        if ($count) {
+        if ($count && $res) {
             $this->setSuccess(__('Write new shield bloc'));
         }
 
-        return $res;
+        return (string) $res;
     }
 
-    private function deleteShieldsBloc($content)
+    private function deleteShieldsBloc(string $content): string
     {
         $res = preg_replace(
             $this->bloc_pattern['remove'],
@@ -162,10 +170,10 @@ class ImproveActionGitshields extends ImproveAction
             1,
             $count
         );
-        if ($count) {
+        if ($count && $res) {
             $this->setSuccess(__('Delete old shield bloc'));
         }
 
-        return $res;
+        return (string) $res;
     }
 }

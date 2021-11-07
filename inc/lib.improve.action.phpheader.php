@@ -12,7 +12,8 @@
  */
 class ImproveActionPhpheader extends ImproveAction
 {
-    private static $exemple = "
+    /** @var string Exemple of header */
+    private static $exemple = <<<EOF
 @brief %module_id%, a %module_type% for Dotclear 2
 
 @package Dotclear
@@ -21,8 +22,10 @@ class ImproveActionPhpheader extends ImproveAction
 @author %module_author%
 
 @copyright %user_cn%
-@copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html";
+@copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+EOF;
 
+    /** @var array<string> Allowed bloc replacement */
     private $bloc_wildcards = [
         '%year%',
         '%module_id%',
@@ -34,10 +37,15 @@ class ImproveActionPhpheader extends ImproveAction
         '%user_email%',
         '%user_url%'
     ];
-    private $bloc_action = [];
 
-    private $bloc_content = '';
-    private $stop_scan    = false;
+    /** @var array Allowed action for header */
+    private $action_bloc = [];
+
+    /** @var string Parsed bloc */
+    private $bloc = '';
+
+    /** @var boolean Stop parsing files */
+    private $stop_scan = false;
 
     protected function init(): bool
     {
@@ -106,9 +114,47 @@ class ImproveActionPhpheader extends ImproveAction
 
     public function openModule(): ?bool
     {
-        $this->replaceInfo();
+        $bloc = trim($this->getSetting('bloc_content'));
 
-        return null;
+        if (empty($bloc)) {
+            $this->setWarning(__('bloc is empty'));
+
+            return null;
+        }
+
+        $bloc = trim(str_replace("\r\n", "\n", $bloc));
+
+        try {
+            $this->bloc = (string) preg_replace_callback(
+                // use \u in bloc content for first_upper_case
+                '/(\\\u([a-z]{1}))/',
+                function ($str) {
+                    return ucfirst($str[2]);
+                },
+                str_replace(
+                    $this->bloc_wildcards,
+                    [
+                        date('Y'),
+                        $this->module['id'],
+                        $this->module['name'],
+                        $this->module['author'],
+                        $this->module['type'],
+                        $this->core->auth->getInfo('user_cn'),
+                        $this->core->auth->getinfo('user_name'),
+                        $this->core->auth->getInfo('user_email'),
+                        $this->core->auth->getInfo('user_url')
+                    ],
+                    (string) $bloc
+                )
+            );
+            $this->setSuccess(__('Prepare header info'));
+
+            return null;
+        } catch (Exception $e) {
+            $this->setError(__('Failed to parse bloc'));
+
+            return null;
+        }
     }
 
     public function openDirectory(): ?bool
@@ -155,50 +201,13 @@ class ImproveActionPhpheader extends ImproveAction
         return true;
     }
 
-    private function replaceInfo()
-    {
-        $bloc = trim($this->getSetting('bloc_content'));
-
-        if (empty($bloc)) {
-            $this->setWarning(__('bloc is empty'));
-
-            return null;
-        }
-
-        $bloc = trim(str_replace("\r\n", "\n", $bloc));
-
-        try {
-            $this->bloc = preg_replace_callback(
-                // use \u in bloc content for first_upper_case
-                '/(\\\u([a-z]{1}))/',
-                function ($str) {
-                    return ucfirst($str[2]);
-                },
-                str_replace(
-                    $this->bloc_wildcards,
-                    [
-                        date('Y'),
-                        $this->module['id'],
-                        $this->module['name'],
-                        $this->module['author'],
-                        $this->module['type'],
-                        $this->core->auth->getInfo('user_cn'),
-                        $this->core->auth->getinfo('user_name'),
-                        $this->core->auth->getInfo('user_email'),
-                        $this->core->auth->getInfo('user_url')
-                    ],
-                    $bloc
-                )
-            );
-            $this->setSuccess(__('Prepare header info'));
-        } catch (Exception $e) {
-            $this->setError(__('Failed to parse bloc'));
-
-            return null;
-        }
-    }
-
-    private function writeDocBloc($content)
+    /**
+     * Write bloc content in file content
+     *
+     * @param  string $content Old content
+     * @return string          New content
+     */
+    private function writeDocBloc(string $content): string
     {
         $res = preg_replace(
             '/^(\<\?php[\n|\r\n]+)/',
@@ -207,15 +216,21 @@ class ImproveActionPhpheader extends ImproveAction
             1,
             $count
         );
-        if ($count) {
+        if ($count && $res) {
             $res = str_replace("\n * \n", "\n *\n", $res);
             $this->setSuccess(__('Write new doc bloc content'));
         }
 
-        return $res;
+        return (string) $res;
     }
 
-    private function deleteDocBloc($content)
+    /**
+     * Delete bloc content in file content
+     *
+     * @param  string $content Old content
+     * @return string          New content
+     */
+    private function deleteDocBloc(string $content): string
     {
         $res = preg_replace(
             '/^(\<\?php\s*[\n|\r\n]{0,1}\s*\/\*\*.*?\s*\*\/\s*[\n|\r\n]+)/msi',
@@ -228,10 +243,16 @@ class ImproveActionPhpheader extends ImproveAction
             $this->setSuccess(__('Delete old doc bloc content'));
         }
 
-        return $res;
+        return (string) $res;
     }
 
-    private function deleteOldBloc($content)
+    /**
+     * Delete old style bloc content in file content
+     *
+     * @param  string $content Old content
+     * @return string          New content
+     */
+    private function deleteOldBloc(string $content): string
     {
         $res = preg_replace(
             '/((# -- BEGIN LICENSE BLOCK ([-]+))(.*?)(# -- END LICENSE BLOCK ([-]+))([\n|\r\n]{1,}))/msi',
@@ -244,6 +265,6 @@ class ImproveActionPhpheader extends ImproveAction
             $this->setSuccess(__('Delete old style bloc content'));
         }
 
-        return $res;
+        return (string) $res;
     }
 }

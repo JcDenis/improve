@@ -21,7 +21,7 @@ $improve = new Improve($core);
 
 $combo_actions = [];
 foreach ($improve->modules() as $action) {
-    $combo_actions[$action->name] = $action->id;
+    $combo_actions[$action->get('name')] = $action->get('id');
 }
 $disabled = $improve->disabled();
 if (!empty($disabled)) {

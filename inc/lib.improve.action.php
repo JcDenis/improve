@@ -47,8 +47,6 @@ class ImproveActionTab extends ImproveAction
 
 class ImproveActionNewline extends ImproveAction
 {
-    private $extensions = ['php', 'js', 'xml', 'md', 'txt'];
-
     protected function init(): bool
     {
         $this->setProperties([
@@ -98,19 +96,19 @@ class ImproveActionNewline extends ImproveAction
          '</p>';
     }
 
-    public function readFile(&$content): ?bool
+    public function readFile(string &$content): ?bool
     {
         $ext = $this->getSetting('extensions');
         if (!is_array($ext) || !in_array($this->path_extension, $ext)) {
             return null;
         }
-        $clean = preg_replace(
+        $clean = (string) preg_replace(
             '/(\n\s+\n)/',
             "\n\n",
-            preg_replace(
+            (string) preg_replace(
                 '/(\n\n+)/',
                 "\n\n",
-                str_replace(
+                (string) str_replace(
                     ["\r\n", "\r"],
                     "\n",
                     $content
@@ -128,8 +126,6 @@ class ImproveActionNewline extends ImproveAction
 
 class ImproveActionEndoffile extends ImproveAction
 {
-    private $psr2 = false;
-
     protected function init(): bool
     {
         $this->setProperties([

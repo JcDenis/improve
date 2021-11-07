@@ -37,7 +37,7 @@ $_menu['Plugins']->addItem(
 
 class ImproveBehaviors
 {
-    public static function adminDashboardFavorites($core, $favs)
+    public static function adminDashboardFavorites(dcCore $core, dcFavorites $favs): void
     {
         $favs->register(
             'improve',

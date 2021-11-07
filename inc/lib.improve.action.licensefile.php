@@ -12,14 +12,18 @@
  */
 class ImproveActionLicensefile extends ImproveAction
 {
+    /** @var array Possible license filenames */
     protected static $license_filenames = [
         'license',
         'license.md',
         'license.txt'
     ];
+
+    /** @var array Possible license names */
     private $action_version = [];
-    private $action_full    = [];
-    private $stop_scan      = false;
+
+    /** @var array Action */
+    private $action_full = [];
 
     protected function init(): bool
     {
@@ -90,7 +94,7 @@ class ImproveActionLicensefile extends ImproveAction
         return null;
     }
 
-    private function writeFullLicense()
+    private function writeFullLicense(): ?bool
     {
         try {
             $full = file_get_contents(dirname(__FILE__) . '/license/' . $this->getSetting('action_version') . '.full.txt');
@@ -110,7 +114,7 @@ class ImproveActionLicensefile extends ImproveAction
         return true;
     }
 
-    private function deleteFullLicense($only_one = false)
+    private function deleteFullLicense(bool $only_one = false): bool
     {
         foreach (self::fileExists($this->module['root']) as $file) {
             if ($only_one && $file != 'LICENSE') {
@@ -128,7 +132,7 @@ class ImproveActionLicensefile extends ImproveAction
         return true;
     }
 
-    private static function fileExists($root)
+    private static function fileExists(string $root): array
     {
         $existing = [];
         foreach (self::$license_filenames as $file) {

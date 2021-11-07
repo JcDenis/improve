@@ -12,6 +12,7 @@
  */
 class ImproveActionZip extends ImproveAction
 {
+    /** @var array List of excluded file pattern */
     public static $exclude = [
         '.',
         '..',
@@ -24,6 +25,8 @@ class ImproveActionZip extends ImproveAction
         'Thumbs.db',
         '_disabled'
     ];
+
+    /** @var array Replacement wildcards */
     public static $filename_wildcards = [
         '%type%',
         '%id%',
@@ -31,8 +34,6 @@ class ImproveActionZip extends ImproveAction
         '%author%',
         '%time%'
     ];
-
-    private $package = '';
 
     protected function init(): bool
     {
@@ -137,7 +138,7 @@ class ImproveActionZip extends ImproveAction
         return null;
     }
 
-    private function zipModule(string $file, array $exclude)
+    private function zipModule(string $file, array $exclude): void
     {
         $file = str_replace(
             self::$filename_wildcards,
@@ -158,12 +159,12 @@ class ImproveActionZip extends ImproveAction
         if (file_exists($path) && empty($this->getSetting('pack_overwrite'))) {
             $this->setWarning(__('Destination filename already exists'));
 
-            return null;
+            return;
         }
         if (!is_dir(dirname($path)) || !is_writable(dirname($path))) {
             $this->setError(__('Destination path is not writable'));
 
-            return null;
+            return;
         }
         @set_time_limit(300);
         $fp  = fopen($path, 'wb');
@@ -187,24 +188,34 @@ class ImproveActionZip extends ImproveAction
 
         $this->setSuccess(sprintf(__('Zip module into "%s"'), $path));
 
-        return null;
     }
 }
 
 class ImproveZipFileZip extends fileZip
 {
+    /** @var boolean Should remove comments from files */
     public static $remove_comment = false;
 
+    /**
+     * Replace clearbrick fileZip::writeFile
+     *
+     * @param  string $name  Name
+     * @param  string $file  File
+     * @param  int    $size  Size
+     * @param  int    $mtime Mtime
+     *
+     * @return void
+     */
     protected function writeFile($name, $file, $size, $mtime)
     {
         if (!isset($this->entries[$name])) {
-            return null;
+            return;
         }
 
         $size = filesize($file);
         $this->memoryAllocate($size * 3);
 
-        $content = file_get_contents($file);
+        $content = (string) file_get_contents($file);
 
         if (self::$remove_comment && substr($file, -4) == '.php') {
             $content = self::removePHPComment($content);
@@ -212,7 +223,7 @@ class ImproveZipFileZip extends fileZip
 
         $unc_len = strlen($content);
         $crc     = crc32($content);
-        $zdata   = gzdeflate($content);
+        $zdata   = (string) gzdeflate($content);
         $c_len   = strlen($zdata);
 
         unset($content);
@@ -267,7 +278,7 @@ class ImproveZipFileZip extends fileZip
         $this->ctrl_dir[] = $cdrec;
     }
 
-    protected static function removePHPComment($content)
+    protected static function removePHPComment(string $content): string
     {
         $comment = [T_COMMENT];
         if (defined('T_DOC_COMMENT')) {
