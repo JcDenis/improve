@@ -45,5 +45,6 @@ Configure actions. Select actions and module to work with, then click fix.
 ## CONTRIBUTORS
 
  * Jean-Christian Denis
+ * Gvx
 
  You are welcome to contribute to this code.

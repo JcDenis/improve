@@ -5,6 +5,9 @@ dev
 - [ ] add module to create full README file
 - [ ] write documentation of php class
 
+0.7.1 - 2021.11.08
+- Fix php < 8 _ thanks @Gvx- _ closes #5
+
 0.7 - 2021.11.08
 - add phpstan module
 - fix some errors from phpstan analyze
