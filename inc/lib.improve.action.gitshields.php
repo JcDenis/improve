@@ -37,12 +37,12 @@ class ImproveActionGitshields extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'gitshields',
-            'name'     => __('Shields badges'),
-            'desc'     => __('Add and maintain shields.io badges to the REDAME.md file'),
-            'priority' => 380,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'gitshields',
+            'name'         => __('Shields badges'),
+            'description'  => __('Add and maintain shields.io badges to the REDAME.md file'),
+            'priority'     => 380,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
 
         return true;

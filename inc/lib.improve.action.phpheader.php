@@ -47,15 +47,18 @@ EOF;
     /** @var boolean Stop parsing files */
     private $stop_scan = false;
 
+    /** @var string Settings bloc content */
+    private $bloc_content = '';
+
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'phpheader',
-            'name'     => __('PHP header'),
-            'desc'     => __('Add or remove phpdoc header bloc from php file'),
-            'priority' => 340,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'phpheader',
+            'name'         => __('PHP header'),
+            'description'  => __('Add or remove phpdoc header bloc from php file'),
+            'priority'     => 340,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
 
         $this->action_bloc = [
@@ -65,6 +68,9 @@ EOF;
             __('Overwrite bloc only if it exists') => 'replace',
             __('Remove existing bloc header')      => 'remove'
         ];
+
+        $bloc_content       = $this->getSetting('bloc_content');
+        $this->bloc_content = is_string($bloc_content) ? $bloc_content : '';
 
         return true;
     }
@@ -103,7 +109,7 @@ EOF;
 
         <p>' . __('Bloc content:') . '</p>
         <p class="area">' .
-        form::textarea('bloc_content', 50, 10, html::escapeHTML($this->getSetting('bloc_content'))) . '
+        form::textarea('bloc_content', 50, 10, html::escapeHTML($this->bloc_content)) . '
         </p><p class="form-note">' .
         sprintf(
             __('You can use wildcards %s'),
@@ -114,7 +120,7 @@ EOF;
 
     public function openModule(): ?bool
     {
-        $bloc = trim($this->getSetting('bloc_content'));
+        $bloc = trim($this->bloc_content);
 
         if (empty($bloc)) {
             $this->setWarning(__('bloc is empty'));

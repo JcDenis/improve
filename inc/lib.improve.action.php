@@ -15,11 +15,11 @@ class ImproveActionTab extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'tab',
-            'name'     => __('Tabulations'),
-            'desc'     => __('Replace tabulation by four space in php files'),
-            'priority' => 820,
-            'types'    => ['plugin', 'theme']
+            'id'          => 'tab',
+            'name'        => __('Tabulations'),
+            'description' => __('Replace tabulation by four space in php files'),
+            'priority'    => 820,
+            'types'       => ['plugin', 'theme']
         ]);
 
         return true;
@@ -50,12 +50,12 @@ class ImproveActionNewline extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'newline',
-            'name'     => __('Newlines'),
-            'desc'     => __('Replace bad and repetitive and empty newline by single newline in files'),
-            'priority' => 840,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'newline',
+            'name'         => __('Newlines'),
+            'description'  => __('Replace bad and repetitive and empty newline by single newline in files'),
+            'priority'     => 840,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
         /*
                 $ext = @unserialize($this->core->blog->settings->improve->newline_extensions);
@@ -129,12 +129,12 @@ class ImproveActionEndoffile extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'endoffile',
-            'name'     => __('End of files'),
-            'desc'     => __('Remove php tag and empty lines from end of files'),
-            'priority' => 860,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'endoffile',
+            'name'         => __('End of files'),
+            'description'  => __('Remove php tag and empty lines from end of files'),
+            'priority'     => 860,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
 
         return true;

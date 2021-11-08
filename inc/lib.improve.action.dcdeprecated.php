@@ -62,11 +62,11 @@ class ImproveActionDcdeprecated extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'dcdeprecated',
-            'name'     => __('Dotclear deprecated'),
-            'desc'     => __('Search for use of deprecated Dotclear functions'),
-            'priority' => 520,
-            'types'    => ['plugin', 'theme']
+            'id'          => 'dcdeprecated',
+            'name'        => __('Dotclear deprecated'),
+            'description' => __('Search for use of deprecated Dotclear functions'),
+            'priority'    => 520,
+            'types'       => ['plugin', 'theme']
         ]);
 
         return true;

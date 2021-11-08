@@ -52,15 +52,26 @@ abstract class ImproveAction
     /** @var array<string>  Action module settings */
     private $settings = [];
 
-    /** @var array<mixed>   Action module properties */
-    private $properties = [
-        'id'       => '',
-        'name'     => '',
-        'desc'     => '',
-        'priority' => 500,
-        'config'   => false, //mixed bool for internal, string for ext url
-        'types'    => ['plugin']
-    ];
+    /** @var array List of allowed properties */
+    protected static $allowed_properties = ['id', 'name', 'description', 'priority', 'configurator', 'types'];
+
+    /** @var string Module id */
+    private $id = '';
+
+    /** @var string Module name */
+    private $name = '';
+
+    /** @var string Module description */
+    private $description = '';
+
+    /** @var integer Module id */
+    private $priority = 500;
+
+    /** @var boolean Module has config page */
+    private $configurator = false;
+
+    /** @var array Module supported types */
+    private $types = ['plugin'];
 
     /**
      * ImproveAction constructor inits properpties and settings of a child class.
@@ -79,7 +90,7 @@ abstract class ImproveAction
 
         // can overload priority by settings
         if (1 < ($p = (int) $core->blog->settings->improve->get('priority_' . $this->class_name))) {
-            $this->properties['priority'] = $p;
+            $this->priority = $p;
         }
     }
 
@@ -117,50 +128,61 @@ abstract class ImproveAction
      */
     final public function get(string $key)
     {
-        if (isset($this->properties[$key])) {
-            return $this->properties[$key];
-        } elseif (isset($this->settings[$key])) {
+        if (isset($this->settings[$key])) {
             return $this->settings[$key];
         }
 
         return null;
     }
 
-    /**
-     * Get a definition property of action class
-     *
-     * @return     mixed  A property of action definition.
-     */
-    final public function getProperty(string $property)
+    /** Get action module id */
+    final public function id(): string
     {
-        return $this->properties[$property] ?? null;
+        return $this->id;
+    }
+
+    /** Get action module name */
+    final public function name(): string
+    {
+        return $this->name;
+    }
+
+    /** Get action module description */
+    final public function description(): string
+    {
+        return $this->description;
+    }
+
+    /** Get action module priority */
+    final public function priority(): int
+    {
+        return $this->priority;
+    }
+
+    /** Get action module configuration url if any */
+    final public function configurator(): bool
+    {
+        return $this->configurator;
+    }
+
+    /** Get action module supported types */
+    final public function types(): array
+    {
+        return $this->types;
     }
 
     /**
-     * Set a definition property of action class
+     * Set properties of action class
      *
-     * Property can be:
-     *  - id :          action id
-     *  - name :        action short name
-     *  - desc :        action short description,
-     *  - priority :    order of execution of this action
-     *  - config :      as configuration gui, false = none, true = internal, string = ext url
-     *  - types :       array of supported type of module, can : be plugins and/or themes
-     *
-     * @param      mixed    $property   one or more definition
-     * @param      mixed    $value      value for a single property
+     * @param      array    $properties   Properties
      *
      * @return     boolean              Success
      */
-    final protected function setProperties($property, $value = null): bool
+    final protected function setProperties(array $properties): bool
     {
-        $properties = is_array($property) ? $property : [$property => $value];
-        foreach ($properties as $k => $v) {
-            if (isset($this->properties[$k])) {
-                if ($k == 'types' && !is_array($v)) {
-                    $v = [$v];
-                }
-                $this->properties[$k] = $v;
+        foreach ($properties as $key => $value) {
+            if (in_array($key, self::$allowed_properties)) {
+                $this->{$key} = $value;
             }
         }
 
@@ -385,7 +407,7 @@ abstract class ImproveAction
     /**
      * Get action logs.
      *
-     * @param      mixed $type        type of message, can be error, warning, succes
+     * @param      string|null $type        type of message, can be error, warning, succes
      *
      * @return     array  Arry of given type of log or all if type is null
      */

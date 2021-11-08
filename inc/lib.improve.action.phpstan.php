@@ -18,16 +18,33 @@ class ImproveActionPhpstan extends ImproveAction
     /** @var string User pref for colored synthax theme */
     protected static $user_ui_colorsyntax_theme = 'default';
 
+    /** @var integer Settings phpstan run level */
+    private $run_level = 5;
+
+    /** @var string Settings phpstan ignored vars */
+    private $ignored_vars = '';
+
+    /** @var string Settings PHP executable path */
+    private $phpexe_path = '';
+
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'phpstan',
-            'name'     => __('PHPStan'),
-            'desc'     => __('Analyse php code using PHPStan'),
-            'priority' => 910,
-            'config'   => true,
-            'types'    => ['plugin']
+            'id'           => 'phpstan',
+            'name'         => __('PHPStan'),
+            'description'  => __('Analyse php code using PHPStan'),
+            'priority'     => 910,
+            'configurator' => true,
+            'types'        => ['plugin']
         ]);
+
+        $this->getPhpPath();
+
+        $run_level       = $this->getSetting('run_level');
+        $this->run_level = is_int($run_level) ? $run_level : 5;
+
+        $ignored_vars       = $this->getSetting('ignored_vars');
+        $this->ignored_vars = is_string($ignored_vars) ? $ignored_vars : '';
 
         $this->core->auth->user_prefs->addWorkspace('interface');
         self::$user_ui_colorsyntax       = $this->core->auth->user_prefs->interface->colorsyntax;
@@ -67,16 +84,16 @@ class ImproveActionPhpstan extends ImproveAction
         '<p class="info">' . __('You must enable improve details to view analyse results !') . '</p>' .
         '<p><label class="classic" for="phpexe_path">' .
         __('Root directory of PHP executable:') . '<br />' .
-        form::field('phpexe_path', 160, 255, $this->getSetting('phpexe_path')) . '</label>' .
+        form::field('phpexe_path', 160, 255, $this->phpexe_path) . '</label>' .
         '</p>' .
         '<p class="form-note">' .
             __('If this module does not work you can try to put here directory to php executable (without executable file name).') .
         ' C:\path_to\php</p>' .
         '<p><label class="classic" for="run_level">' . __('Level:') . ' </label>' .
-        form::number('run_level', ['min' => 0, 'max' => 9, 'default' => (int) $this->getSetting('run_level')]) . '</p>' .
+        form::number('run_level', ['min' => 0, 'max' => 9, 'default' => $this->run_level]) . '</p>' .
         '<p><label class="classic" for="ignored_vars">' .
         __('List of ignored variables:') . '<br />' .
-        form::field('ignored_vars', 160, 255, $this->getSetting('ignored_vars')) . '</label>' .
+        form::field('ignored_vars', 160, 255, $this->ignored_vars) . '</label>' .
         '</p>' .
         '<p class="form-note">' . sprintf(
             __('If you have errors like "%s", you can add this var here. Use ; as separator and do not put $ ahead.'),
@@ -136,17 +153,13 @@ class ImproveActionPhpstan extends ImproveAction
 
     private function execFixer(string $path = null): bool
     {
-        $phpexe_path = $this->getPhpPath();
-        if (!empty($phpexe_path)) {
-            $phpexe_path .= '/';
-        }
         if (!empty($path)) {
             $path .= ' ';
         }
 
         $command = sprintf(
             '%sphp %s/libs/phpstan.phar analyse ' . $path . '--configuration=%s',
-            $phpexe_path,
+            $this->phpexe_path,
             dirname(__FILE__),
             DC_VAR . '/phpstan.neon'
         );
@@ -171,14 +184,23 @@ class ImproveActionPhpstan extends ImproveAction
         }
     }
 
-    private function getPhpPath(): string
+    /**
+     * Get php executable path
+     */
+    private function getPhpPath(): void
     {
         $phpexe_path = $this->getSetting('phpexe_path');
+        if (!is_string($phpexe_path)) {
+            $phpexe_path = '';
+        }
         if (empty($phpexe_path) && !empty(PHP_BINDIR)) {
             $phpexe_path = PHP_BINDIR;
         }
-
-        return (string) path::real($phpexe_path);
+        $phpexe_path = (string) path::real($phpexe_path);
+        if (!empty($phpexe_path)) {
+            $phpexe_path .= '/';
+        }
+        $this->phpexe_path = $phpexe_path;
     }
 
     private function writeConf(): bool
@@ -191,7 +213,7 @@ class ImproveActionPhpstan extends ImproveAction
                 '%BOOTSTRAP_ROOT%'
             ],
             [
-                (int) $this->getSetting('run_level'),
+                $this->run_level,
                 $this->module['sroot'],
                 DC_ROOT,
                 dirname(__FILE__) . '/libs/'
@@ -199,7 +221,7 @@ class ImproveActionPhpstan extends ImproveAction
             (string) file_get_contents(dirname(__FILE__) . '/libs/dc.phpstan.rules.conf')
         );
 
-        $ignored = explode(';', $this->getSetting('ignored_vars'));
+        $ignored = explode(';', $this->ignored_vars);
         foreach ($ignored as $var) {
             $var = trim($var);
             if (empty($var)) {

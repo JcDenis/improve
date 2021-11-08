@@ -31,8 +31,8 @@ if (!empty($_POST['save_preferences'])) {
     $preferences[$type] = [];
     if (!empty($_POST['actions'])) {
         foreach ($improve->modules() as $action) {
-            if (in_array($type, $action->get('types')) && in_array($action->get('id'), $_POST['actions'])) {
-                $preferences[$type][] = $action->get('id');
+            if (in_array($type, $action->types()) && in_array($action->id(), $_POST['actions'])) {
+                $preferences[$type][] = $action->id();
             }
         }
     }
@@ -141,18 +141,18 @@ if (!empty($_REQUEST['config'])) {
     $back_url = $_REQUEST['redir'] ?? $core->adminurl->get('admin.plugin.improve', ['type' => $type]);
 
     if (null !== $action) {
-        $redir = $_REQUEST['redir'] ?? $core->adminurl->get('admin.plugin.improve', ['type' => $type, 'config' => $action->get('id')]);
+        $redir = $_REQUEST['redir'] ?? $core->adminurl->get('admin.plugin.improve', ['type' => $type, 'config' => $action->id()]);
         $res   = $action->configure($redir);
 
         echo '
-        <h3>' . sprintf(__('Configure module "%s"'), $action->get('name')) . '</h3>
+        <h3>' . sprintf(__('Configure module "%s"'), $action->name()) . '</h3>
         <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>
-        <p class="info">' . html::escapeHTML($action->get('desc')) . '</p>
+        <p class="info">' . html::escapeHTML($action->description()) . '</p>
         <form action="' . $core->adminurl->get('admin.plugin.improve') . '" method="post" id="form-actions">' .
         (empty($res) ? '<p class="message">' . __('Nothing to configure') . '</p>' : $res) . '
         <p class="clear"><input type="submit" name="save" value="' . __('Save') . '" />' .
         form::hidden('type', $type) .
-        form::hidden('config', $action->get('id')) .
+        form::hidden('config', $action->id()) .
         form::hidden('redir', $redir) .
         $core->formNonce() . '</p>' .
         '</form>';
@@ -173,31 +173,30 @@ if (!empty($_REQUEST['config'])) {
         (DC_DEBUG ? '<th scope="col">' . __('Priority') . '</td>' : '') .
         '</tr></thead><tbody>';
         foreach ($improve->modules() as $action) {
-            if (!in_array($type, $action->get('types'))) {
+            if (!in_array($type, $action->types())) {
                 continue;
             }
             echo
             '<tr class="line' . ($action->isConfigured() ? '' : ' offline') . '">' .
             '<td class="minimal">' . form::checkbox(
                 ['actions[]',
-                    'action_' . $action->get('id')],
-                $action->get('id'),
-                in_array($action->get('id'), $preferences[$type]) && $action->isConfigured(),
+                    'action_' . $action->id()],
+                $action->id(),
+                in_array($action->id(), $preferences[$type]) && $action->isConfigured(),
                 '',
                 '',
                 !$action->isConfigured()
             ) . '</td>' .
             '<td class="minimal nowrap">' .
-                '<label for="action_' . $action->get('id') . '" class="classic">' . html::escapeHTML($action->get('name')) . '</label>' .
+                '<label for="action_' . $action->id() . '" class="classic">' . html::escapeHTML($action->name()) . '</label>' .
             '</td>' .
-            '<td class="maximal">' . $action->get('desc') . '</td>' .
+            '<td class="maximal">' . $action->description() . '</td>' .
             '<td class="minimal nowrap modules">' . (
-                false === $action->get('config') ? '' :
-                '<a class="module-config" href="' .
-                (true === $action->get('config') ? $core->adminurl->get('admin.plugin.improve', ['type' => $type, 'config' => $action->get('id')]) : $action->get('config')) .
-                '" title="' . sprintf(__("Configure action '%s'"), $action->get('name')) . '">' . __('Configure') . '</a>'
+                false === $action->configurator() ? '' :
+                    '<a class="module-config" href="' . $core->adminurl->get('admin.plugin.improve', ['type' => $type, 'config' => $action->id()]) .
+                    '" title="' . sprintf(__("Configure action '%s'"), $action->name()) . '">' . __('Configure') . '</a>'
             ) . '</td>' .
-            (DC_DEBUG ? '<td class="minimal"><span class="debug">' . $action->get('priority') . '</span></td>' : '') .
+            (DC_DEBUG ? '<td class="minimal"><span class="debug">' . $action->priority() . '</span></td>' : '') .
             '</tr>';
         }
 
@@ -227,7 +226,7 @@ if (!empty($_REQUEST['config'])) {
                         echo '<div class="' . $type . '"><ul>';
                         foreach ($tools as $tool => $msgs) {
                             $a = $improve->module($tool);
-                            echo '<li>' . ($a !== null ? $a->get('name') : 'unknow') . '<ul>';
+                            echo '<li>' . ($a !== null ? $a->name() : 'unknow') . '<ul>';
                             foreach ($msgs as $msg) {
                                 echo '<li>' . $msg . '</li>';
                             }

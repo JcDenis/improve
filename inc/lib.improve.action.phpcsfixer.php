@@ -29,16 +29,21 @@ class ImproveActionPhpcsfixer extends ImproveAction
     /** @var string User pref for colored synthax theme */
     protected static $user_ui_colorsyntax_theme = 'default';
 
+    /** @var string Settings PHP executable path */
+    private $phpexe_path = '';
+
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'phpcsfixer',
-            'name'     => __('PHP CS Fixer'),
-            'desc'     => __('Fix PSR coding style using Php CS Fixer'),
-            'priority' => 920,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'phpcsfixer',
+            'name'         => __('PHP CS Fixer'),
+            'description'  => __('Fix PSR coding style using Php CS Fixer'),
+            'priority'     => 920,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
+
+        $this->getPhpPath();
 
         $this->core->auth->user_prefs->addWorkspace('interface');
         self::$user_ui_colorsyntax       = $this->core->auth->user_prefs->interface->colorsyntax;
@@ -74,7 +79,7 @@ class ImproveActionPhpcsfixer extends ImproveAction
         return
         '<p><label class="classic" for="phpexe_path">' .
         __('Root directory of PHP executable:') . '<br />' .
-        form::field('phpexe_path', 160, 255, $this->getSetting('phpexe_path')) . '</label>' .
+        form::field('phpexe_path', 160, 255, $this->phpexe_path) . '</label>' .
         '</p>' .
         '<p class="form-note">' .
             __('If this module does not work you can try to put here directory to php executable (without executable file name).') .
@@ -95,14 +100,9 @@ class ImproveActionPhpcsfixer extends ImproveAction
 
     public function closeModule(): ?bool
     {
-        $phpexe_path = $this->getPhpPath();
-        if (!empty($phpexe_path)) {
-            $phpexe_path .= '/';
-        }
-
         $command = sprintf(
             '%sphp %s/libs/php-cs-fixer.phar fix %s --config=%s/libs/dc.phpcsfixer.rules.php --using-cache=no',
-            $phpexe_path,
+            $this->phpexe_path,
             dirname(__FILE__),
             $this->module['sroot'],
             dirname(__FILE__)
@@ -131,16 +131,20 @@ class ImproveActionPhpcsfixer extends ImproveAction
 
     /**
      * Get php executable path
-     *
-     * @return string   The path
      */
-    private function getPhpPath(): string
+    private function getPhpPath(): void
     {
         $phpexe_path = $this->getSetting('phpexe_path');
+        if (!is_string($phpexe_path)) {
+            $phpexe_path = '';
+        }
         if (empty($phpexe_path) && !empty(PHP_BINDIR)) {
             $phpexe_path = PHP_BINDIR;
         }
-
-        return (string) path::real($phpexe_path);
+        $phpexe_path = (string) path::real($phpexe_path);
+        if (!empty($phpexe_path)) {
+            $phpexe_path .= '/';
+        }
+        $this->phpexe_path = $phpexe_path;
     }
 }

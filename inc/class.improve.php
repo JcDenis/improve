@@ -51,11 +51,11 @@ class Improve
             $this->core->callBehavior('improveAddAction', $list, $this->core);
 
             foreach ($list as $action) {
-                if (is_a($action, 'ImproveAction') && !isset($this->actions[$action->get('id')])) {
-                    if (in_array($action->get('id'), $disabled)) {
-                        $this->disabled[$action->get('id')] = $action->get('name');
+                if (is_a($action, 'ImproveAction') && !isset($this->actions[$action->id()])) {
+                    if (in_array($action->id(), $disabled)) {
+                        $this->disabled[$action->id()] = $action->name();
                     } else {
-                        $this->actions[$action->get('id')] = $action;
+                        $this->actions[$action->id()] = $action;
                     }
                 }
             }
@@ -96,7 +96,9 @@ class Improve
         }
         $this->core->log->delLogs($rs->log_id);
 
-        return unserialize($rs->log_msg);
+        $res = unserialize($rs->log_msg);
+
+        return is_array($res) ? $res : [];
     }
 
     public function parselogs(int $id): array
@@ -182,7 +184,7 @@ class Improve
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs['improve'][__('Begin')][] = $action->get('id');
+            $this->logs['improve'][__('Begin')][] = $action->id();
             // info: set current module
             $action->setModule($module);
             $action->setPath(__('Begin'), '', true);
@@ -199,7 +201,7 @@ class Improve
             }
             foreach ($workers as $action) {
                 // trace all path and action in logs
-                $this->logs['improve'][$file[0]][] = $action->get('id');
+                $this->logs['improve'][$file[0]][] = $action->id();
                 // info: set current path
                 $action->setPath($file[0], $file[1], $file[2]);
             }
@@ -223,7 +225,7 @@ class Improve
                                 throw new Exception(sprintf(
                                     __('File content has been removed: %s by %s'),
                                     $file[0],
-                                    $action->get('name')
+                                    $action->name()
                                 ));
                             }
                         }
@@ -238,7 +240,7 @@ class Improve
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs['improve'][__('End')][] = $action->get('id');
+            $this->logs['improve'][__('End')][] = $action->id();
             // info: set current module
             $action->setPath(__('End'), '', true);
             // action: close module
@@ -246,7 +248,7 @@ class Improve
         }
         // info: get acions reports
         foreach ($workers as $action) {
-            $this->logs[$action->get('id')] = $action->getLogs();
+            $this->logs[$action->id()] = $action->getLogs();
             foreach ($this->has_log as $type => $v) {
                 if ($action->hasLog($type)) {
                     $this->has_log[$type] = true;
@@ -329,11 +331,11 @@ class Improve
      */
     private function sortModules(ImproveAction $a, ImproveAction $b): int
     {
-        if ($a->get('priority') == $b->get('priority')) {
-            return strcasecmp($a->get('name'), $b->get('name'));
+        if ($a->priority() == $b->priority()) {
+            return strcasecmp($a->name(), $b->name());
         }
 
-        return $a->get('priority') < $b->get('priority') ? -1 : 1;
+        return $a->priority() < $b->priority() ? -1 : 1;
     }
 }
 
@@ -411,7 +413,7 @@ class ImproveDefinition
      *
      * @return  boolean                 Success
      */
-    private function registerModule(string $name, string $desc, string $author, string $version, $properties = []): bool // @phpstan-ignore-line
+    private function registerModule(string $name, string $desc, string $author, string $version, $properties = []): bool
     {
         if (!is_array($properties)) {
             $args       = func_get_args();

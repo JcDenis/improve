@@ -15,12 +15,12 @@ class ImproveActionDcstore extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'dcstore',
-            'name'     => __('Store file'),
-            'desc'     => __('Re-create dcstore.xml file according to _define.php variables'),
-            'priority' => 420,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'dcstore',
+            'name'         => __('Store file'),
+            'description'  => __('Re-create dcstore.xml file according to _define.php variables'),
+            'priority'     => 420,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
 
         return true;
@@ -187,6 +187,11 @@ class ImproveActionDcstore extends ImproveAction
 
     private function parseFilePattern(): string
     {
+        $str = $this->getSetting('pattern');
+        if (!is_string($str)) {
+            return '';
+        }
+
         return text::tidyURL(str_replace(
             [
                 '%type%',
@@ -200,7 +205,7 @@ class ImproveActionDcstore extends ImproveAction
                 $this->module['version'],
                 $this->module['author']
             ],
-            $this->getSetting('pattern')
+            $str
         ));
     }
 }

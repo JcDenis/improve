@@ -28,12 +28,12 @@ class ImproveActionLicensefile extends ImproveAction
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'license',
-            'name'     => __('License file'),
-            'desc'     => __('Add or remove full license file to module root'),
-            'priority' => 330,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'license',
+            'name'         => __('License file'),
+            'description'  => __('Add or remove full license file to module root'),
+            'priority'     => 330,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
         $this->action_version = [
             __('no version selected')                          => '',

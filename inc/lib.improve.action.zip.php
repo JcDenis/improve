@@ -35,16 +35,34 @@ class ImproveActionZip extends ImproveAction
         '%time%'
     ];
 
+    /** @var string Settings Excluded files */
+    private $pack_excludefiles = '';
+
+    /** @var string Settings Main packacge filename */
+    private $pack_filename = '';
+
+    /** @var string Settings Second package filename */
+    private $secondpack_filename = '';
+
     protected function init(): bool
     {
         $this->setProperties([
-            'id'       => 'zip',
-            'name'     => __('Zip module'),
-            'desc'     => __('Compress module into a ready to install package'),
-            'priority' => 980,
-            'config'   => true,
-            'types'    => ['plugin', 'theme']
+            'id'           => 'zip',
+            'name'         => __('Zip module'),
+            'description'  => __('Compress module into a ready to install package'),
+            'priority'     => 980,
+            'configurator' => true,
+            'types'        => ['plugin', 'theme']
         ]);
+
+        $pack_excludefiles       = $this->getSetting('pack_excludefiles');
+        $this->pack_excludefiles = is_string($pack_excludefiles) ? $pack_excludefiles : '';
+
+        $pack_filename       = $this->getSetting('pack_filename');
+        $this->pack_filename = is_string($pack_filename) ? $pack_filename : '';
+
+        $secondpack_filename       = $this->getSetting('secondpack_filename');
+        $this->secondpack_filename = is_string($secondpack_filename) ? $secondpack_filename : '';
 
         return true;
     }
@@ -86,7 +104,7 @@ class ImproveActionZip extends ImproveAction
         <h4>' . __('Files') . '</h4>
 
         <p><label for="pack_filename">' . __('Name of exported package:') . ' ' .
-        form::field('pack_filename', 65, 255, $this->getSetting('pack_filename'), 'maximal') .
+        form::field('pack_filename', 65, 255, $this->pack_filename, 'maximal') .
         '</label></p>
         <p class="form-note">' . sprintf(__('Preconization: %s'), '%type%-%id%') . '</p>
 
@@ -105,7 +123,7 @@ class ImproveActionZip extends ImproveAction
         <h4>' . __('Content') . '</h4>
 
         <p><label for="pack_excludefiles">' . __('Extra files to exclude from package:') . ' ' .
-        form::field('pack_excludefiles', 65, 255, $this->getSetting('pack_excludefiles'), 'maximal') .
+        form::field('pack_excludefiles', 65, 255, $this->pack_excludefiles, 'maximal') .
         '</label></p>
         <p class="form-note">' . sprintf(__('Preconization: %s'), '*.zip,*.tar,*.tar.gz') . '<br />' .
         sprintf(__('By default all these files are always removed from packages : %s'), implode(', ', self::$exclude)) . '</p>
@@ -121,7 +139,7 @@ class ImproveActionZip extends ImproveAction
     {
         $exclude = array_merge(
             self::$exclude,
-            explode(',', $this->getSetting('pack_excludefiles'))
+            explode(',', $this->pack_excludefiles)
         );
         $this->setSuccess(sprintf(__('Prepare excluded files "%s"'), implode(', ', $exclude)));
         if (!empty($this->getSetting('pack_nocomment'))) {
@@ -129,10 +147,10 @@ class ImproveActionZip extends ImproveAction
             $this->setSuccess(__('Prepare comment removal'));
         }
         if (!empty($this->getSetting('pack_filename'))) {
-            $this->zipModule($this->getSetting('pack_filename'), $exclude);
+            $this->zipModule($this->pack_filename, $exclude);
         }
         if (!empty($this->getSetting('secondpack_filename'))) {
-            $this->zipModule($this->getSetting('secondpack_filename'), $exclude);
+            $this->zipModule($this->secondpack_filename, $exclude);
         }
 
         return null;
