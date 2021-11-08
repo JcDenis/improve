@@ -295,7 +295,13 @@ class Improve
         return $this->core->adminurl->get('admin.plugin.improve', $params, '&');
     }
 
-    public static function cleanExtensions(string|array $in): array
+    /**
+     * Check and clean file extension
+     *
+     * @param  string|array  $in    Extension(s) to clean
+     * @return array                Cleaned extension(s)
+     */
+    public static function cleanExtensions($in): array
     {
         $out = [];
         if (!is_array($in)) {
@@ -405,7 +411,7 @@ class ImproveDefinition
      *
      * @return  boolean                 Success
      */
-    private function registerModule(string $name, string $desc, string $author, string $version, string|array $properties = []): bool // @phpstan-ignore-line
+    private function registerModule(string $name, string $desc, string $author, string $version, $properties = []): bool // @phpstan-ignore-line
     {
         if (!is_array($properties)) {
             $args       = func_get_args();
