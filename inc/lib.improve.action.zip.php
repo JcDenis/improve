@@ -187,7 +187,6 @@ class ImproveActionZip extends ImproveAction
         unset($zip);
 
         $this->setSuccess(sprintf(__('Zip module into "%s"'), $path));
-
     }
 }
 

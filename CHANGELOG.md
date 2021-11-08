@@ -5,6 +5,10 @@ dev
 - [ ] add module to create full README file
 - [ ] write documentation of php class
 
+0.7 - 2021.11.08
+- add phpstan module
+- fix some errors from phpstan analyze
+
 0.6 - 2021.11.06
 - add header for modules configuration
 - add options to hide details of executed actions
