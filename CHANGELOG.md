@@ -4,6 +4,9 @@ dev
 - [ ] add module to check directory structure
 - [ ] add module to create full README file
 - [ ] write documentation of php class
+- update structure to php namespace
+- update php cs fixer rules to dc2.21 / php7.4
+- update phpstan to 1.1.2
 
 0.7.1 - 2021.11.08
 - Fix php < 8 _ thanks @Gvx- _ closes #5

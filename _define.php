@@ -25,6 +25,6 @@ $this->registerModule(
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/improve',
         'details'     => 'https://github.com/JcDenis/improve',
-        'repository'  => 'https://raw.githubusercontent.com/JcDenis/improve/master/dcstore.xml'
+        'repository'  => 'https://raw.githubusercontent.com/JcDenis/improve/master/dcstore.xml',
     ]
 );

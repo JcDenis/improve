@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: improve 0.6\n"
+"Project-Id-Version: improve 0.7.3\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2021-11-07T17:50:41+00:00\n"
+"PO-Revision-Date: 2021-11-13T21:51:37+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -94,6 +94,21 @@ msgstr "Lien de détail non défini"
 msgid "no support URL"
 msgstr "Lien de support non défini"
 
+msgid "End of files"
+msgstr "Fin de fichiers"
+
+msgid "Remove php tag and empty lines from end of files"
+msgstr "Supprimer le tag PHP et les lignes vides de fin de fichiers"
+
+msgid "Add a blank line to the end of file"
+msgstr "Ajouter une ligne vide en fin de fichier"
+
+msgid "PSR2 must have a blank line, whereas PSR12 must not."
+msgstr "PSR2 doit avoir une ligne vide, alors que PSR12 non."
+
+msgid "Replace end of file"
+msgstr "Remplacer les fins de fichiers"
+
 msgid "Shields badges"
 msgstr "Badges Shields.io"
 
@@ -175,15 +190,6 @@ msgstr "Impossible de supprimer l'ancien fichier de licence (%s)"
 msgid "Delete old license file \"%s\""
 msgstr "Effacer l'ancien fichier de Licence \"%s\""
 
-msgid "Tabulations"
-msgstr "Tabulations"
-
-msgid "Replace tabulation by four space in php files"
-msgstr "Remplace les tabulation par quatre espaces dans les fichiers php"
-
-msgid "Replace tabulation by spaces"
-msgstr "Remplacer les tabulations"
-
 msgid "Newlines"
 msgstr "Retour à la ligne"
 
@@ -198,21 +204,6 @@ msgstr "Utiliser une liste d'extensions séparé par des virgules et sans le poi
 
 msgid "Replace bad new lines"
 msgstr "Remplacer les retours à la ligne"
-
-msgid "End of files"
-msgstr "Fin de fichiers"
-
-msgid "Remove php tag and empty lines from end of files"
-msgstr "Supprimer le tag PHP et les lignes vides de fin de fichiers"
-
-msgid "Add a blank line to the end of file"
-msgstr "Ajouter une ligne vide en fin de fichier"
-
-msgid "PSR2 must have a blank line, whereas PSR12 must not."
-msgstr "PSR2 doit avoir une ligne vide, alors que PSR12 non."
-
-msgid "Replace end of file"
-msgstr "Remplacer les fins de fichiers"
 
 msgid "Fix PSR coding style using Php CS Fixer"
 msgstr "Corrige le style du code suivant les règles PSR en utilisant Php CS Fixer"
@@ -262,9 +253,6 @@ msgstr "Contenu du bloc :"
 msgid "Do not put structural elements to the begining of lines."
 msgstr "Ne pas mettre d'élément de structure en début de ligne"
 
-msgid "Skip directory"
-msgstr "Ignorer le répertoire"
-
 msgid "bloc is empty"
 msgstr "le bloc est vide"
 
@@ -273,6 +261,9 @@ msgstr "Préparer les informations d'entête"
 
 msgid "Failed to parse bloc"
 msgstr "Impossible de préparer le bloc"
+
+msgid "Skip directory"
+msgstr "Ignorer le répertoire"
 
 msgid "Write new doc bloc content"
 msgstr "Ecrire le nouveau contenu de bloc"
@@ -285,6 +276,9 @@ msgstr "Effacer l'ancien contenu de type ancien"
 
 msgid "Analyse php code using PHPStan"
 msgstr "Analyse le code PHP en utilisant PHPStan"
+
+msgid "You must enable improve details to view analyse results !"
+msgstr "Vous devez activer l'affichage des détails de l'analyse dans les paramètres d'improve."
 
 msgid "Level:"
 msgstr "Niveau :"
@@ -307,11 +301,26 @@ msgstr "Scinder le rapport par fichier plutôt qu'un seul à la fin."
 msgid "Enable this can cause timeout."
 msgstr "Activer ceci peut causer de Timeout."
 
-msgid "You must enable improve details to view analyse results !"
-msgstr "Vous devez activer l'affichage des détails de l'analyse dans les paramètres d'improve."
+msgid "PHPStan configuration file:"
+msgstr "Fichier de configuration de PHPStan :"
+
+msgid "Failed to write phpstan configuration"
+msgstr "Impossible d'écrire la configuration de PHPStan"
 
 msgid "No errors found"
 msgstr "Aucune erreur trouvé"
+
+msgid "Failed to run phpstan"
+msgstr "Impossible d'exécuter PHPStan"
+
+msgid "Tabulations"
+msgstr "Tabulations"
+
+msgid "Replace tabulation by four space in php files"
+msgstr "Remplace les tabulation par quatre espaces dans les fichiers php"
+
+msgid "Replace tabulation by spaces"
+msgstr "Remplacer les tabulations"
 
 msgid "Zip module"
 msgstr "Zipper le module"
@@ -388,17 +397,17 @@ msgstr "Fixe de \"%s\" complété en %s secondes"
 msgid "Fix of \"%s\" complete in %s secondes without messages"
 msgstr "Fixe de \"%s\" complété en %s secondes sans message"
 
-msgid "Configure module"
-msgstr "Configurer le module"
-
 msgid "Themes actions"
 msgstr "Actions sur les thèmes"
 
 msgid "Plugins actions"
 msgstr "Actions sur les plugins"
 
-msgid "Themes"
-msgstr "Thèmes"
+msgid "Configure module"
+msgstr "Configurer le module"
+
+msgid "Unknow module"
+msgstr "Module inconnu"
 
 msgid "Configure module \"%s\""
 msgstr "Configurer le module \"%s\""
@@ -406,8 +415,8 @@ msgstr "Configurer le module \"%s\""
 msgid "Nothing to configure"
 msgstr "Rien à configurer"
 
-msgid "Unknow module"
-msgstr "Module inconnu"
+msgid "Themes"
+msgstr "Thèmes"
 
 msgid "No module to manage"
 msgstr "Aucun module à gérer"
@@ -417,6 +426,9 @@ msgstr "Priorité"
 
 msgid "Configure action '%s'"
 msgstr "Configurer l'action \"%s\""
+
+msgid "Configure"
+msgstr "Configurer"
 
 msgid "Save fields selection as preference"
 msgstr "Enregistrer la sélection comme préférence"

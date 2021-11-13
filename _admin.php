@@ -10,33 +10,73 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-$core->blog->settings->addNamespace('improve');
+declare(strict_types=1);
 
-$core->addBehavior('adminDashboardFavorites', ['ImproveBehaviors', 'adminDashboardFavorites']);
+namespace plugins\improve;
 
-$core->addBehavior('improveAddAction', ['ImproveActionDcdeprecated', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionDcstore', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionEndoffile', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionGitshields', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionLicensefile', 'create']);
-//$core->addBehavior('improveAddAction', ['ImproveActionLicense', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionNewline', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionPhpcsfixer', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionPhpheader', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionPhpstan', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionTab', 'create']);
-$core->addBehavior('improveAddAction', ['ImproveActionZip', 'create']);
+if (!defined('DC_CONTEXT_ADMIN')) {
+    return;
+}
 
-$_menu['Plugins']->addItem(
-    __('improve'),
-    $core->adminurl->get('admin.plugin.improve'),
-    dcPage::getPF('improve/icon.png'),
-    preg_match('/' . preg_quote($core->adminurl->get('admin.plugin.improve')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-    $core->auth->isSuperAdmin()
-);
+/* dotclear */
+use dcCore;
+use dcPage;
+use dcFavorites;
 
-class ImproveBehaviors
+/* clearbricks */
+use files;
+
+/* php */
+use ArrayObject;
+
+/**
+ * Improve admin class
+ *
+ * Add menu and dashboard icons, load Improve action modules.
+ */
+class admin
 {
+    public static function process(dcCore $core, ArrayObject $_menu): void
+    {
+        self::addSettingsNamespace($core);
+        self::addAdminBehaviors($core);
+        self::addAdminMenu($core, $_menu);
+        self::addImproveActions($core);
+    }
+
+    private static function addSettingsNamespace(dcCore $core): void
+    {
+        $core->blog->settings->addNamespace('improve');
+    }
+
+    private static function addAdminBehaviors(dcCore $core): void
+    {
+        $core->addBehavior('adminDashboardFavorites', __NAMESPACE__ . '\admin::adminDashboardFavorites');
+    }
+
+    private static function addAdminMenu(dcCore $core, ArrayObject $_menu): void
+    {
+        $_menu['Plugins']->addItem(
+            __('improve'),
+            $core->adminurl->get('admin.plugin.improve'),
+            dcPage::getPF('improve/icon.png'),
+            preg_match('/' . preg_quote($core->adminurl->get('admin.plugin.improve')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+            $core->auth->isSuperAdmin()
+        );
+    }
+
+    private static function addImproveActions(dcCore $core): void
+    {
+        global $__autoload;
+
+        foreach (files::scandir(prepend::getActionsDir()) as $file) {
+            if (is_file(prepend::getActionsDir() . $file) && '.php' == substr($file, -4)) {
+                $__autoload[prepend::getActionsNS() . substr($file, 0, -4)] = prepend::getActionsDir() . $file;
+                $core->addBehavior('improveAddAction', [prepend::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */
+            }
+        }
+    }
+
     public static function adminDashboardFavorites(dcCore $core, dcFavorites $favs): void
     {
         $favs->register(
@@ -46,8 +86,11 @@ class ImproveBehaviors
                 'url'         => $core->adminurl->get('admin.plugin.improve'),
                 'small-icon'  => dcPage::getPF('improve/icon.png'),
                 'large-icon'  => dcPage::getPF('improve/icon-b.png'),
-                'permissions' => null
+                'permissions' => null,
             ]
         );
     }
 }
+
+/* process */
+admin::process($core, $_menu);

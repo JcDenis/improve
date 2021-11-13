@@ -10,27 +10,38 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
+declare(strict_types=1);
+
+namespace plugins\improve;
+
+if (!defined('DC_RC_PATH') || !defined('DC_CONTEXT_ADMIN')) {
     return;
 }
 
-$improve_libs = [
-    'Improve'       => 'class.improve.php',
-    'ImproveAction' => 'class.improve.action.php',
+/**
+ * Improve prepend class
+ *
+ * Manage autoload and some action module helpers.
+ */
+class prepend
+{
+    public static function process(array &$__autoload): void
+    {
+        foreach (['improve', 'action', 'module'] as $class) {
+            $__autoload['plugins\\improve\\' . $class] = dirname(__FILE__) . '/inc/core/' . $class . '.php';
+        }
+    }
 
-    'ImproveActionDcdeprecated' => 'lib.improve.action.dcdeprecated.php',
-    'ImproveActionDcstore'      => 'lib.improve.action.dcstore.php',
-    'ImproveActionEndoffile'    => 'lib.improve.action.php',
-    'ImproveActionGitshields'   => 'lib.improve.action.gitshields.php',
-    'ImproveActionLicensefile'  => 'lib.improve.action.licensefile.php',
-    'ImproveActionNewline'      => 'lib.improve.action.php',
-    'ImproveActionPhpcsfixer'   => 'lib.improve.action.phpcsfixer.php',
-    'ImproveActionPhpheader'    => 'lib.improve.action.phpheader.php',
-    'ImproveActionPhpstan'      => 'lib.improve.action.phpstan.php',
-    'ImproveActionTab'          => 'lib.improve.action.php',
-    'ImproveActionZip'          => 'lib.improve.action.zip.php',
-    'ImproveZipFileZip'         => 'lib.improve.action.zip.php'
-];
-foreach ($improve_libs as $class => $file) {
-    $__autoload[$class] = dirname(__FILE__) . '/inc/' . $file;
+    public static function getActionsDir(): string
+    {
+        return dirname(__FILE__) . '/inc/module/';
+    }
+
+    public static function getActionsNS(): string
+    {
+        return 'plugins\\improve\\module\\';
+    }
 }
+
+/* process */
+prepend::process($__autoload);

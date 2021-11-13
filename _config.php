@@ -10,54 +10,105 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
+declare(strict_types=1);
+
+namespace plugins\improve;
+
 if (!defined('DC_CONTEXT_ADMIN')) {
     return;
 }
 
-# Check user perms
-dcPage::checkSuper();
+/* dotclear */
+use dcCore;
+use adminModulesList;
+use dcPage;
 
-$improve = new Improve($core);
+/* clearbricks */
+use form;
 
-$combo_actions = [];
-foreach ($improve->modules() as $action) {
-    $combo_actions[$action->name()] = $action->id();
-}
-$disabled = $improve->disabled();
-if (!empty($disabled)) {
-    $combo_actions = array_merge($combo_actions, array_flip($disabled));
-}
+/* php */
+use Exception;
 
-if (!empty($_POST['save'])) {
-    try {
-        $pdisabled = '';
-        if (!empty($_POST['disabled'])) {
-            $pdisabled = implode(';', $_POST['disabled']);
+/**
+ * Admin Improve configuration class
+ *
+ * Set preference for this plugin.
+ */
+class config
+{
+    /** @var dcCore $core   dcCore instance */
+    private $core = null;
+    /** @var adminModulesList $list   adminModulesList instance */
+    private $list = null;
+    /** @var improve $improve  improve core instance */
+    private $improve = null;
+
+    public function __construct(dcCore $core, adminModulesList $list)
+    {
+        dcPage::checkSuper();
+
+        $this->core    = $core;
+        $this->list    = $list;
+        $this->improve = new improve($core);
+
+        $this->saveConfig();
+        $this->displayConfig();
+    }
+
+    private function getModules(): array
+    {
+        $modules = [];
+        foreach ($this->improve->modules() as $action) {
+            $modules[$action->name()] = $action->id();
         }
-        $core->blog->settings->improve->put('disabled', $pdisabled);
-        $core->blog->settings->improve->put('nodetails', !empty($_POST['nodetails']));
-        dcPage::addSuccessNotice(__('Configuration successfully updated'));
+        $modules = array_merge($modules, array_flip($this->improve->disabled()));
 
-        $core->adminurl->redirect(
-            'admin.plugins',
-            ['module' => 'improve', 'conf' => 1, 'chk' => 1, 'redir' => $list->getRedir()]
-        );
-    } catch (Exception $e) {
-        $core->error->add($e->getMessage());
+        return $modules;
+    }
+
+    private function saveConfig(): void
+    {
+        if (empty($_POST['save'])) {
+            return;
+        }
+
+        try {
+            $pdisabled = '';
+            if (!empty($_POST['disabled']) && is_array($_POST['disabled'])) {
+                $pdisabled = implode(';', $_POST['disabled']);
+            }
+            $this->core->blog->settings->improve->put('disabled', $pdisabled);
+            $this->core->blog->settings->improve->put('nodetails', !empty($_POST['nodetails']));
+
+            dcPage::addSuccessNotice(__('Configuration successfully updated'));
+
+            $this->core->adminurl->redirect(
+                'admin.plugins',
+                ['module' => 'improve', 'conf' => 1, 'chk' => 1, 'redir' => $this->list->getRedir()]
+            );
+        } catch (Exception $e) {
+            $this->core->error->add($e->getMessage());
+        }
+    }
+
+    private function displayConfig(): void
+    {
+        echo '<div class="fieldset"><h4>' . __('List of disabled actions:') . '</h4>';
+
+        foreach ($this->getModules() as $name => $id) {
+            echo
+            '<p><label class="classic" title="' . $id . '">' .
+            form::checkbox(['disabled[]'], $id, ['checked' => array_key_exists($id, $this->improve->disabled())]) .
+            __($name) . '</label></p>';
+        }
+        echo
+        '</div><div class="fieldset"><h4>' . __('Options') . '</h4>' .
+        '<p><label class="classic">' .
+        form::checkbox('nodetails', '1', ['checked' => $this->core->blog->settings->improve->nodetails]) .
+        __('Hide details of rendered actions') . '</label></p>' .
+        '</div>';
     }
 }
 
-echo '<div class="fieldset"><h4>' . __('List of disabled actions:') . '</h4>';
-
-foreach ($combo_actions as $name => $id) {
-    echo
-    '<p><label class="classic" title="' . $id . '">' .
-    form::checkbox(['disabled[]'], $id, ['checked' => isset($disabled[$id])]) .
-    __($name) . '</label></p>';
-}
-echo
-'</div><div class="fieldset"><h4>' . __('Options') . '</h4>' .
-'<p><label class="classic">' .
-form::checkbox('nodetails', '1', ['checked' => $core->blog->settings->improve->nodetails]) .
-__('Hide details of rendered actions') . '</label></p>' .
-'</div>';
+/* process */
+new config($core, $list);
