@@ -150,7 +150,8 @@ class index
 
     private function doAction(): void
     {
-        $done = $this->setPreferences();
+        $log_id = '';
+        $done   = $this->setPreferences();
 
         if (!empty($_POST['fix'])) {
             if (empty($_POST['actions'])) {
