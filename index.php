@@ -88,9 +88,12 @@ class index
     {
         try {
             if (!empty($this->type)) {
-                $preferences = unserialize($this->core->blog->settings->improve->preferences);
-                if (is_array($preferences)) {
-                    return array_key_exists($this->type, $preferences) ? $preferences[$this->type] : [];
+                $preferences = $this->core->blog->settings->improve->preferences;
+                if (is_string($preferences)) {
+                    $preferences = unserialize($preferences);
+                    if (is_array($preferences)) {
+                        return array_key_exists($this->type, $preferences) ? $preferences[$this->type] : [];
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -99,7 +102,7 @@ class index
         return [];
     }
 
-    private function setPreferences(): void
+    private function setPreferences(): bool
     {
         if (!empty($_POST['save_preferences'])) {
             $preferences[$this->type] = [];
@@ -112,7 +115,11 @@ class index
             }
             $this->core->blog->settings->improve->put('preferences', serialize($preferences), 'string', null, true, true);
             dcPage::addSuccessNotice(__('Configuration successfully updated'));
+
+            return true;
         }
+
+        return false;
     }
 
     private function comboModules(): array
@@ -143,6 +150,8 @@ class index
 
     private function doAction(): void
     {
+        $done = $this->setPreferences();
+
         if (!empty($_POST['fix'])) {
             if (empty($_POST['actions'])) {
                 dcPage::addWarningNotice(__('No action selected'));
@@ -170,11 +179,16 @@ class index
                     }
                     dcPage::addNotice($notice['type'], sprintf($notice['msg'], $this->module, $time));
 
-                    $this->core->adminurl->redirect('admin.plugin.improve', ['type' => $this->type, 'module' => $this->module, 'upd' => $log_id]);
+                    $done = true;
                 } catch (Exception $e) {
                     $this->core->error->add($e->getMessage());
+                    $done = false;
                 }
             }
+        }
+
+        if ($done) {
+            $this->core->adminurl->redirect('admin.plugin.improve', ['type' => $this->type, 'module' => $this->module, 'upd' => $log_id]);
         }
     }
 
