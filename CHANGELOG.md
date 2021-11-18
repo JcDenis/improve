@@ -5,6 +5,13 @@ dev
 - [ ] add module to create full README file
 - [ ] write documentation of php class
 
+0.8.2 - 2021.11.18
+- update php-cs-fixer.phar to 3.3.2
+- update phpstan.phar to 1.2.0
+
+0.8.1 - 2021.11.15
+- fix unknow preferences on new install
+
 0.8 - 2021.11.13
 - update structure to php namespace
 - update php cs fixer rules to dc2.21 / php7.4
