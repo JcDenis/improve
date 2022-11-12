@@ -18,9 +18,9 @@ $this->registerModule(
     'improve',
     'Tiny tools to fix things for module devs',
     'Jean-Christian Denis and contributors',
-    '0.8.2',
+    '0.9',
     [
-        'requires'    => [['core', '2.19']],
+        'requires'    => [['core', '2.24']],
         'permissions' => null,
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/improve',

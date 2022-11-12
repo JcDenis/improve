@@ -20,7 +20,6 @@ if (!defined('DC_CONTEXT_ADMIN')) {
 
 /* dotclear */
 use dcCore;
-use adminModulesList;
 use dcPage;
 
 /* clearbricks */
@@ -36,20 +35,14 @@ use Exception;
  */
 class config
 {
-    /** @var dcCore $core   dcCore instance */
-    private $core = null;
-    /** @var adminModulesList $list   adminModulesList instance */
-    private $list = null;
     /** @var improve $improve  improve core instance */
     private $improve = null;
 
-    public function __construct(dcCore $core, adminModulesList $list)
+    public function __construct()
     {
         dcPage::checkSuper();
 
-        $this->core    = $core;
-        $this->list    = $list;
-        $this->improve = new improve($core);
+        $this->improve = new improve();
 
         $this->saveConfig();
         $this->displayConfig();
@@ -77,17 +70,17 @@ class config
             if (!empty($_POST['disabled']) && is_array($_POST['disabled'])) {
                 $pdisabled = implode(';', $_POST['disabled']);
             }
-            $this->core->blog->settings->improve->put('disabled', $pdisabled);
-            $this->core->blog->settings->improve->put('nodetails', !empty($_POST['nodetails']));
+            dcCore::app()->blog->settings->improve->put('disabled', $pdisabled);
+            dcCore::app()->blog->settings->improve->put('nodetails', !empty($_POST['nodetails']));
 
             dcPage::addSuccessNotice(__('Configuration successfully updated'));
 
-            $this->core->adminurl->redirect(
+            dcCore::app()->adminurl->redirect(
                 'admin.plugins',
-                ['module' => 'improve', 'conf' => 1, 'chk' => 1, 'redir' => $this->list->getRedir()]
+                ['module' => 'improve', 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->list->getRedir()]
             );
         } catch (Exception $e) {
-            $this->core->error->add($e->getMessage());
+            dcCore::app()->error->add($e->getMessage());
         }
     }
 
@@ -104,11 +97,11 @@ class config
         echo
         '</div><div class="fieldset"><h4>' . __('Options') . '</h4>' .
         '<p><label class="classic">' .
-        form::checkbox('nodetails', '1', ['checked' => $this->core->blog->settings->improve->nodetails]) .
+        form::checkbox('nodetails', '1', ['checked' => dcCore::app()->blog->settings->improve->nodetails]) .
         __('Hide details of rendered actions') . '</label></p>' .
         '</div>';
     }
 }
 
 /* process */
-new config($core, $list);
+new config();

@@ -18,6 +18,7 @@ namespace plugins\improve\module;
 use plugins\improve\action;
 
 /* dotclear */
+use dcCore;
 use dcPage;
 
 /* clearbricks */
@@ -67,9 +68,9 @@ class phpstan extends action
         $ignored_vars       = $this->getSetting('ignored_vars');
         $this->ignored_vars = is_string($ignored_vars) ? $ignored_vars : '';
 
-        $this->core->auth->user_prefs->addWorkspace('interface');
-        self::$user_ui_colorsyntax       = $this->core->auth->user_prefs->interface->colorsyntax;
-        self::$user_ui_colorsyntax_theme = $this->core->auth->user_prefs->interface->colorsyntax_theme;
+        dcCore::app()->auth->user_prefs->addWorkspace('interface');
+        self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->interface->colorsyntax;
+        self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->interface->colorsyntax_theme;
 
         return true;
     }
@@ -200,7 +201,6 @@ class phpstan extends action
             return true;
         } catch (Exception $e) {
             $this->setError(__('Failed to run phpstan'));
-            pdump($e);
 
             return false;
         }

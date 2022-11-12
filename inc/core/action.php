@@ -29,16 +29,13 @@ use arrayObject;
  *
  * Action class must extends class action.
  * If your class signature is myActionClass extends plugins\improve\class\action,
- * do $core->addBehavior('ImproveAddAction'), ['myClass', 'create']);
+ * do dcCore::app()->addBehavior('ImproveAddAction'), ['myClass', 'create']);
  * your action class is automatically created,
  * then function init() of your class wil be called.
  * One class must manage only one action.
  */
 abstract class action
 {
-    /** @var dcCore     dcCore instance */
-    protected $core;
-
     /** @var array<string>  Current module */
     protected $module = [];
 
@@ -83,15 +80,12 @@ abstract class action
 
     /**
      * Action constructor inits properties and settings of a child class.
-     *
-     * @param      dcCore  $core        dcCore instance
      */
-    final public function __construct(dcCore $core)
+    final public function __construct()
     {
-        $this->core       = $core;
         $this->class_name = str_replace(prepend::getActionsNS(), '', get_called_class());
 
-        $settings = $core->blog->settings->improve->get('settings_' . $this->class_name);
+        $settings = dcCore::app()->blog->settings->improve->get('settings_' . $this->class_name);
         if (null != $settings) {
             $settings = unserialize($settings);
         }
@@ -100,7 +94,7 @@ abstract class action
         $this->init();
 
         // can overload priority by settings
-        if (1 < ($p = (int) $core->blog->settings->improve->get('priority_' . $this->class_name))) {
+        if (1 < ($p = (int) dcCore::app()->blog->settings->improve->get('priority_' . $this->class_name))) {
             $this->priority = $p;
         }
     }
@@ -109,12 +103,11 @@ abstract class action
      * Helper to create an instance of a ImproveAction child class.
      *
      * @param      ArrayObject  $list    ArrayObject of actions list
-     * @param      dcCore       $core    dcCore instance
      */
-    final public static function create(arrayObject $list, dcCore $core): void
+    final public static function create(arrayObject $list): void
     {
         $child = static::class;
-        $class = new $child($core);
+        $class = new $child();
         $list->append($class);
     }
 
@@ -242,7 +235,7 @@ abstract class action
      */
     final protected function redirect(string $url): bool
     {
-        $this->core->blog->settings->improve->put(
+        dcCore::app()->blog->settings->improve->put(
             'settings_' . $this->class_name,
             serialize($this->settings),
             'string',
@@ -250,7 +243,7 @@ abstract class action
             true,
             true
         );
-        $this->core->blog->triggerBlog();
+        dcCore::app()->blog->triggerBlog();
         dcPage::addSuccessNotice(__('Configuration successfully updated'));
         http::redirect($url);
 

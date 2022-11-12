@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace plugins\improve;
 
+use Clearbricks;
+
 if (!defined('DC_RC_PATH') || !defined('DC_CONTEXT_ADMIN')) {
     return;
 }
@@ -25,16 +27,16 @@ if (!defined('DC_RC_PATH') || !defined('DC_CONTEXT_ADMIN')) {
  */
 class prepend
 {
-    public static function process(array &$__autoload): void
+    public static function process(): void
     {
         foreach (['improve', 'action', 'module'] as $class) {
-            $__autoload['plugins\\improve\\' . $class] = dirname(__FILE__) . '/inc/core/' . $class . '.php';
+            Clearbricks::lib()->autoload(['plugins\\improve\\' . $class => __DIR__ . '/inc/core/' . $class . '.php']);
         }
     }
 
     public static function getActionsDir(): string
     {
-        return dirname(__FILE__) . '/inc/module/';
+        return __DIR__ . '/inc/module/';
     }
 
     public static function getActionsNS(): string
@@ -44,4 +46,4 @@ class prepend
 }
 
 /* process */
-prepend::process($__autoload);
+prepend::process();

@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace plugins\improve\module;
 
+/* dotclear */
+use dcCore;
+
 /* improve */
 use plugins\improve\action;
 
@@ -162,10 +165,10 @@ class phpheader extends action
                         $this->module['name'],
                         $this->module['author'],
                         $this->module['type'],
-                        $this->core->auth->getInfo('user_cn'),
-                        $this->core->auth->getinfo('user_name'),
-                        $this->core->auth->getInfo('user_email'),
-                        $this->core->auth->getInfo('user_url'),
+                        dcCore::app()->auth->getInfo('user_cn'),
+                        dcCore::app()->auth->getinfo('user_name'),
+                        dcCore::app()->auth->getInfo('user_email'),
+                        dcCore::app()->auth->getInfo('user_url'),
                     ],
                     (string) $bloc
                 )

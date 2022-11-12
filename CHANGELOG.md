@@ -5,6 +5,11 @@ dev
 - [ ] add module to create full README file
 - [ ] write documentation of php class
 
+0.9 - 2022.11.12
+- update to Dotclear 2.24
+- update to php-cs-fixer.phar 3.13.0
+- update to phpstan.phar 1.9.2
+
 0.8.2 - 2021.11.18
 - update php-cs-fixer.phar to 3.3.2
 - update phpstan.phar to 1.2.0

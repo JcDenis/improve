@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace plugins\improve\module;
 
+/* dotclear */
+use dcCore;
+
 /* improve */
 use plugins\improve\action;
 
@@ -111,8 +114,8 @@ class zip extends action
         '</label></p>' .
         '<p class="form-note">' . sprintf(
             __('Preconization: %s'),
-            $this->core->blog->public_path ?
-            path::real($this->core->blog->public_path) : __("Blog's public directory")
+            dcCore::app()->blog->public_path ?
+            path::real(dcCore::app()->blog->public_path) : __("Blog's public directory")
         ) . '</p>
         </div>
 

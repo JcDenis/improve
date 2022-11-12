@@ -34,7 +34,7 @@ use Exception;
 class install
 {
     /** @var string Dotclear minimal version */
-    private static $dotclear_version = '2.19';
+    private static $dotclear_version = '2.24';
     /** @var array Improve default settings */
     private static $default_settings = [[
         'disabled',
@@ -43,12 +43,12 @@ class install
         'string',
     ]];
 
-    public static function process(dcCore $core): ?bool
+    public static function process(): ?bool
     {
-        if (!self::checkModuleVersion($core)) {
+        if (!self::checkModuleVersion()) {
             return null;
         }
-        if (!self::checkDotclearVersion($core)) {
+        if (!self::checkDotclearVersion()) {
             throw new Exception(sprintf(
                 '%s requires Dotclear %s',
                 'improve',
@@ -56,40 +56,40 @@ class install
             ));
         }
 
-        $core->blog->settings->addNamespace('improve');
-        self::update_0_8_0($core);
-        self::putSettings($core);
-        self::setVersion($core);
+        dcCore::app()->blog->settings->addNamespace('improve');
+        self::update_0_8_0();
+        self::putSettings();
+        self::setVersion();
 
         return true;
     }
 
-    private static function getInstalledVersion(dcCore $core): string
+    private static function getInstalledVersion(): string
     {
-        $version = $core->getVersion('improve');
+        $version = dcCore::app()->getVersion('improve');
 
         return is_string($version) ? $version : '0';
     }
 
-    private static function checkModuleVersion(dcCore $core): bool
+    private static function checkModuleVersion(): bool
     {
         return version_compare(
-            self::getInstalledVersion($core),
-            $core->plugins->moduleInfo('improve', 'version'),
+            self::getInstalledVersion(),
+            dcCore::app()->plugins->moduleInfo('improve', 'version'),
             '<'
         );
     }
 
-    private static function checkDotclearVersion(dcCore $core): bool
+    private static function checkDotclearVersion(): bool
     {
         return method_exists('dcUtils', 'versionsCompare')
             && dcUtils::versionsCompare(DC_VERSION, self::$dotclear_version, '>=', false);
     }
 
-    private static function putSettings(dcCore $core): void
+    private static function putSettings(): void
     {
         foreach (self::$default_settings as $v) {
-            $core->blog->settings->improve->put(
+            dcCore::app()->blog->settings->improve->put(
                 $v[0],
                 $v[2],
                 $v[3],
@@ -100,19 +100,19 @@ class install
         }
     }
 
-    private static function setVersion(dcCore $core): void
+    private static function setVersion(): void
     {
-        $core->setVersion('improve', $core->plugins->moduleInfo('improve', 'version'));
+        dcCore::app()->setVersion('improve', dcCore::app()->plugins->moduleInfo('improve', 'version'));
     }
 
     /** Update improve < 0.8 : action modules settings name */
-    private static function update_0_8_0(dcCore $core): void
+    private static function update_0_8_0(): void
     {
-        if (version_compare(self::getInstalledVersion($core), '0.8', '<')) {
-            foreach ($core->blog->settings->improve->dumpGlobalSettings() as $id => $values) {
+        if (version_compare(self::getInstalledVersion(), '0.8', '<')) {
+            foreach (dcCore::app()->blog->settings->improve->dumpGlobalSettings() as $id => $values) {
                 $newId = str_replace('ImproveAction', '', $id);
                 if ($id != $newId) {
-                    $core->blog->settings->improve->rename($id, strtolower($newId));
+                    dcCore::app()->blog->settings->improve->rename($id, strtolower($newId));
                 }
             }
         }
@@ -121,7 +121,7 @@ class install
 
 /* process */
 try {
-    return install::process($core);
+    return install::process();
 } catch (Exception $e) {
     $core->error->add($e->getMessage());
 

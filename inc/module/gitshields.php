@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace plugins\improve\module;
 
+/* dotclear */
+use dcCore;
+
 /* improve */
 use plugins\improve\action;
 
@@ -165,7 +168,7 @@ class gitshields extends action
             $version = $this->module['dc_min'];
         }
 
-        return $version ?: $this->core->getVersion('core');
+        return $version ?: dcCore::app()->getVersion('core');
     }
 
     private function writeShieldsBloc(string $content): string

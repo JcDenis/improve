@@ -37,7 +37,7 @@ class newline extends action
             'types'        => ['plugin', 'theme'],
         ]);
         /*
-                $ext = @unserialize($this->core->blog->settings->improve->newline_extensions);
+                $ext = @unserialize(dcCore::app()->blog->settings->improve->newline_extensions);
                 $ext = Improve::cleanExtensions($ext);
                 if (!empty($ext)) {
                     $this->extensions = $ext;

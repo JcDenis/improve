@@ -35,9 +35,6 @@ class improve
         'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md',
     ];
 
-    /** @var dcCore $core dcCore instance */
-    private $core;
-
     /** @var array<action> $actions Loaded actions modules */
     private $actions = [];
 
@@ -52,17 +49,14 @@ class improve
 
     /**
      * Constructor
-     *
-     * @param dcCore $core dcCore instance
      */
-    public function __construct(dcCore $core)
+    public function __construct()
     {
-        $this->core = &$core;
-        $disabled   = explode(';', (string) $core->blog->settings->improve->disabled);
-        $list       = new arrayObject();
+        $disabled = explode(';', (string) dcCore::app()->blog->settings->improve->disabled);
+        $list     = new arrayObject();
 
         try {
-            $this->core->callBehavior('improveAddAction', $list, $this->core);
+            dcCore::app()->callBehavior('improveAddAction', $list);
 
             foreach ($list as $action) {
                 if ($action instanceof action && !isset($this->actions[$action->id()])) {
@@ -74,7 +68,7 @@ class improve
                 }
             }
         } catch (Exception $e) {
-            $core->error->add($e->getMessage());
+            dcCore::app()->error->add($e->getMessage());
         }
         uasort($this->actions, [$this, 'sortModules']);
     }
@@ -94,21 +88,21 @@ class improve
         if (empty($this->logs)) {
             return 0;
         }
-        $cur            = $this->core->con->openCursor($this->core->prefix . 'log');
+        $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'log');
         $cur->log_msg   = serialize($this->logs);
         $cur->log_table = 'improve';
-        $id             = $this->core->log->addLog($cur);
+        $id             = dcCore::app()->log->addLog($cur);
 
         return $id;
     }
 
     public function readLogs(int $id): array
     {
-        $rs = $this->core->log->getLogs(['log_table' => 'improve', 'log_id' => $id, 'limit' => 1]);
+        $rs = dcCore::app()->log->getLogs(['log_table' => 'improve', 'log_id' => $id, 'limit' => 1]);
         if ($rs->isEmpty()) {
             return [];
         }
-        $this->core->log->delLogs($rs->log_id);
+        dcCore::app()->log->delLogs($rs->log_id);
 
         $res = unserialize($rs->log_msg);
 
@@ -308,7 +302,7 @@ class improve
 
     public function getURL(array $params = []): string
     {
-        return $this->core->adminurl->get('admin.plugin.improve', $params, '&');
+        return dcCore::app()->adminurl->get('admin.plugin.improve', $params, '&');
     }
 
     /**
