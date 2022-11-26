@@ -58,7 +58,7 @@ class admin
         dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
             __('improve'),
             dcCore::app()->adminurl->get('admin.plugin.improve'),
-            dcPage::getPF('improve/icon.png'),
+            dcPage::getPF('improve/icon.svg'),
             preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.improve')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
             dcCore::app()->auth->isSuperAdmin()
         );
@@ -81,8 +81,8 @@ class admin
             [
                 'title'       => __('improve'),
                 'url'         => dcCore::app()->adminurl->get('admin.plugin.improve'),
-                'small-icon'  => dcPage::getPF('improve/icon.png'),
-                'large-icon'  => dcPage::getPF('improve/icon-b.png'),
+                'small-icon'  => dcPage::getPF('improve/icon.svg'),
+                'large-icon'  => dcPage::getPF('improve/icon.svg'),
                 'permissions' => null,
             ]
         );
