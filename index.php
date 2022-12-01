@@ -128,7 +128,7 @@ class index
             'theme'  => explode(',', DC_DISTRIB_THEMES),
         ];
 
-        if (!isset(dcCore::app()->themes)) {
+        if (!(dcCore::app()->themes instanceof dcThemes)) {
             dcCore::app()->themes = new dcThemes();
             dcCore::app()->themes->loadModules(dcCore::app()->blog->themes_path, null);
         }
