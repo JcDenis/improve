@@ -54,10 +54,10 @@ class admin
             $favs->register(
                 'improve',
                 [
-                    'title'       => __('improve'),
-                    'url'         => dcCore::app()->adminurl->get('admin.plugin.improve'),
-                    'small-icon'  => dcPage::getPF('improve/icon.svg'),
-                    'large-icon'  => dcPage::getPF('improve/icon.svg'),
+                    'title'      => __('improve'),
+                    'url'        => dcCore::app()->adminurl->get('admin.plugin.improve'),
+                    'small-icon' => dcPage::getPF('improve/icon.svg'),
+                    'large-icon' => dcPage::getPF('improve/icon.svg'),
                     //'permissions' => null,
                 ]
             );

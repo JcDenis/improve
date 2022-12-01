@@ -22,7 +22,7 @@ use plugins\improve\action;
  */
 class dcdeprecated extends action
 {
-    /** @var array Deprecated functions [filetype [pattern, deprecated, replacement, version]] */
+    /** @var array Deprecated functions [filetype [pattern, deprecated, replacement, version, help link]] */
     private static $deprecated = [
         'php' => [
             ['(\$core|\$GLOBALS\[(\'|")core(\'|")\]|\$this->core)', '$core', 'dcCore::app()', '2.23', 'https://open-time.net/post/2022/10/21/Adapter-son-code-pour-la-224-n-2'],
@@ -120,7 +120,7 @@ class dcdeprecated extends action
         }
         foreach (self::$deprecated[$this->path_extension] as $d) {
             if (preg_match('/' . $d[0] . '/i', $content)) {
-                $this->setWarning(sprintf(__('Possible use of deprecated "%s", you should use "%s" instead since Dotclear %s.'), $d[1], __($d[2]), $d[3]) . (empty($d[4]) ? '' : ' <a href="'. $d['4'] . '">' . __('Help') . '</a> '));
+                $this->setWarning(sprintf(__('Possible use of deprecated "%s", you should use "%s" instead since Dotclear %s.'), $d[1], __($d[2]), $d[3]) . (empty($d[4]) ? '' : ' <a href="' . $d['4'] . '">' . __('Help') . '</a> '));
             }
         }
 

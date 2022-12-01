@@ -77,7 +77,7 @@ class config
 
             dcCore::app()->adminurl->redirect(
                 'admin.plugins',
-                ['module' => 'improve', 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->list->getRedir()]
+                ['module' => 'improve', 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->__get('list')->getRedir()]
             );
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());

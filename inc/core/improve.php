@@ -16,13 +16,14 @@ namespace plugins\improve;
 
 /* dotclear */
 use dcCore;
+use dcLog;
 
 /* clearbricks */
 use path;
 use files;
 
 /* php */
-use arrayObject;
+use ArrayObject;
 use Exception;
 
 /**
@@ -53,7 +54,7 @@ class improve
     public function __construct()
     {
         $disabled = explode(';', (string) dcCore::app()->blog->settings->improve->disabled);
-        $list     = new arrayObject();
+        $list     = new ArrayObject();
 
         try {
             dcCore::app()->callBehavior('improveAddAction', $list);
@@ -102,9 +103,9 @@ class improve
         if ($rs->isEmpty()) {
             return [];
         }
-        dcCore::app()->log->delLogs($rs->log_id);
+        dcCore::app()->log->delLogs($rs->__get('log_id'));
 
-        $res = unserialize($rs->log_msg);
+        $res = unserialize($rs->__get('log_msg'));
 
         return is_array($res) ? $res : [];
     }
