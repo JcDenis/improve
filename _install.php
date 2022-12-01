@@ -126,7 +126,7 @@ class install
 try {
     return install::process();
 } catch (Exception $e) {
-    $core->error->add($e->getMessage());
+    dcCore::app()->error->add($e->getMessage());
 
     return false;
 }
