@@ -33,8 +33,6 @@ use Exception;
  */
 class install
 {
-    /** @var string Dotclear minimal version */
-    private static $dotclear_version = '2.24';
     /** @var array Improve default settings */
     private static $default_settings = [[
         'disabled',
@@ -52,7 +50,7 @@ class install
             throw new Exception(sprintf(
                 '%s requires Dotclear %s',
                 'improve',
-                self::$dotclear_version
+                self::getDotclearVersion()
             ));
         }
 
@@ -62,6 +60,11 @@ class install
         self::setVersion();
 
         return true;
+    }
+
+    private static function getDotclearVersion(): string
+    {
+        return dcCore::app()->plugins->moduleInfo('improve', 'requires')[0][1];
     }
 
     private static function getInstalledVersion(): string
@@ -83,7 +86,7 @@ class install
     private static function checkDotclearVersion(): bool
     {
         return method_exists('dcUtils', 'versionsCompare')
-            && dcUtils::versionsCompare(DC_VERSION, self::$dotclear_version, '>=', false);
+            && dcUtils::versionsCompare(DC_VERSION, self::getDotclearVersion(), '>=', false);
     }
 
     private static function putSettings(): void
