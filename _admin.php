@@ -50,7 +50,18 @@ class admin
 
     private static function addAdminBehaviors(): void
     {
-        dcCore::app()->addBehavior('adminDashboardFavoritesV2', __NAMESPACE__ . '\admin::adminDashboardFavorites');
+        dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs): void {
+            $favs->register(
+                'improve',
+                [
+                    'title'       => __('improve'),
+                    'url'         => dcCore::app()->adminurl->get('admin.plugin.improve'),
+                    'small-icon'  => dcPage::getPF('improve/icon.svg'),
+                    'large-icon'  => dcPage::getPF('improve/icon.svg'),
+                    //'permissions' => null,
+                ]
+            );
+        });
     }
 
     private static function addAdminMenu(): void
@@ -72,20 +83,6 @@ class admin
                 dcCore::app()->addBehavior('improveAddAction', [prepend::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */
             }
         }
-    }
-
-    public static function adminDashboardFavorites(dcFavorites $favs): void
-    {
-        $favs->register(
-            'improve',
-            [
-                'title'       => __('improve'),
-                'url'         => dcCore::app()->adminurl->get('admin.plugin.improve'),
-                'small-icon'  => dcPage::getPF('improve/icon.svg'),
-                'large-icon'  => dcPage::getPF('improve/icon.svg'),
-                'permissions' => null,
-            ]
-        );
     }
 }
 
