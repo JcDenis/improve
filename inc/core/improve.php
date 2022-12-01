@@ -88,7 +88,7 @@ class improve
         if (empty($this->logs)) {
             return 0;
         }
-        $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . 'log');
+        $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcLog::LOG_TABLE_NAME);
         $cur->log_msg   = serialize($this->logs);
         $cur->log_table = 'improve';
         $id             = dcCore::app()->log->addLog($cur);
