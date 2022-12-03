@@ -134,7 +134,7 @@ class index
         }
 
         $combo_modules = [];
-        $modules       = $this->type == 'plugin' ? dcCore::app()->plugins->getModules() : dcCore::app()->themes->getModules();
+        $modules       = self::getModules($this->type == 'plugin' ? 'plugins' : 'themes');
         foreach ($modules as $id => $m) {
             if (!$m['root_writable'] || !$allow_distrib && in_array($id, $official[$this->type])) {
                 continue;
@@ -144,6 +144,21 @@ class index
         dcUtils::lexicalKeySort($combo_modules);
 
         return array_merge([__('Select a module') => '-'], $combo_modules);
+    }
+
+    public static function getModules(string $type, ?string $id = null): ?array
+    {
+        $type = $type == 'themes' ? 'themes' : 'plugins';
+
+        $modules = array_merge(dcCore::app()->{$type}->getDisabledModules(), dcCore::app()->{$type}->getModules());
+
+        if (empty($id)) {
+            return $modules;
+        } elseif (array_key_exists($id, $modules)) {
+            return $modules[$id];
+        }
+
+        return null;
     }
 
     private function doAction(): void
@@ -161,7 +176,7 @@ class index
                     $time = $this->improve->fixModule(
                         $this->type,
                         $this->module,
-                        $this->type == 'plugin' ? dcCore::app()->plugins->getModules($this->module) : dcCore::app()->themes->getModules($this->module),
+                        self::getModules($this->type == 'plugin' ? 'plugins' : 'themes',$this->module),
                         $_POST['actions']
                     );
                     $log_id = $this->improve->writeLogs();
