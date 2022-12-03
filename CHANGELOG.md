@@ -5,6 +5,13 @@ dev
 - [ ] add module to create full README file
 - [ ] write documentation of php class
 
+0.10 - 2022.12.03
+- allow to improve disabled modules
+- split deprecated list by dotclear versions
+- fix translation
+- use svg icon
+- various code improvments
+
 0.9 - 2022.11.20
 - update to Dotclear 2.24
 - update to php-cs-fixer.phar 3.13.0
