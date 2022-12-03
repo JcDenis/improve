@@ -176,7 +176,7 @@ class index
                     $time = $this->improve->fixModule(
                         $this->type,
                         $this->module,
-                        self::getModules($this->type == 'plugin' ? 'plugins' : 'themes',$this->module),
+                        self::getModules($this->type == 'plugin' ? 'plugins' : 'themes', $this->module),
                         $_POST['actions']
                     );
                     $log_id = $this->improve->writeLogs();
