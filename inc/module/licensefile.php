@@ -58,6 +58,7 @@ class licensefile extends action
             __('gpl3 - GNU General Public License v3')         => 'gpl3',
             __('lgpl3 - GNU Lesser General Public License v3') => 'lgpl3',
             __('Massachusetts Institute of Technolog mit')     => 'mit',
+            __('Do What The Fuck You Want To Public License')  => 'wtfpl',
         ];
         $this->action_full = [
             __('Do nothing')                    => 0,
