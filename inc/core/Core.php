@@ -36,7 +36,7 @@ class Core
         'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md', 'po',
     ];
 
-    /** @var array<action> $actions Loaded actions modules */
+    /** @var array<Action> $actions Loaded actions modules */
     private $actions = [];
 
     /** @var array<string>  $disabled Disabled actions modules */
@@ -60,7 +60,7 @@ class Core
             dcCore::app()->callBehavior('improveAddAction', $list);
 
             foreach ($list as $action) {
-                if ($action instanceof action && !isset($this->actions[$action->id()])) {
+                if ($action instanceof Action && !isset($this->actions[$action->id()])) {
                     if (in_array($action->id(), $disabled)) {
                         $this->disabled[$action->id()] = $action->name();
                     } else {
@@ -154,9 +154,9 @@ class Core
      *
      * @param  string $id Module id
      *
-     * @return action     action instance
+     * @return Action     action instance
      */
-    public function module(string $id): ?action
+    public function module(string $id): ?Action
     {
         if (empty($id)) {
             return null;
@@ -168,7 +168,7 @@ class Core
     /**
      * Get all loaded action modules
      *
-     * @return action[]     action instance
+     * @return Action[]     action instance
      */
     public function modules(): array
     {
@@ -338,12 +338,12 @@ class Core
     /**
      * Sort modules by priority then name
      *
-     * @param  action    $a  ImproveAction instance
-     * @param  action    $b  ImproveAction instance
+     * @param  Action    $a  ImproveAction instance
+     * @param  Action    $b  ImproveAction instance
      *
      * @return integer              Is higher
      */
-    private function sortModules(action $a, action $b): int
+    private function sortModules(Action $a, Action $b): int
     {
         if ($a->priority() == $b->priority()) {
             return strcasecmp($a->name(), $b->name());

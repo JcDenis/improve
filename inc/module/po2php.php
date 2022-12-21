@@ -29,16 +29,13 @@ class po2php extends Action
 {
     /** @var string License bloc */
     private $license = <<<EOF
-    /**
-     * @package Dotclear
-     *
-     * @copyright Olivier Meunier & Association Dotclear
-     * @copyright GPL-2.0-only
-     */
-    EOF;
-
-    /** @var string Settings dcstore zip url pattern */
-    private $pattern = '';
+        /**
+         * @package Dotclear
+         *
+         * @copyright Olivier Meunier & Association Dotclear
+         * @copyright GPL-2.0-only
+         */
+        EOF;
 
     protected function init(): bool
     {

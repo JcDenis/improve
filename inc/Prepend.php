@@ -21,7 +21,7 @@ use Clearbricks;
  *
  * Manage autoload and some action module helpers.
  */
-class prepend
+class Prepend
 {
     private static $init = false;
 

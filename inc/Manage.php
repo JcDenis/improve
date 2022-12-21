@@ -36,16 +36,16 @@ use Exception;
  */
 class Manage
 {
-    /** @var improve $improve  improve core instance */
+    /** @var Core $improve  improve core instance */
     private static $improve = null;
     /** @var string $type   Current module(s) type */
     private static $type = 'plugin';
     /** @var string $module Current module id */
     private static $module = '-';
-    /** @var action|null $action Current action module */
+    /** @var Action|null $action Current action module */
     private static $action = null;
 
-    private static $init         = false;
+    private static $init = false;
 
     public static function init(): bool
     {
@@ -56,7 +56,7 @@ class Manage
             self::$type    = self::getType();
             self::$module  = self::getModule();
             self::$action  = self::getAction();
-            self::$init         = true;
+            self::$init    = true;
         }
 
         return self::$init;
@@ -77,7 +77,7 @@ class Manage
         return $module;
     }
 
-    private static function getAction(): ?action
+    private static function getAction(): ?Action
     {
         return empty($_REQUEST['config']) ? null : self::$improve->module($_REQUEST['config']);
     }

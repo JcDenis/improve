@@ -55,6 +55,7 @@ class Install
         try {
             self::update_0_8_0();
             self::putSettings();
+
             return true;
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
