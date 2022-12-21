@@ -139,7 +139,7 @@ class index
             if (!$m['root_writable'] || !$allow_distrib && in_array($id, $official[$this->type])) {
                 continue;
             }
-            $combo_modules[__($m['name'])] = $id;
+            $combo_modules[sprintf(__('%s (%s)'), __($m['name']), $id)] = $id;
         }
         dcUtils::lexicalKeySort($combo_modules);
 
