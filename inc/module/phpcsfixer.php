@@ -12,10 +12,11 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\Core;
 
 /* dotclear */
 use dcCore;
@@ -32,7 +33,7 @@ use Exception;
 /**
  * Improve action module PHP CS Fixer
  */
-class phpcsfixer extends action
+class phpcsfixer extends Action
 {
     /** @var array<int,string> Type of runtime errors */
     protected static $errors = [
@@ -68,8 +69,8 @@ class phpcsfixer extends action
         $this->getPhpPath();
 
         dcCore::app()->auth->user_prefs->addWorkspace('interface');
-        self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->interface->colorsyntax;
-        self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->interface->colorsyntax_theme;
+        self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
+        self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
 
         return true;
     }
@@ -96,7 +97,7 @@ class phpcsfixer extends action
             ]);
             $this->redirect($url);
         }
-        $content = (string) file_get_contents(dirname(__FILE__) . '/phpcsfixer/phpcsfixer.rules.php');
+        $content = (string) file_get_contents(__DIR__ . '/phpcsfixer/phpcsfixer.rules.php');
 
         return
         '<p><label class="classic" for="phpexe_path">' .
@@ -115,7 +116,7 @@ class phpcsfixer extends action
         ]) . '</p>' .
         (
             !self::$user_ui_colorsyntax ? '' :
-            dcPage::jsLoad(dcPage::getPF('improve/inc/module/phpcsfixer/phpcsfixer.improve.js')) .
+            dcPage::jsModuleLoad(Core::id() . '/inc/module/phpcsfixer/phpcsfixer.improve.js') .
             dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }
@@ -125,9 +126,9 @@ class phpcsfixer extends action
         $command = sprintf(
             '%sphp %s/phpcsfixer/libs/php-cs-fixer.phar fix %s --config=%s/phpcsfixer/phpcsfixer.rules.php --using-cache=no',
             $this->phpexe_path,
-            dirname(__FILE__),
+            __DIR__,
             $this->module['sroot'],
-            dirname(__FILE__)
+            __DIR__
         );
 
         try {

@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve;
+namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcCore;
@@ -22,7 +22,7 @@ use dcPage;
 use http;
 
 /* php */
-use arrayObject;
+use ArrayObject;
 
 /**
  * Improve action class helper
@@ -34,7 +34,7 @@ use arrayObject;
  * then function init() of your class wil be called.
  * One class must manage only one action.
  */
-abstract class action
+abstract class Action
 {
     /** @var array<string>  Current module */
     protected $module = [];
@@ -83,9 +83,9 @@ abstract class action
      */
     final public function __construct()
     {
-        $this->class_name = str_replace(prepend::getActionsNS(), '', get_called_class());
+        $this->class_name = str_replace(Prepend::getActionsNS(), '', get_called_class());
 
-        $settings = dcCore::app()->blog->settings->improve->get('settings_' . $this->class_name);
+        $settings = dcCore::app()->blog->settings->get(Core::id())->get('settings_' . $this->class_name);
         if (null != $settings) {
             $settings = unserialize($settings);
         }
@@ -94,7 +94,7 @@ abstract class action
         $this->init();
 
         // can overload priority by settings
-        if (1 < ($p = (int) dcCore::app()->blog->settings->improve->get('priority_' . $this->class_name))) {
+        if (1 < ($p = (int) dcCore::app()->blog->settings->get(Core::id())->get('priority_' . $this->class_name))) {
             $this->priority = $p;
         }
     }
@@ -104,7 +104,7 @@ abstract class action
      *
      * @param      ArrayObject  $list    ArrayObject of actions list
      */
-    final public static function create(arrayObject $list): void
+    final public static function create(ArrayObject $list): void
     {
         $child = static::class;
         $class = new $child();
@@ -235,7 +235,7 @@ abstract class action
      */
     final protected function redirect(string $url): bool
     {
-        dcCore::app()->blog->settings->improve->put(
+        dcCore::app()->blog->settings->get(Core::id())->put(
             'settings_' . $this->class_name,
             serialize($this->settings),
             'string',

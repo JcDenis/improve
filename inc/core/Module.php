@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve;
+namespace Dotclear\Plugin\improve;
 
 /* clearbricks */
 use path;
@@ -23,7 +23,7 @@ use path;
  * Help to load module configuration file (_define.php)
  * and gather information about it.
  */
-class module
+class Module
 {
     /** @var array  Current module properties */
     private $properties = [];

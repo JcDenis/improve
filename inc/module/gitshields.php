@@ -12,13 +12,13 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* dotclear */
 use dcCore;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
 use form;
@@ -26,7 +26,7 @@ use form;
 /**
  * Improve action module Github shields.io
  */
-class gitshields extends action
+class gitshields extends Action
 {
     /** @var string Username of git repo */
     private $username = '';

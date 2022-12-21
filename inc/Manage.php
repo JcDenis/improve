@@ -12,11 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve;
-
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
+namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcCore;
@@ -38,59 +34,63 @@ use Exception;
  * Display page and configure modules
  * and launch action.
  */
-class index
+class Manage
 {
     /** @var improve $improve  improve core instance */
-    private $improve = null;
+    private static $improve = null;
     /** @var string $type   Current module(s) type */
-    private $type = 'plugin';
+    private static $type = 'plugin';
     /** @var string $module Current module id */
-    private $module = '-';
+    private static $module = '-';
     /** @var action|null $action Current action module */
-    private $action = null;
+    private static $action = null;
 
-    public function __construct()
+    private static $init         = false;
+
+    public static function init(): bool
     {
-        dcPage::checkSuper();
+        if (defined('DC_CONTEXT_ADMIN')) {
+            dcPage::checkSuper();
 
-        $this->improve = new improve();
-        $this->type    = $this->getType();
-        $this->module  = $this->getModule();
-        $this->action  = $this->getAction();
+            self::$improve = new Core();
+            self::$type    = self::getType();
+            self::$module  = self::getModule();
+            self::$action  = self::getAction();
+            self::$init         = true;
+        }
 
-        $this->doAction();
-        $this->displayPage();
+        return self::$init;
     }
 
-    private function getType(): string
+    private static function getType(): string
     {
         return $_REQUEST['type'] ?? 'plugin';
     }
 
-    private function getModule(): string
+    private static function getModule(): string
     {
         $module = $_REQUEST['module'] ?? '';
-        if (!in_array($module, $this->comboModules())) {
+        if (!in_array($module, self::comboModules())) {
             $module = '-';
         }
 
         return $module;
     }
 
-    private function getAction(): ?action
+    private static function getAction(): ?action
     {
-        return empty($_REQUEST['config']) ? null : $this->improve->module($_REQUEST['config']);
+        return empty($_REQUEST['config']) ? null : self::$improve->module($_REQUEST['config']);
     }
 
-    private function getPreference(): array
+    private static function getPreference(): array
     {
         try {
-            if (!empty($this->type)) {
-                $preferences = dcCore::app()->blog->settings->improve->preferences;
+            if (!empty(self::$type)) {
+                $preferences = dcCore::app()->blog->settings->get(Core::id())->get('preferences');
                 if (is_string($preferences)) {
                     $preferences = unserialize($preferences);
                     if (is_array($preferences)) {
-                        return array_key_exists($this->type, $preferences) ? $preferences[$this->type] : [];
+                        return array_key_exists(self::$type, $preferences) ? $preferences[self::$type] : [];
                     }
                 }
             }
@@ -100,18 +100,18 @@ class index
         return [];
     }
 
-    private function setPreferences(): bool
+    private static function setPreferences(): bool
     {
         if (!empty($_POST['save_preferences'])) {
-            $preferences[$this->type] = [];
+            $preferences[self::$type] = [];
             if (!empty($_POST['actions'])) {
-                foreach ($this->improve->modules() as $action) {
-                    if (in_array($this->type, $action->types()) && in_array($action->id(), $_POST['actions'])) {
-                        $preferences[$this->type][] = $action->id();
+                foreach (self::$improve->modules() as $action) {
+                    if (in_array(self::$type, $action->types()) && in_array($action->id(), $_POST['actions'])) {
+                        $preferences[self::$type][] = $action->id();
                     }
                 }
             }
-            dcCore::app()->blog->settings->improve->put('preferences', serialize($preferences), 'string', null, true, true);
+            dcCore::app()->blog->settings->get(Core::id())->put('preferences', serialize($preferences), 'string', null, true, true);
             dcAdminNotices::addSuccessNotice(__('Configuration successfully updated'));
 
             return true;
@@ -120,9 +120,9 @@ class index
         return false;
     }
 
-    private function comboModules(): array
+    private static function comboModules(): array
     {
-        $allow_distrib = (bool) dcCore::app()->blog->settings->improve->allow_distrib;
+        $allow_distrib = (bool) dcCore::app()->blog->settings->get(Core::id())->get('allow_distrib');
         $official      = [
             'plugin' => explode(',', DC_DISTRIB_PLUGINS),
             'theme'  => explode(',', DC_DISTRIB_THEMES),
@@ -134,9 +134,9 @@ class index
         }
 
         $combo_modules = [];
-        $modules       = self::getModules($this->type == 'plugin' ? 'plugins' : 'themes');
+        $modules       = self::getModules(self::$type == 'plugin' ? 'plugins' : 'themes');
         foreach ($modules as $id => $m) {
-            if (!$m['root_writable'] || !$allow_distrib && in_array($id, $official[$this->type])) {
+            if (!$m['root_writable'] || !$allow_distrib && in_array($id, $official[self::$type])) {
                 continue;
             }
             $combo_modules[sprintf(__('%s (%s)'), __($m['name']), $id)] = $id;
@@ -161,37 +161,41 @@ class index
         return null;
     }
 
-    private function doAction(): void
+    public static function process(): void
     {
+        if (!self::$init) {
+            return;
+        }
+
         $log_id = '';
-        $done   = $this->setPreferences();
+        $done   = self::setPreferences();
 
         if (!empty($_POST['fix'])) {
             if (empty($_POST['actions'])) {
                 dcAdminNotices::addWarningNotice(__('No action selected'));
-            } elseif ($this->module == '-') {
+            } elseif (self::$module == '-') {
                 dcAdminNotices::addWarningNotice(__('No module selected'));
             } else {
                 try {
-                    $time = $this->improve->fixModule(
-                        $this->type,
-                        $this->module,
-                        self::getModules($this->type == 'plugin' ? 'plugins' : 'themes', $this->module),
+                    $time = self::$improve->fixModule(
+                        self::$type,
+                        self::$module,
+                        self::getModules(self::$type == 'plugin' ? 'plugins' : 'themes', self::$module),
                         $_POST['actions']
                     );
-                    $log_id = $this->improve->writeLogs();
+                    $log_id = self::$improve->writeLogs();
                     dcCore::app()->blog->triggerBlog();
 
-                    if ($this->improve->hasLog('error')) {
+                    if (self::$improve->hasLog('error')) {
                         $notice = ['type' => dcAdminNotices::NOTICE_ERROR, 'msg' => __('Fix of "%s" complete in %s secondes with errors')];
-                    } elseif ($this->improve->hasLog('warning')) {
+                    } elseif (self::$improve->hasLog('warning')) {
                         $notice = ['type' => dcAdminNotices::NOTICE_WARNING, 'msg' => __('Fix of "%s" complete in %s secondes with warnings')];
-                    } elseif ($this->improve->hasLog('success')) {
+                    } elseif (self::$improve->hasLog('success')) {
                         $notice = ['type' => dcAdminNotices::NOTICE_SUCCESS, 'msg' => __('Fix of "%s" complete in %s secondes')];
                     } else {
                         $notice = ['type' => dcAdminNotices::NOTICE_SUCCESS, 'msg' => __('Fix of "%s" complete in %s secondes without messages')];
                     }
-                    dcAdminNotices::addNotice($notice['type'], sprintf($notice['msg'], $this->module, $time));
+                    dcAdminNotices::addNotice($notice['type'], sprintf($notice['msg'], self::$module, $time));
 
                     $done = true;
                 } catch (Exception $e) {
@@ -202,19 +206,23 @@ class index
         }
 
         if ($done) {
-            dcCore::app()->adminurl->redirect('admin.plugin.improve', ['type' => $this->type, 'module' => $this->module, 'upd' => $log_id]);
+            dcCore::app()->adminurl->redirect('admin.plugin.' . Core::id(), ['type' => self::$type, 'module' => self::$module, 'upd' => $log_id]);
         }
     }
 
-    private function displayPage(): void
+    public static function render(): void
     {
+        if (!self::$init) {
+            return;
+        }
+
         $bc = empty($_REQUEST['config']) ?
-            ($this->type == 'theme' ? __('Themes actions') : __('Plugins actions')) :
+            (self::$type == 'theme' ? __('Themes actions') : __('Plugins actions')) :
             __('Configure module');
 
         echo '<html><head><title>' . __('improve') . '</title>' .
-        dcPage::jsLoad(dcPage::getPF('improve/js/index.js')) .
-        ($this->action === null ? '' : $this->action->header()) .
+        dcPage::jsModuleLoad(Core::id() . '/js/index.js') .
+        (self::$action === null ? '' : self::$action->header()) .
         '</head><body>' .
         dcPage::notices() .
         dcPage::breadcrumb([
@@ -224,64 +232,64 @@ class index
         ]);
 
         if (empty($_REQUEST['config'])) {
-            $this->displayActions();
+            self::displayActions();
         } else {
-            $this->displayConfigurator();
+            self::displayConfigurator();
         }
 
         echo '</body></html>';
     }
 
-    private function displayConfigurator(): void
+    private static function displayConfigurator(): void
     {
-        $back_url = $_REQUEST['redir'] ?? dcCore::app()->adminurl->get('admin.plugin.improve', ['type' => $this->type]);
+        $back_url = $_REQUEST['redir'] ?? dcCore::app()->adminurl->get('admin.plugin.' . Core::id(), ['type' => self::$type]);
 
-        if (null === $this->action) {
+        if (null === self::$action) {
             echo '
             <p class="warning">' . __('Unknow module') . '</p>
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>';
         } else {
-            $redir = $_REQUEST['redir'] ?? dcCore::app()->adminurl->get('admin.plugin.improve', ['type' => $this->type, 'config' => $this->action->id()]);
-            $res   = $this->action->configure($redir);
+            $redir = $_REQUEST['redir'] ?? dcCore::app()->adminurl->get('admin.plugin.' . Core::id(), ['type' => self::$type, 'config' => self::$action->id()]);
+            $res   = self::$action->configure($redir);
 
             echo '
-            <h3>' . sprintf(__('Configure module "%s"'), $this->action->name()) . '</h3>
+            <h3>' . sprintf(__('Configure module "%s"'), self::$action->name()) . '</h3>
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>
-            <p class="info">' . html::escapeHTML($this->action->description()) . '</p>
-            <form action="' . dcCore::app()->adminurl->get('admin.plugin.improve') . '" method="post" id="form-actions">' .
+            <p class="info">' . html::escapeHTML(self::$action->description()) . '</p>
+            <form action="' . dcCore::app()->adminurl->get('admin.plugin.' . Core::id()) . '" method="post" id="form-actions">' .
             (empty($res) ? '<p class="message">' . __('Nothing to configure') . '</p>' : $res) . '
             <p class="clear"><input type="submit" name="save" value="' . __('Save') . '" />' .
-            form::hidden('type', $this->type) .
-            form::hidden('config', $this->action->id()) .
+            form::hidden('type', self::$type) .
+            form::hidden('config', self::$action->id()) .
             form::hidden('redir', $redir) .
             dcCore::app()->formNonce() . '</p>' .
             '</form>';
         }
     }
 
-    private function displayActions(): void
+    private static function displayActions(): void
     {
         echo
-        '<form method="get" action="' . dcCore::app()->adminurl->get('admin.plugin.improve') . '" id="improve_menu">' .
+        '<form method="get" action="' . dcCore::app()->adminurl->get('admin.plugin.' . Core::id()) . '" id="improve_menu">' .
         '<p class="anchor-nav"><label for="type" class="classic">' . __('Goto:') . ' </label>' .
-        form::combo('type', [__('Plugins') => 'plugin', __('Themes') => 'theme'], $this->type) . ' ' .
+        form::combo('type', [__('Plugins') => 'plugin', __('Themes') => 'theme'], self::$type) . ' ' .
         '<input type="submit" value="' . __('Ok') . '" />' .
         form::hidden('p', 'improve') . '</p>' .
         '</form>';
 
-        $combo_modules = $this->comboModules();
+        $combo_modules = self::comboModules();
         if (count($combo_modules) == 1) {
             echo '<p class="message">' . __('No module to manage') . '</p>';
         } else {
-            echo '<form action="' . dcCore::app()->adminurl->get('admin.plugin.improve') . '" method="post" id="form-actions">' .
+            echo '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . Core::id()) . '" method="post" id="form-actions">' .
             '<table><caption class="hidden">' . __('Actions') . '</caption><thead><tr>' .
             '<th colspan="2" class="first">' . __('Action') . '</td>' .
             '<th scope="col">' . __('Description') . '</td>' .
             '<th scope="col">' . __('Configuration') . '</td>' .
             (DC_DEBUG ? '<th scope="col">' . __('Priority') . '</td>' : '') . /* @phpstan-ignore-line */
             '</tr></thead><tbody>';
-            foreach ($this->improve->modules() as $action) {
-                if (!in_array($this->type, $action->types())) {
+            foreach (self::$improve->modules() as $action) {
+                if (!in_array(self::$type, $action->types())) {
                     continue;
                 }
                 echo
@@ -290,7 +298,7 @@ class index
                     ['actions[]',
                         'action_' . $action->id(), ],
                     $action->id(),
-                    in_array($action->id(), $this->getPreference()) && $action->isConfigured(),
+                    in_array($action->id(), self::getPreference()) && $action->isConfigured(),
                     '',
                     '',
                     !$action->isConfigured()
@@ -301,7 +309,7 @@ class index
                 '<td class="maximal">' . $action->description() . '</td>' .
                 '<td class="minimal nowrap modules">' . (
                     false === $action->configurator() ? '' :
-                        '<a class="module-config" href="' . dcCore::app()->adminurl->get('admin.plugin.improve', ['type' => $this->type, 'config' => $action->id()]) .
+                        '<a class="module-config" href="' . dcCore::app()->adminurl->get('admin.plugin.' . Core::id(), ['type' => self::$type, 'config' => $action->id()]) .
                         '" title="' . sprintf(__("Configure action '%s'"), $action->name()) . '">' . __('Configure') . '</a>'
                 ) . '</td>' .
                 (DC_DEBUG ? '<td class="minimal"><span class="debug">' . $action->priority() . '</span></td>' : '') . /* @phpstan-ignore-line */
@@ -314,17 +322,17 @@ class index
             form::checkbox('save_preferences', 1, !empty($_POST['save_preferences'])) .
             __('Save fields selection as preference') . '</label></p>
             <p class="col right"><label for="module" class="classic">' . __('Select a module:') . ' </label>' .
-            form::combo('module', $combo_modules, $this->module) .
+            form::combo('module', $combo_modules, self::$module) .
             ' <input type="submit" name="fix" value="' . __('Fix it') . '" />' .
-            form::hidden(['type'], $this->type) .
+            form::hidden(['type'], self::$type) .
             dcCore::app()->formNonce() . '
             </p>
             </div>
             <br class="clear" />
             </form>';
 
-            if (!empty($_REQUEST['upd']) && !dcCore::app()->blog->settings->improve->nodetails) {
-                $logs = $this->improve->parseLogs((int) $_REQUEST['upd']);
+            if (!empty($_REQUEST['upd']) && !dcCore::app()->blog->settings->get(Core::id())->get('nodetails')) {
+                $logs = self::$improve->parseLogs((int) $_REQUEST['upd']);
 
                 if (!empty($logs)) {
                     echo '<div class="fieldset"><h4>' . __('Details') . '</h4>';
@@ -333,7 +341,7 @@ class index
                         foreach ($types as $type => $tools) {
                             echo '<div class="' . $type . '"><ul>';
                             foreach ($tools as $tool => $msgs) {
-                                $a = $this->improve->module($tool);
+                                $a = self::$improve->module($tool);
                                 if (null !== $a) {
                                     echo '<li>' . $a->name() . '<ul>';
                                     foreach ($msgs as $msg) {
@@ -352,6 +360,3 @@ class index
         }
     }
 }
-
-/* process */
-new index();

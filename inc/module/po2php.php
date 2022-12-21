@@ -12,10 +12,10 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
 use l10n;
@@ -25,7 +25,7 @@ use l10n;
 /**
  * Improve action module dcstore.xml
  */
-class po2php extends action
+class po2php extends Action
 {
     /** @var string License bloc */
     private $license = <<<EOF

@@ -12,10 +12,10 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
 use form;
@@ -27,7 +27,7 @@ use Exception;
 /**
  * Improve action module license file
  */
-class licensefile extends action
+class licensefile extends Action
 {
     /** @var array Possible license filenames */
     protected static $license_filenames = [
@@ -115,7 +115,7 @@ class licensefile extends action
     private function writeFullLicense(): ?bool
     {
         try {
-            $full = file_get_contents(dirname(__FILE__) . '/licensefile/' . $this->getSetting('action_version') . '.full.txt');
+            $full = file_get_contents(__DIR__ . '/licensefile/' . $this->getSetting('action_version') . '.full.txt');
             if (empty($full)) {
                 $this->setError(__('Failed to load license content'));
 

@@ -12,10 +12,10 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
 use form;
@@ -23,7 +23,7 @@ use form;
 /**
  * Improve action module end of file
  */
-class endoffile extends action
+class endoffile extends Action
 {
     protected function init(): bool
     {

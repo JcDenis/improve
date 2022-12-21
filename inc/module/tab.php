@@ -12,10 +12,10 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
 
 /**
  * Improve action module tab

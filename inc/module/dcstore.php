@@ -12,10 +12,10 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
 use form;
@@ -30,7 +30,7 @@ use Exception;
 /**
  * Improve action module dcstore.xml
  */
-class dcstore extends action
+class dcstore extends Action
 {
     /** @var string Settings dcstore zip url pattern */
     private $pattern = '';

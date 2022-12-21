@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve;
+namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcCore;
@@ -29,7 +29,7 @@ use Exception;
 /**
  * Improve main class
  */
-class improve
+class Core
 {
     /** @var array  Allowed file extensions to open */
     private static $readfile_extensions = [
@@ -53,7 +53,7 @@ class improve
      */
     public function __construct()
     {
-        $disabled = explode(';', (string) dcCore::app()->blog->settings->improve->disabled);
+        $disabled = explode(';', (string) dcCore::app()->blog->settings->get(self::id())->get('disabled'));
         $list     = new ArrayObject();
 
         try {
@@ -72,6 +72,11 @@ class improve
             dcCore::app()->error->add($e->getMessage());
         }
         uasort($this->actions, [$this, 'sortModules']);
+    }
+
+    public static function id()
+    {
+        return basename(dirname(dirname(__DIR__)));
     }
 
     public function getLogs(): array
@@ -183,7 +188,7 @@ class improve
     public function fixModule(string $type, string $id, array $properties, array $actions): float
     {
         $time_start = microtime(true);
-        $module     = module::clean($type, $id, $properties);
+        $module     = Module::clean($type, $id, $properties);
 
         $workers = [];
         foreach ($actions as $action) {
@@ -303,7 +308,7 @@ class improve
 
     public function getURL(array $params = []): string
     {
-        return dcCore::app()->adminurl->get('admin.plugin.improve', $params, '&');
+        return dcCore::app()->adminurl->get('admin.plugin.' . self::id(), $params, '&');
     }
 
     /**

@@ -12,11 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve;
-
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
+namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcAdmin;
@@ -33,58 +29,52 @@ use files;
  *
  * Add menu and dashboard icons, load Improve action modules.
  */
-class admin
+class Admin
 {
-    public static function process(): void
+    private static $init = false;
+
+    public static function init(): bool
     {
-        self::addSettingsNamespace();
-        self::addAdminBehaviors();
-        self::addAdminMenu();
-        self::addImproveActions();
+        if (defined('DC_CONTEXT_ADMIN')) {
+            dcCore::app()->blog->settings->addNamespace(Core::id());
+            self::$init = true;
+        }
+
+        return self::$init;
     }
 
-    private static function addSettingsNamespace(): void
+    public static function process()
     {
-        dcCore::app()->blog->settings->addNamespace('improve');
-    }
+        if (!self::$init) {
+            return false;
+        }
 
-    private static function addAdminBehaviors(): void
-    {
         dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs): void {
             $favs->register(
                 'improve',
                 [
                     'title'      => __('improve'),
-                    'url'        => dcCore::app()->adminurl->get('admin.plugin.improve'),
-                    'small-icon' => dcPage::getPF('improve/icon.svg'),
-                    'large-icon' => dcPage::getPF('improve/icon.svg'),
+                    'url'        => dcCore::app()->adminurl->get('admin.plugin.' . Core::id()),
+                    'small-icon' => dcPage::getPF(Core::id() . '/icon.svg'),
+                    'large-icon' => dcPage::getPF(Core::id() . '/icon.svg'),
                     //'permissions' => null,
                 ]
             );
         });
-    }
 
-    private static function addAdminMenu(): void
-    {
         dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
             __('improve'),
-            dcCore::app()->adminurl->get('admin.plugin.improve'),
-            dcPage::getPF('improve/icon.svg'),
-            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.improve')) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+            dcCore::app()->adminurl->get('admin.plugin.' . Core::id()),
+            dcPage::getPF(Core::id() . '/icon.svg'),
+            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . Core::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
             dcCore::app()->auth->isSuperAdmin()
         );
-    }
 
-    private static function addImproveActions(): void
-    {
-        foreach (files::scandir(prepend::getActionsDir()) as $file) {
-            if (is_file(prepend::getActionsDir() . $file) && '.php' == substr($file, -4)) {
-                Clearbricks::lib()->autoload([prepend::getActionsNS() . substr($file, 0, -4) => prepend::getActionsDir() . $file]);
-                dcCore::app()->addBehavior('improveAddAction', [prepend::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */
+        foreach (files::scandir(Prepend::getActionsDir()) as $file) {
+            if (is_file(Prepend::getActionsDir() . $file) && '.php' == substr($file, -4)) {
+                Clearbricks::lib()->autoload([Prepend::getActionsNS() . substr($file, 0, -4) => Prepend::getActionsDir() . $file]);
+                dcCore::app()->addBehavior('improveAddAction', [Prepend::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */
             }
         }
     }
 }
-
-/* process */
-admin::process();

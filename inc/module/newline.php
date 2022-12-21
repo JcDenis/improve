@@ -12,11 +12,11 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
-use plugins\improve\improve;
+use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\Core;
 
 /* clearbricks */
 use form;
@@ -24,7 +24,7 @@ use form;
 /**
  * Improve action module new line
  */
-class newline extends action
+class newline extends Action
 {
     protected function init(): bool
     {
@@ -56,7 +56,7 @@ class newline extends action
         if (!empty($_POST['save']) && !empty($_POST['newline_extensions'])) {
             $this->setSettings(
                 'extensions',
-                improve::cleanExtensions($_POST['newline_extensions'])
+                Core::cleanExtensions($_POST['newline_extensions'])
             );
             $this->redirect($url);
         }

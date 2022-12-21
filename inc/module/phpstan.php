@@ -12,10 +12,11 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\Core;
 
 /* dotclear */
 use dcCore;
@@ -32,7 +33,7 @@ use Exception;
 /**
  * Improve action module PHPStan
  */
-class phpstan extends action
+class phpstan extends Action
 {
     /** @var boolean User pref to use colored synthax */
     protected static $user_ui_colorsyntax = false;
@@ -69,8 +70,8 @@ class phpstan extends action
         $this->ignored_vars = is_string($ignored_vars) ? $ignored_vars : '';
 
         dcCore::app()->auth->user_prefs->addWorkspace('interface');
-        self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->interface->colorsyntax;
-        self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->interface->colorsyntax_theme;
+        self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
+        self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
 
         return true;
     }
@@ -100,7 +101,7 @@ class phpstan extends action
             ]);
             $this->redirect($url);
         }
-        $content = (string) file_get_contents(dirname(__FILE__) . '/phpstan/phpstan.rules.conf');
+        $content = (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.conf');
 
         return
         '<p class="info">' . __('You must enable improve details to view analyse results !') . '</p>' .
@@ -134,7 +135,7 @@ class phpstan extends action
         ]) . '</p>' .
         (
             !self::$user_ui_colorsyntax ? '' :
-            dcPage::jsLoad(dcPage::getPF('improved/inc/module/phpstan/phpstan.improve.js')) .
+            dcPage::jsModuleLoad(Core::id() . '/inc/module/phpstan/phpstan.improve.js') .
             dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }
@@ -182,7 +183,7 @@ class phpstan extends action
         $command = sprintf(
             '%sphp %s/phpstan/libs/phpstan.phar analyse ' . $path . '--configuration=%s',
             $this->phpexe_path,
-            dirname(__FILE__),
+            __DIR__,
             DC_VAR . '/phpstan.neon'
         );
 
@@ -238,9 +239,9 @@ class phpstan extends action
                 $this->run_level,
                 $this->module['sroot'],
                 DC_ROOT,
-                dirname(__FILE__) . '/phpstan',
+                __DIR__ . '/phpstan',
             ],
-            (string) file_get_contents(dirname(__FILE__) . '/phpstan/phpstan.rules.conf')
+            (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.conf')
         );
 
         $ignored = explode(';', $this->ignored_vars);

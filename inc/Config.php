@@ -12,11 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve;
-
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
+namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcCore;
@@ -33,34 +29,28 @@ use Exception;
  *
  * Set preference for this plugin.
  */
-class config
+class Config
 {
-    /** @var improve $improve  improve core instance */
-    private $improve = null;
+    private static $init = false;
 
-    public function __construct()
+    public static function init(): bool
     {
-        dcPage::checkSuper();
+        if (defined('DC_CONTEXT_ADMIN')) {
+            dcPage::checkSuper();
 
-        $this->improve = new improve();
-
-        $this->saveConfig();
-        $this->displayConfig();
-    }
-
-    private function getModules(): array
-    {
-        $modules = [];
-        foreach ($this->improve->modules() as $action) {
-            $modules[$action->name()] = $action->id();
+            dcCore::app()->blog->settings->addNamespace(Core::id());
+            self::$init = true;
         }
-        $modules = array_merge($modules, array_flip($this->improve->disabled()));
 
-        return $modules;
+        return self::$init;
     }
 
-    private function saveConfig(): void
+    public static function process(): void
     {
+        if (!self::$init) {
+            return;
+        }
+
         if (empty($_POST['save'])) {
             return;
         }
@@ -70,8 +60,8 @@ class config
             if (!empty($_POST['disabled']) && is_array($_POST['disabled'])) {
                 $pdisabled = implode(';', $_POST['disabled']);
             }
-            dcCore::app()->blog->settings->improve->put('disabled', $pdisabled);
-            dcCore::app()->blog->settings->improve->put('nodetails', !empty($_POST['nodetails']));
+            dcCore::app()->blog->settings->get(Core::id())->put('disabled', $pdisabled);
+            dcCore::app()->blog->settings->get(Core::id())->put('nodetails', !empty($_POST['nodetails']));
 
             dcPage::addSuccessNotice(__('Configuration successfully updated'));
 
@@ -84,24 +74,33 @@ class config
         }
     }
 
-    private function displayConfig(): void
+    public static function render()
     {
+        if (!self::$init) {
+            return;
+        }
+
+        $improve = new Core();
+
+        $modules = [];
+        foreach ($improve->modules() as $action) {
+            $modules[$action->name()] = $action->id();
+        }
+        $modules = array_merge($modules, array_flip($improve->disabled()));
+
         echo '<div class="fieldset"><h4>' . __('List of disabled actions:') . '</h4>';
 
-        foreach ($this->getModules() as $name => $id) {
+        foreach ($modules as $name => $id) {
             echo
             '<p><label class="classic" title="' . $id . '">' .
-            form::checkbox(['disabled[]'], $id, ['checked' => array_key_exists($id, $this->improve->disabled())]) .
+            form::checkbox(['disabled[]'], $id, ['checked' => array_key_exists($id, $improve->disabled())]) .
             __($name) . '</label></p>';
         }
         echo
         '</div><div class="fieldset"><h4>' . __('Options') . '</h4>' .
         '<p><label class="classic">' .
-        form::checkbox('nodetails', '1', ['checked' => dcCore::app()->blog->settings->improve->nodetails]) .
+        form::checkbox('nodetails', '1', ['checked' => dcCore::app()->blog->settings->get(Core::id())->get('nodetails')]) .
         __('Hide details of rendered actions') . '</label></p>' .
         '</div>';
     }
 }
-
-/* process */
-new config();

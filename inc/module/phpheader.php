@@ -12,13 +12,13 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve\module;
+namespace Dotclear\Plugin\improve\Module;
 
 /* dotclear */
 use dcCore;
 
 /* improve */
-use plugins\improve\action;
+use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
 use form;
@@ -30,7 +30,7 @@ use Exception;
 /**
  * Improve action module php header
  */
-class phpheader extends action
+class phpheader extends Action
 {
     /** @var string Exemple of header */
     private static $exemple = <<<EOF

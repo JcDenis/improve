@@ -12,13 +12,9 @@
  */
 declare(strict_types=1);
 
-namespace plugins\improve;
+namespace Dotclear\Plugin\improve;
 
 use Clearbricks;
-
-if (!defined('DC_RC_PATH') || !defined('DC_CONTEXT_ADMIN')) {
-    return;
-}
 
 /**
  * Improve prepend class
@@ -27,23 +23,39 @@ if (!defined('DC_RC_PATH') || !defined('DC_CONTEXT_ADMIN')) {
  */
 class prepend
 {
-    public static function process(): void
+    private static $init = false;
+
+    public static function init(): bool
     {
-        foreach (['improve', 'action', 'module'] as $class) {
-            Clearbricks::lib()->autoload(['plugins\\improve\\' . $class => __DIR__ . '/inc/core/' . $class . '.php']);
+        self::$init = defined('DC_RC_PATH') && defined('DC_CONTEXT_ADMIN');
+
+        return self::$init;
+    }
+
+    public static function process()
+    {
+        if (!self::$init) {
+            return false;
+        }
+
+        // Core plugin class
+        foreach (['Core', 'Action', 'Module'] as $class) {
+            Clearbricks::lib()->autoload(['Dotclear\\Plugin\\improve\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, 'core', $class . '.php'])]);
+        }
+
+        // Dotclear plugin class
+        foreach (['Admin', 'Config', 'Install', 'Manage', 'Prepend', 'Uninstall'] as $class) {
+            Clearbricks::lib()->autoload(['Dotclear\\Plugin\\improve\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, $class . '.php'])]);
         }
     }
 
     public static function getActionsDir(): string
     {
-        return __DIR__ . '/inc/module/';
+        return __DIR__ . '/module/';
     }
 
     public static function getActionsNS(): string
     {
-        return 'plugins\\improve\\module\\';
+        return 'Dotclear\\Plugin\\improve\\Module\\';
     }
 }
-
-/* process */
-prepend::process();
