@@ -3,7 +3,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Project-Id-Version: improve 0.10\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-12-03T22:40:15+00:00\n"
+"PO-Revision-Date: 2022-12-21T11:10:34+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -315,6 +315,18 @@ msgstr "Aucune erreur trouvé"
 
 msgid "Failed to run phpstan"
 msgstr "Impossible d'exécuter PHPStan"
+
+msgid "Translation files"
+msgstr "Fichier de traductions"
+
+msgid "Compile existing translation .po files to fresh .lang.php files"
+msgstr "Compile les fichiers de traductions .po existants en fichiers compilés .lang.php"
+
+msgid "Compile .po file to .lang.php"
+msgstr "Fichier .po compilé en .lang.php"
+
+msgid "Failed to compile .po file"
+msgstr "Impossible de compiler le fichier .po"
 
 msgid "Tabulations"
 msgstr "Tabulations"

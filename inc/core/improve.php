@@ -33,7 +33,7 @@ class improve
 {
     /** @var array  Allowed file extensions to open */
     private static $readfile_extensions = [
-        'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md',
+        'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md', 'po',
     ];
 
     /** @var array<action> $actions Loaded actions modules */
