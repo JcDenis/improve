@@ -1,9 +1,22 @@
 dev
 - [ ] add global config for file size limit
-- [ ] add module to check deprecated PHP function
 - [ ] add module to check directory structure
 - [ ] add module to create full README file
+- [ ] add module to minify .js
 - [ ] write documentation of php class
+
+1.0 - 2022.12.21
+- update phpstan and php-cs-fixer to lastest releases
+- add module to compile .po file into .lang.php file
+- add some deprecated (splitted by dc version)
+- add ability to improve disabled modules
+- use svg icon
+- use constant for tables names
+- use anonymous functions
+- use abstract plugin id
+- change plugin files structure and namespace
+- fix install
+- fix translations
 
 0.10 - 2022.12.03
 - allow to improve disabled modules

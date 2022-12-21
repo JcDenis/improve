@@ -18,13 +18,13 @@ $this->registerModule(
     'improve',
     'Tiny tools to fix things for module devs',
     'Jean-Christian Denis and contributors',
-    '0.10',
+    '1.0',
     [
         'requires'    => [['core', '2.24']],
         'permissions' => null,
         'type'        => 'plugin',
-        'support'     => 'https://github.com/JcDenis/improve',
-        'details'     => 'https://github.com/JcDenis/improve',
-        'repository'  => 'https://raw.githubusercontent.com/JcDenis/improve/master/dcstore.xml',
+        'support'     => 'https://github.com/JcDenis/' . basename(__DIR__),
+        'details'     => 'https://github.com/JcDenis/' . basename(__DIR__),
+        'repository'  => 'https://raw.githubusercontent.com/JcDenis/' . basename(__DIR__) . '/master/dcstore.xml',
     ]
 );
