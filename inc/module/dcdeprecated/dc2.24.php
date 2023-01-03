@@ -21,9 +21,9 @@ return [
         ['corePostSearch(\s|"|\')', 'corePostSearch', 'corePostSearchV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
 
         ['publicAfterContentFilter(\s|"|\')', 'publicAfterContentFilter', 'publicAfterContentFilterV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
-        ['publicAfterDocument(\s|"|\')', 'publicAfterDocument', 'apublicAfterDocumentV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
+        ['publicAfterDocument(\s|"|\')', 'publicAfterDocument', 'publicAfterDocumentV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
         ['publicBeforeContentFilter(\s|"|\')', 'publicBeforeContentFilter', 'publicBeforeContentFilterV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
-        ['publicBeforeDocument(\s|"|\')', 'publicBeforeDocument', 'apublicBeforeDocumentV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
+        ['publicBeforeDocument(\s|"|\')', 'publicBeforeDocument', 'publicBeforeDocumentV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
         ['publicBeforeReceiveTrackback(\s|"|\')', 'publicBeforeReceiveTrackback', 'publicBeforeReceiveTrackbackV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
         ['publicContentFilter(\s|"|\')', 'publicContentFilter', 'publicContentFilterV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
         ['publicPrepend(\s|"|\')', 'publicPrepend', 'publicPrependV2', '2.24', 'https://open-time.net/post/2022/11/06/Adapter-son-code-pour-la-224-n-17'],
