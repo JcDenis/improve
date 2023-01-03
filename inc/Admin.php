@@ -36,7 +36,6 @@ class Admin
     public static function init(): bool
     {
         if (defined('DC_CONTEXT_ADMIN')) {
-            dcCore::app()->blog->settings->addNamespace(Core::id());
             self::$init = true;
         }
 

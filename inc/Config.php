@@ -37,8 +37,6 @@ class Config
     {
         if (defined('DC_CONTEXT_ADMIN')) {
             dcPage::checkSuper();
-
-            dcCore::app()->blog->settings->addNamespace(Core::id());
             self::$init = true;
         }
 
