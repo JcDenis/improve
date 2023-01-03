@@ -26,7 +26,7 @@ return [
         ['comments_actions.php', 'comments_actions.php', 'dcCommentsActionsPage', '2.21', ''],
         ['posts_actions.php', 'posts_actions.php', 'dcPostsActionsPage', '2.21', ''],
 
-        ['global_filter', 'global_filter', 'tpl_context::global_filters', '2.11', ''],
+        ['global_filter(\s|"|\')', 'global_filter', 'tpl_context::global_filters', '2.11', ''],
 
         ['getLangFile', 'getLangFile', 'nothing', '2.11', ''],
         ['getTextDirection', 'getTextDirection', 'getLanguageTextDirection', '2.11', ''],
