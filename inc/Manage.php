@@ -82,7 +82,7 @@ class Manage
         return empty($_REQUEST['config']) ? null : self::$improve->module($_REQUEST['config']);
     }
 
-    private static function getPreference(): array
+    private static function getPreference(bool $all = false): array
     {
         try {
             if (!empty(self::$type)) {
@@ -90,7 +90,7 @@ class Manage
                 if (is_string($preferences)) {
                     $preferences = unserialize($preferences);
                     if (is_array($preferences)) {
-                        return array_key_exists(self::$type, $preferences) ? $preferences[self::$type] : [];
+                        return $all ? $preferences : (array_key_exists(self::$type, $preferences) ? $preferences[self::$type] : []);
                     }
                 }
             }
@@ -103,6 +103,7 @@ class Manage
     private static function setPreferences(): bool
     {
         if (!empty($_POST['save_preferences'])) {
+            $preferences              = self::getPreference(true);
             $preferences[self::$type] = [];
             if (!empty($_POST['actions'])) {
                 foreach (self::$improve->modules() as $action) {
