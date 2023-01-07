@@ -40,12 +40,12 @@ class Prepend
 
         // Core plugin class
         foreach (['Core', 'Action', 'Module'] as $class) {
-            Clearbricks::lib()->autoload(['Dotclear\\Plugin\\improve\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, 'core', $class . '.php'])]);
+            Clearbricks::lib()->autoload([__NAMESPACE__ . '\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, 'core', $class . '.php'])]);
         }
 
         // Dotclear plugin class
         foreach (['Admin', 'Config', 'Install', 'Manage', 'Prepend', 'Uninstall'] as $class) {
-            Clearbricks::lib()->autoload(['Dotclear\\Plugin\\improve\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, $class . '.php'])]);
+            Clearbricks::lib()->autoload([__NAMESPACE__ . '\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, $class . '.php'])]);
         }
     }
 
@@ -56,6 +56,6 @@ class Prepend
 
     public static function getActionsNS(): string
     {
-        return 'Dotclear\\Plugin\\improve\\Module\\';
+        return __NAMESPACE__ . '\\Module\\';
     }
 }
