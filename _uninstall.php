@@ -12,6 +12,7 @@
  */
 declare(strict_types=1);
 
-if (Dotclear\Plugin\improve\Uninstall::init()) {
-    Dotclear\Plugin\improve\Uninstall::process($this);
+$uninstall = implode('\\', ['Dotclear', 'Plugin', basename(__DIR__), 'Uninstall']);
+if ($uninstall::init()) {
+    $uninstall::process($this);
 }

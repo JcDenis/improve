@@ -12,10 +12,11 @@
  */
 declare(strict_types=1);
 
-if (!class_exists('Dotclear\Plugin\improve\Prepend')) {
-    require __DIR__ . DIRECTORY_SEPARATOR . 'inc' . DIRECTORY_SEPARATOR . 'Prepend.php';
+$prepend = implode('\\', ['Dotclear', 'Plugin', basename(__DIR__), 'Prepend']);
+if (!class_exists($prepend)) {
+    require implode(DIRECTORY_SEPARATOR, [__DIR__, 'inc', 'Prepend.php']);
 
-    if (Dotclear\Plugin\improve\Prepend::init()) {
-        Dotclear\Plugin\improve\Prepend::process();
+    if ($prepend::init()) {
+        $prepend::process();
     }
 }

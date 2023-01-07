@@ -12,8 +12,9 @@
  */
 declare(strict_types=1);
 
-if (Dotclear\Plugin\improve\Install::init()) {
-    return Dotclear\Plugin\improve\Install::process();
+$install = implode('\\', ['Dotclear', 'Plugin', basename(__DIR__), 'Install']);
+if ($install::init()) {
+    return $install::process();
 }
 
 return null;

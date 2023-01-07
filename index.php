@@ -12,7 +12,8 @@
  */
 declare(strict_types=1);
 
-if (Dotclear\Plugin\improve\Manage::init()) {
-    Dotclear\Plugin\improve\Manage::process();
-    Dotclear\Plugin\improve\Manage::render();
+$manage = implode('\\', ['Dotclear', 'Plugin', basename(__DIR__), 'Manage']);
+if ($manage::init()) {
+    $manage::process();
+    $manage::render();
 }

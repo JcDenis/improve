@@ -12,11 +12,8 @@
  */
 declare(strict_types=1);
 
-if (!defined('DC_CONTEXT_MODULE')) {
-    return null;
-}
-
-if (Dotclear\Plugin\improve\Config::init()) {
-    Dotclear\Plugin\improve\Config::process();
-    Dotclear\Plugin\improve\Config::render();
+$config = implode('\\', ['Dotclear', 'Plugin', basename(__DIR__), 'Config']);
+if ($config::init()) {
+    $config::process();
+    $config::render();
 }

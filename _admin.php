@@ -12,6 +12,9 @@
  */
 declare(strict_types=1);
 
-if (Dotclear\Plugin\improve\Admin::init()) {
-    Dotclear\Plugin\improve\Admin::process();
+$admin = implode('\\', ['Dotclear', 'Plugin', basename(__DIR__), 'Admin']);
+if ($admin::init()) {
+    return $admin::process();
 }
+
+return null;
