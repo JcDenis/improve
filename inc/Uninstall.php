@@ -16,10 +16,12 @@ namespace Dotclear\Plugin\improve;
 
 class Uninstall
 {
-    private static $init = false;
+    private static $pid    = '';
+    protected static $init = false;
 
     public static function init(): bool
     {
+        self::$pid  = basename(dirname(__DIR__));
         self::$init = defined('DC_RC_PATH');
 
         return self::$init;
@@ -37,7 +39,7 @@ class Uninstall
             /* action */
             'delete_all',
             /* ns */
-            Core::id(),
+            self::$pid,
             /* desc */
             __('delete all settings')
         );
@@ -48,7 +50,7 @@ class Uninstall
             /* action */
             'delete',
             /* ns */
-            Core::id(),
+            self::$pid,
             /* desc */
             __('delete plugin files')
         );
@@ -59,7 +61,7 @@ class Uninstall
             /* action */
             'delete',
             /* ns */
-            Core::id(),
+            self::$pid,
             /* desc */
             __('delete the version number')
         );
@@ -70,9 +72,9 @@ class Uninstall
             /* action */
             'delete_all',
             /* ns */
-            Core::id(),
+            self::$pid,
             /* desc */
-            sprintf(__('delete all %s settings'), Core::id())
+            sprintf(__('delete all %s settings'), self::$pid)
         );
 
         $uninstaller->addDirectAction(
@@ -81,9 +83,9 @@ class Uninstall
             /* action */
             'delete',
             /* ns */
-            Core::id(),
+            self::$pid,
             /* desc */
-            sprintf(__('delete %s plugin files'), Core::id())
+            sprintf(__('delete %s plugin files'), self::$pid)
         );
 
         $uninstaller->addDirectAction(
@@ -92,9 +94,9 @@ class Uninstall
             /* action */
             'delete',
             /* ns */
-            Core::id(),
+            self::$pid,
             /* desc */
-            sprintf(__('delete %s version number'), Core::id())
+            sprintf(__('delete %s version number'), self::$pid)
         );
     }
 }

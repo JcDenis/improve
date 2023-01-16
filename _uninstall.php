@@ -13,6 +13,12 @@
 declare(strict_types=1);
 
 $uninstall = implode('\\', ['Dotclear', 'Plugin', basename(__DIR__), 'Uninstall']);
+
+// cope with disabled plugin
+if (!class_exists($uninstall)) {
+    require implode(DIRECTORY_SEPARATOR, [__DIR__, 'inc', 'Uninstall.php']);
+}
+
 if ($uninstall::init()) {
     $uninstall::process($this);
 }
