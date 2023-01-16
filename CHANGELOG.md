@@ -5,6 +5,12 @@ dev
 - [ ] add module to minify .js
 - [ ] write documentation of php class
 
+1.0.2 - 2023.01.16
+- cleanup namespace usage
+- fix namespace on disabled plugin
+- update to phpstan 1.9.11
+- update to php-cs-fixer 3.13.2
+
 1.0.1 - 2023.01.03
 - fix lost of settings between themes and plugins (thx brol)
 - fix false positive on global_filters deprecated
