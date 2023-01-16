@@ -31,7 +31,7 @@ use files;
  */
 class Admin
 {
-    private static $init = false;
+    protected static $init = false;
 
     public static function init(): bool
     {

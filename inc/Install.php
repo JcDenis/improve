@@ -37,7 +37,7 @@ class Install
     ]];
 
     // Nothing to change below
-    private static $init = false;
+    protected static $init = false;
 
     public static function init(): bool
     {

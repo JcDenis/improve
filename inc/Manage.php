@@ -45,7 +45,7 @@ class Manage
     /** @var Action|null $action Current action module */
     private static $action = null;
 
-    private static $init = false;
+    protected static $init = false;
 
     public static function init(): bool
     {
