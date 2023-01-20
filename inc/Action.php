@@ -83,7 +83,7 @@ abstract class Action
      */
     final public function __construct()
     {
-        $this->class_name = str_replace(Prepend::getActionsNS(), '', get_called_class());
+        $this->class_name = str_replace(Utils::getActionsNS(), '', get_called_class());
 
         $settings = dcCore::app()->blog->settings->get(Core::id())->get('settings_' . $this->class_name);
         if (null != $settings) {

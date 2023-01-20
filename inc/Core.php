@@ -76,7 +76,7 @@ class Core
 
     public static function id()
     {
-        return basename(dirname(dirname(__DIR__)));
+        return basename(dirname(__DIR__));
     }
 
     public function getLogs(): array

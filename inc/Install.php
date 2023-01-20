@@ -16,6 +16,7 @@ namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcCore;
+use dcNsProcess;
 
 /* php */
 use Exception;
@@ -26,7 +27,7 @@ use Exception;
  * Set default settings and version
  * and manage changes on updates.
  */
-class Install
+class Install extends dcNsProcess
 {
     /** @var array Improve default settings */
     private static $default_settings = [[
@@ -36,9 +37,6 @@ class Install
         'string',
     ]];
 
-    // Nothing to change below
-    protected static $init = false;
-
     public static function init(): bool
     {
         self::$init = defined('DC_CONTEXT_ADMIN') && dcCore::app()->newVersion(Core::id(), dcCore::app()->plugins->moduleInfo(Core::id(), 'version'));
@@ -46,7 +44,7 @@ class Install
         return self::$init;
     }
 
-    public static function process(): ?bool
+    public static function process(): bool
     {
         if (!self::$init) {
             return false;

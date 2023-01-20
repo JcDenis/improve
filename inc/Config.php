@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\improve;
 /* dotclear */
 use dcCore;
 use dcPage;
+use dcNsProcess;
 
 /* clearbricks */
 use form;
@@ -29,10 +30,8 @@ use Exception;
  *
  * Set preference for this plugin.
  */
-class Config
+class Config extends dcNsProcess
 {
-    protected static $init = false;
-
     public static function init(): bool
     {
         if (defined('DC_CONTEXT_ADMIN')) {
@@ -43,14 +42,14 @@ class Config
         return self::$init;
     }
 
-    public static function process(): void
+    public static function process(): bool
     {
         if (!self::$init) {
-            return;
+            return false;
         }
 
         if (empty($_POST['save'])) {
-            return;
+            return true;
         }
 
         try {
@@ -70,9 +69,11 @@ class Config
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
         }
+
+        return true;
     }
 
-    public static function render()
+    public static function render(): void
     {
         if (!self::$init) {
             return;

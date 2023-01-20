@@ -20,6 +20,7 @@ use dcPage;
 use dcAdminNotices;
 use dcThemes;
 use dcUtils;
+use dcNsProcess;
 
 /* clearbricks */
 use html;
@@ -34,7 +35,7 @@ use Exception;
  * Display page and configure modules
  * and launch action.
  */
-class Manage
+class Manage extends dcNsProcess
 {
     /** @var Core $improve  improve core instance */
     private static $improve = null;
@@ -162,10 +163,10 @@ class Manage
         return null;
     }
 
-    public static function process(): void
+    public static function process(): bool
     {
         if (!self::$init) {
-            return;
+            return false;
         }
 
         $log_id = '';
@@ -209,6 +210,8 @@ class Manage
         if ($done) {
             dcCore::app()->adminurl->redirect('admin.plugin.' . Core::id(), ['type' => self::$type, 'module' => self::$module, 'upd' => $log_id]);
         }
+
+        return true;
     }
 
     public static function render(): void

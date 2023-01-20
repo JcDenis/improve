@@ -14,40 +14,11 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use Clearbricks;
-
 /**
- * Improve prepend class
- *
- * Manage autoload and some action module helpers.
+ * Improve utils class
  */
-class Prepend
+class Utils
 {
-    protected static $init = false;
-
-    public static function init(): bool
-    {
-        self::$init = defined('DC_RC_PATH') && defined('DC_CONTEXT_ADMIN');
-
-        return self::$init;
-    }
-
-    public static function process()
-    {
-        if (!self::$init) {
-            return false;
-        }
-
-        // Core plugin class
-        foreach (['Core', 'Action', 'Module'] as $class) {
-            Clearbricks::lib()->autoload([__NAMESPACE__ . '\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, 'core', $class . '.php'])]);
-        }
-
-        // Dotclear plugin class
-        foreach (['Admin', 'Config', 'Install', 'Manage', 'Prepend', 'Uninstall'] as $class) {
-            Clearbricks::lib()->autoload([__NAMESPACE__ . '\\' . $class => implode(DIRECTORY_SEPARATOR, [__DIR__, $class . '.php'])]);
-        }
-    }
 
     public static function getActionsDir(): string
     {

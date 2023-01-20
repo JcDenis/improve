@@ -19,6 +19,7 @@ use dcAdmin;
 use dcCore;
 use dcPage;
 use dcFavorites;
+use dcNsProcess;
 
 /* clearbricks */
 use Clearbricks;
@@ -29,10 +30,8 @@ use files;
  *
  * Add menu and dashboard icons, load Improve action modules.
  */
-class Admin
+class Admin extends dcNsProcess
 {
-    protected static $init = false;
-
     public static function init(): bool
     {
         if (defined('DC_CONTEXT_ADMIN')) {
@@ -42,7 +41,7 @@ class Admin
         return self::$init;
     }
 
-    public static function process()
+    public static function process(): bool
     {
         if (!self::$init) {
             return false;
@@ -69,11 +68,13 @@ class Admin
             dcCore::app()->auth->isSuperAdmin()
         );
 
-        foreach (files::scandir(Prepend::getActionsDir()) as $file) {
-            if (is_file(Prepend::getActionsDir() . $file) && '.php' == substr($file, -4)) {
-                Clearbricks::lib()->autoload([Prepend::getActionsNS() . substr($file, 0, -4) => Prepend::getActionsDir() . $file]);
-                dcCore::app()->addBehavior('improveAddAction', [Prepend::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */
+        foreach (files::scandir(Utils::getActionsDir()) as $file) {
+            if (is_file(Utils::getActionsDir() . $file) && '.php' == substr($file, -4)) {
+                Clearbricks::lib()->autoload([Utils::getActionsNS() . substr($file, 0, -4) => Utils::getActionsDir() . $file]);
+                dcCore::app()->addBehavior('improveAddAction', [Utils::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */
             }
         }
+
+        return true;
     }
 }
