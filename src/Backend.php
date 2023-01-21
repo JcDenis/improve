@@ -30,7 +30,7 @@ use files;
  *
  * Add menu and dashboard icons, load Improve action modules.
  */
-class Admin extends dcNsProcess
+class Backend extends dcNsProcess
 {
     public static function init(): bool
     {
