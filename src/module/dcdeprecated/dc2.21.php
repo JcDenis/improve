@@ -15,7 +15,7 @@ return [
         ['adminPostsActionsCombo', 'adminPostsActionsCombo', 'adminPostsActions', '2.21', ''],
         ['adminPostsActionsHeaders', 'adminPostsActionsHeaders', 'adminPostsActions', '2.21', ''],
         ['adminPostsActionsContent', 'adminPostsActionsContent', 'adminPostsActions', '2.21', ''],
-        ['adminCommentsActionsCombo', 'adminCommentsActionsCombo', 'adminCommentsActionsCombo', '2.21', ''],
+        ['adminCommentsActionsCombo', 'adminCommentsActionsCombo', 'adminCommentsActions', '2.21', ''],
         ['adminCommentsActionsHeaders', 'adminCommentsActionsHeaders', 'adminCommentsActions', '2.21', ''],
         ['adminCommentsActionsContent', 'adminCommentsActionsContent', 'adminCommentsActions', '2.21', ''],
         ['adminPagesActionsCombo', 'adminPagesActionsCombo', 'adminPagesActionsCombo', 'adminPagesActions', '2.21', ''],
