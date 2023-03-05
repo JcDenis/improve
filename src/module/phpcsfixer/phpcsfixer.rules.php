@@ -14,7 +14,6 @@
 $finder = PhpCsFixer\Finder::create()
     ->exclude('node_modules')
     ->exclude('vendor')
-    ->exclude('libs')
     ->in(__DIR__);
 
 /** @phpstan-ignore-next-line */
@@ -23,10 +22,10 @@ $config = new PhpCsFixer\Config();
 /* @phpstan-ignore-next-line */
 return $config
     ->setRules([
-        '@PSR12'                                => true,
-        '@PHP81Migration'                       => true,
-        'array_indentation'                     => true,
-        'binary_operator_spaces'                => [
+        '@PSR12'                 => true,
+        '@PHP81Migration'        => true,
+        'array_indentation'      => true,
+        'binary_operator_spaces' => [
             'default'   => 'align_single_space_minimal',
             'operators' => [
                 '=>' => 'align_single_space_minimal',
@@ -51,5 +50,8 @@ return $config
         'phpdoc_trim'                           => true,
         'single_quote'                          => true,
         'trim_array_spaces'                     => true,
+
+        //'no_multiline_whitespace_around_double_arrow' => true,
+        //'use_arrow_functions'                         => true,
     ])
     ->setFinder($finder);
