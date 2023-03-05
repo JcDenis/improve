@@ -23,7 +23,7 @@ It helps dev to clean up plugin or theme before publishing code.
 **improve** requires: 
 
   * admin permission
-  * Dotclear 2.24
+  * Dotclear 2.26-dev
 
 ## USAGE
 
