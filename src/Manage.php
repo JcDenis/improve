@@ -113,7 +113,7 @@ class Manage extends dcNsProcess
                     }
                 }
             }
-            dcCore::app()->blog->settings->get(Core::id())->put('preferences', serialize($preferences), 'string', null, true, true);
+            dcCore::app()->blog->settings->get(Core::id())->put('preferences', json_encode($preferences), 'string', null, true, true);
             dcAdminNotices::addSuccessNotice(__('Configuration successfully updated'));
 
             return true;
@@ -220,20 +220,19 @@ class Manage extends dcNsProcess
             return;
         }
 
-        $bc = empty($_REQUEST['config']) ?
-            (self::$type == 'theme' ? __('Themes actions') : __('Plugins actions')) :
-            __('Configure module');
+        dcPage::openModule(
+            Core::name(),
+            dcPage::jsModuleLoad(Core::id() . '/js/index.js') .
+            (self::$action === null ? '' : self::$action->header())
+        );
 
-        echo '<html><head><title>' . __('improve') . '</title>' .
-        dcPage::jsModuleLoad(Core::id() . '/js/index.js') .
-        (self::$action === null ? '' : self::$action->header()) .
-        '</head><body>' .
-        dcPage::notices() .
+        echo
         dcPage::breadcrumb([
-            __('Plugins') => '',
-            __('improve') => '',
-            $bc           => '',
-        ]);
+            __('Plugins')                                                                                                                 => '',
+            Core::name()                                                                                                                  => '',
+            empty($_REQUEST['config']) ? (self::$type == 'theme' ? __('Themes actions') : __('Plugins actions')) : __('Configure module') => '',
+        ]) .
+        dcPage::notices();
 
         if (empty($_REQUEST['config'])) {
             self::displayActions();
@@ -241,7 +240,7 @@ class Manage extends dcNsProcess
             self::displayConfigurator();
         }
 
-        echo '</body></html>';
+        dcPage::closeModule();
     }
 
     private static function displayConfigurator(): void
@@ -278,7 +277,7 @@ class Manage extends dcNsProcess
         '<p class="anchor-nav"><label for="type" class="classic">' . __('Goto:') . ' </label>' .
         form::combo('type', [__('Plugins') => 'plugin', __('Themes') => 'theme'], self::$type) . ' ' .
         '<input type="submit" value="' . __('Ok') . '" />' .
-        form::hidden('p', 'improve') . '</p>' .
+        form::hidden('p', Core::id()) . '</p>' .
         '</form>';
 
         $combo_modules = self::comboModules();
