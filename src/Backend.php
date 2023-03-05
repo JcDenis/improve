@@ -22,7 +22,7 @@ use dcFavorites;
 use dcNsProcess;
 
 /* clearbricks */
-use Clearbricks;
+use Dotclear\Helper\Clearbricks;
 use files;
 
 /**
@@ -49,9 +49,9 @@ class Backend extends dcNsProcess
 
         dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs): void {
             $favs->register(
-                'improve',
+                Core::id(),
                 [
-                    'title'      => __('improve'),
+                    'title'      => Core::name(),
                     'url'        => dcCore::app()->adminurl->get('admin.plugin.' . Core::id()),
                     'small-icon' => dcPage::getPF(Core::id() . '/icon.svg'),
                     'large-icon' => dcPage::getPF(Core::id() . '/icon.svg'),
@@ -61,7 +61,7 @@ class Backend extends dcNsProcess
         });
 
         dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
-            __('improve'),
+            Core::name(),
             dcCore::app()->adminurl->get('admin.plugin.' . Core::id()),
             dcPage::getPF(Core::id() . '/icon.svg'),
             preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . Core::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),

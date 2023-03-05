@@ -20,7 +20,15 @@ use dcPage;
 use dcNsProcess;
 
 /* clearbricks */
-use form;
+use Dotclear\Helper\Html\Form\{
+    Checkbox,
+    Div,
+    Fieldset,
+    Label,
+    Legend,
+    Para,
+    Text
+};
 
 /* php */
 use Exception;
@@ -64,7 +72,7 @@ class Config extends dcNsProcess
 
             dcCore::app()->adminurl->redirect(
                 'admin.plugins',
-                ['module' => 'improve', 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->__get('list')->getRedir()]
+                ['module' => Core::id(), 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->__get('list')->getRedir()]
             );
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
@@ -80,26 +88,28 @@ class Config extends dcNsProcess
         }
 
         $improve = new Core();
+        $modules = $items = [];
 
-        $modules = [];
         foreach ($improve->modules() as $action) {
             $modules[$action->name()] = $action->id();
         }
-        $modules = array_merge($modules, array_flip($improve->disabled()));
 
-        echo '<div class="fieldset"><h4>' . __('List of disabled actions:') . '</h4>';
-
-        foreach ($modules as $name => $id) {
-            echo
-            '<p><label class="classic" title="' . $id . '">' .
-            form::checkbox(['disabled[]'], $id, ['checked' => array_key_exists($id, $improve->disabled())]) .
-            __($name) . '</label></p>';
+        foreach (array_merge($modules, array_flip($improve->disabled())) as $name => $id) {
+            $items[] = (new Para())->items([
+                (new Checkbox(['disabled_' . $id, 'disabled[]'], array_key_exists($id, $improve->disabled())))->value($id),
+                (new Label($id))->class('classic')->for('disabled_' . $id),
+            ]);
         }
+
         echo
-        '</div><div class="fieldset"><h4>' . __('Options') . '</h4>' .
-        '<p><label class="classic">' .
-        form::checkbox('nodetails', '1', ['checked' => dcCore::app()->blog->settings->get(Core::id())->get('nodetails')]) .
-        __('Hide details of rendered actions') . '</label></p>' .
-        '</div>';
+        (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled actions')))->fields($items),
+            (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
+                (new Para())->items([
+                    (new Checkbox('nodetails', dcCore::app()->blog->settings->get(Core::id())->get('nodetails')))->value('1'),
+                    (new Label(__('Hide details of rendered actions')))->class('classic')->for('nodetails'),
+                ]),
+            ]),
+        ])->render();
     }
 }

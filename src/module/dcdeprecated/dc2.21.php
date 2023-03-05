@@ -44,7 +44,7 @@ return [
 
         ['three-cols', 'three-cols', 'three-boxes', '2.6', ''],
     ],
-    'js'  => [
+    'js' => [
         ['\sstoreLocalData', 'storeLocalData', 'dotclear.storeLocalData', '2.21', ''],
         ['\sdropLocalData', 'dropLocalData', 'dotclear.dropLocalData', '2.21', ''],
         ['\sreadLocalData', 'readLocalData', 'dotclear.readLocalData', '2.21', ''],

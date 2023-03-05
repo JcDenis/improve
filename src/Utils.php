@@ -19,7 +19,6 @@ namespace Dotclear\Plugin\improve;
  */
 class Utils
 {
-
     public static function getActionsDir(): string
     {
         return __DIR__ . '/module/';
