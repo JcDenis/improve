@@ -89,7 +89,7 @@ class Manage extends dcNsProcess
             if (!empty(self::$type)) {
                 $preferences = dcCore::app()->blog->settings->get(Core::id())->get('preferences');
                 if (is_string($preferences)) {
-                    $preferences = unserialize($preferences);
+                    $preferences = json_decode($preferences, true);
                     if (is_array($preferences)) {
                         return $all ? $preferences : (array_key_exists(self::$type, $preferences) ? $preferences[self::$type] : []);
                     }

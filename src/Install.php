@@ -16,6 +16,7 @@ namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcCore;
+use dcNamespace;
 use dcNsProcess;
 
 /* php */
@@ -33,7 +34,7 @@ class Install extends dcNsProcess
     private static $default_settings = [[
         'disabled',
         'List of hidden action modules',
-        'tab;newline;endoffile',
+        'cssheader;tab;newline;endoffile',
         'string',
     ]];
 
@@ -52,6 +53,7 @@ class Install extends dcNsProcess
 
         try {
             self::update_0_8_0();
+            self::update_1_1_0();
             self::putSettings();
 
             return true;
@@ -84,6 +86,33 @@ class Install extends dcNsProcess
                 $newId = str_replace('ImproveAction', '', $id);
                 if ($id != $newId) {
                     dcCore::app()->blog->settings->get(Core::id())->rename($id, strtolower($newId));
+                }
+            }
+        }
+    }
+
+    /** Update improve < 1.1 : use json_(en|de)code rather than (un)serialize */
+    private static function update_1_1_0(): void
+    {
+        if (version_compare(dcCore::app()->getVersion(Core::id()) ?? '0', '1.1', '<')) {
+            foreach (['setting_', 'preferences'] as $key) {
+                $record = dcCore::app()->con->select(
+                    'SELECT * FROM ' . dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME . ' ' .
+                    "WHERE setting_ns = '" . dcCore::app()->con->escape(Core::id()) . "' " .
+                    "AND setting_id LIKE '" . $key . "%' "
+                );
+
+                while ($record->fetch()) {
+                    try {
+                        $value              = @unserialize($record->f('setting_value'));
+                        $cur                = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME);
+                        $cur->setting_value = json_encode(is_array($value) ? $value : []);
+                        $cur->update(
+                            "WHERE setting_id = '" . $record->f('setting_id') . "' and setting_ns = '" . dcCore::app()->con->escape($record->f('setting_ns')) . "' " .
+                            'AND blog_id ' . (null === $record->f('blog_id') ? 'IS NULL ' : ("= '" . dcCore::app()->con->escape($record->f('blog_id')) . "' "))
+                        );
+                    } catch(Exception) {
+                    }
                 }
             }
         }

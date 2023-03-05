@@ -36,7 +36,7 @@ use ArrayObject;
  */
 abstract class Action
 {
-    /** @var array<string>  Current module */
+    /** @var array<string,mixed>  Current module */
     protected $module = [];
 
     /** @var string     Current full path */
@@ -87,7 +87,7 @@ abstract class Action
 
         $settings = dcCore::app()->blog->settings->get(Core::id())->get('settings_' . $this->class_name);
         if (null != $settings) {
-            $settings = unserialize($settings);
+            $settings = json_decode($settings, true);
         }
         $this->settings = is_array($settings) ? $settings : [];
 
@@ -237,7 +237,7 @@ abstract class Action
     {
         dcCore::app()->blog->settings->get(Core::id())->put(
             'settings_' . $this->class_name,
-            serialize($this->settings),
+            json_encode($this->settings),
             'string',
             null,
             true,

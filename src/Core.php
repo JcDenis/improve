@@ -79,6 +79,11 @@ class Core
         return basename(dirname(__DIR__));
     }
 
+    public static function name()
+    {
+        return __('improve');
+    }
+
     public function getLogs(): array
     {
         return $this->logs;
@@ -95,8 +100,8 @@ class Core
             return 0;
         }
         $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcLog::LOG_TABLE_NAME);
-        $cur->log_msg   = serialize($this->logs);
-        $cur->log_table = 'improve';
+        $cur->log_msg   = json_encode($this->logs);
+        $cur->log_table = self::id();
         $id             = dcCore::app()->log->addLog($cur);
 
         return $id;
@@ -104,13 +109,13 @@ class Core
 
     public function readLogs(int $id): array
     {
-        $rs = dcCore::app()->log->getLogs(['log_table' => 'improve', 'log_id' => $id, 'limit' => 1]);
+        $rs = dcCore::app()->log->getLogs(['log_table' => self::id(), 'log_id' => $id, 'limit' => 1]);
         if ($rs->isEmpty()) {
             return [];
         }
         dcCore::app()->log->delLogs($rs->__get('log_id'));
 
-        $res = unserialize($rs->__get('log_msg'));
+        $res = json_decode($rs->__get('log_msg'), true);
 
         return is_array($res) ? $res : [];
     }
@@ -122,7 +127,7 @@ class Core
             return [];
         }
         $lines = [];
-        foreach ($logs['improve'] as $path => $tools) {
+        foreach ($logs[self::id()] as $path => $tools) {
             $l_types = [];
             foreach (['success', 'warning', 'error'] as $type) {
                 $l_tools = [];
@@ -198,7 +203,7 @@ class Core
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs['improve'][__('Begin')][] = $action->id();
+            $this->logs[self::id()][__('Begin')][] = $action->id();
             // info: set current module
             $action->setModule($module);
             $action->setPath(__('Begin'), '', true);
@@ -215,7 +220,7 @@ class Core
             }
             foreach ($workers as $action) {
                 // trace all path and action in logs
-                $this->logs['improve'][$file[0]][] = $action->id();
+                $this->logs[self::id()][$file[0]][] = $action->id();
                 // info: set current path
                 $action->setPath($file[0], $file[1], $file[2]);
             }
@@ -254,7 +259,7 @@ class Core
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs['improve'][__('End')][] = $action->id();
+            $this->logs[self::id()][__('End')][] = $action->id();
             // info: set current module
             $action->setPath(__('End'), '', true);
             // action: close module
