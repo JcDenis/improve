@@ -18,9 +18,9 @@ $this->registerModule(
     'improve',
     'Tiny tools to fix things for module devs',
     'Jean-Christian Denis and contributors',
-    '1.0.2',
+    '1.1',
     [
-        'requires'    => [['core', '2.24']],
+        'requires'    => [['core', '2.26']],
         'permissions' => null,
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/' . basename(__DIR__),

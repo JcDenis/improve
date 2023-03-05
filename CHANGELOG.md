@@ -5,6 +5,16 @@ dev
 - [ ] add module to minify .js
 - [ ] write documentation of php class
 
+1.1 - 2023.03.05 (pre)
+- require Dotclear 2.26-dev
+- use PHP namespace
+- use Html Form
+- use json rather than serialize functions
+- use new open/close module
+- add cssheader tool (experimental)
+- update to phpstan 1.10.3
+- update to php-cs-fixer 3.14.4
+
 1.0.2 - 2023.01.16
 - cleanup namespace usage
 - fix namespace on disabled plugin
