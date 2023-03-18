@@ -32,7 +32,6 @@ use Dotclear\Helper\Html\Form\{
 use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
-use form;
 use html;
 
 /* php */

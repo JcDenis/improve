@@ -230,7 +230,7 @@ class Manage extends dcNsProcess
         echo
         dcPage::breadcrumb([
             __('Plugins')                                                                                                                 => '',
-            My::name()                                                                                                                  => '',
+            My::name()                                                                                                                    => '',
             empty($_REQUEST['config']) ? (self::$type == 'theme' ? __('Themes actions') : __('Plugins actions')) : __('Configure module') => '',
         ]) .
         dcPage::notices();

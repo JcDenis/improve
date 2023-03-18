@@ -43,14 +43,11 @@ class dcdeprecated extends Action
         return true;
     }
 
-    private function loadDeprecatedDefinition()
+    private function loadDeprecatedDefinition(): void
     {
         $path = path::real(__DIR__ . '/dcdeprecated');
-        if (!$path) {
-            return [];
-        }
-        if (!is_dir($path) || !is_readable($path)) {
-            return [];
+        if (!$path || !is_dir($path) || !is_readable($path)) {
+            return;
         }
         $files = files::scandir($path);
 

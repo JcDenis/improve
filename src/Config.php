@@ -49,6 +49,7 @@ class Config extends dcNsProcess
                 dcCore::app()->error->add(sprintf(__('%s required php >= %s'), My::id(), My::PHP_MIN));
             }
         }
+
         return self::$init;
     }
 
