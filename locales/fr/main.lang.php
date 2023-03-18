@@ -62,7 +62,8 @@ l10n::$locales['Help']                                                          
 l10n::$locales['Store file']                                                                                                       = 'Fichier de dépôt';
 l10n::$locales['Re-create dcstore.xml file according to _define.php variables']                                                    = 'Re-créer le fichier dcstore.xml suivant les variables du fichier _define.php';
 l10n::$locales['File will be overwritten if it exists']                                                                            = 'Le fichier sera réécrit si il existe';
-l10n::$locales['Predictable URL to zip file on the external repository']                                                           = 'URL prédictive du fichier zip sur le dépôt externe';
+l10n::$locales['Contents']                                                                                                         = 'Contenu';
+l10n::$locales['Predictable URL to zip file on the external repository:']                                                          = 'URL prédictive du fichier zip sur le dépôt externe :';
 l10n::$locales['For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip']             = 'Par exemple sur github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip';
 l10n::$locales['Note on github, you must create a release and join to it the module zip file.']                                    = 'Note sur Github, vous devez créer un release et y joindre le fichier zip du module.';
 l10n::$locales['Write dcstore.xml file.']                                                                                          = 'Ecrire le fichier dcstore.xml';
@@ -84,7 +85,7 @@ l10n::$locales['PSR2 must have a blank line, whereas PSR12 must not.']          
 l10n::$locales['Replace end of file']                                                                                              = 'Remplacer les fins de fichiers';
 l10n::$locales['Shields badges']                                                                                                   = 'Badges Shields.io';
 l10n::$locales['Add and maintain shields.io badges to the REDAME.md file']                                                         = 'Ajoute et maintient à jour les badges shields.io du fichier README.md';
-l10n::$locales['Your Github user name :']                                                                                          = 'Votre "username" Github :';
+l10n::$locales['Your Github user name:']                                                                                           = 'Votre "username" Github :';
 l10n::$locales['Used in your Github URL: http://github.com/username/module_id.']                                                   = 'Utilisé dans l\'URL Github tel que : http://github.com/username/module_id.';
 l10n::$locales['If you have badges not created by this tool in the README.md file you should remove them manually.']               = 'Si vous avez déjà des badges non créés par cet outil, vous devrez les retirer manuellement.';
 l10n::$locales['Include Dotaddict badge']                                                                                          = 'Inclure le badge Dotaddict';
@@ -114,6 +115,7 @@ l10n::$locales['List of files extension to work on:']                           
 l10n::$locales['Use comma separated list of extensions without dot, recommand "php,js,xml,txt,md".']                               = 'Utiliser une liste d\'extensions séparé par des virgules et sans le point, recommandation: "php,js,xml,txt,md".';
 l10n::$locales['Replace bad new lines']                                                                                            = 'Remplacer les retours à la ligne';
 l10n::$locales['Fix PSR coding style using Php CS Fixer']                                                                          = 'Corrige le style du code suivant les règles PSR en utilisant Php CS Fixer';
+l10n::$locales['Root']                                                                                                             = 'Racine';
 l10n::$locales['Root directory of PHP executable:']                                                                                = 'Chemin complet du répertoire de l\'exécutable PHP :';
 l10n::$locales['If this module does not work you can try to put here directory to php executable (without executable file name).'] = 'Si ce module ne fonctionne pas vous pouvez tenter de mettre ici le chemin complet du répertoire de l\'exécutable PHP (sans le nom de fichier exécutable).';
 l10n::$locales['PHP CS Fixer configuration file:']                                                                                 = 'Fichier de configuration de PHP CS Fixer :';
@@ -123,12 +125,13 @@ l10n::$locales['Add or remove phpdoc header bloc from php file']                
 l10n::$locales['Remove old style bloc header (using #)']                                                                           = 'Supprimer les bloc d\'entête ancien (utilisant #)';
 l10n::$locales['Delete old style bloc content']                                                                                    = 'Effacer l\'ancien contenu de type ancien';
 l10n::$locales['Analyse php code using PHPStan']                                                                                   = 'Analyse le code PHP en utilisant PHPStan';
-l10n::$locales['You must enable improve details to view analyse results !']                                                        = 'Vous devez activer l\'affichage des détails de l\'analyse dans les paramètres d\'improve.';
+l10n::$locales['You must enable improve details to view analyse results !']                                                        = 'Pour voir les résultats d\'analyse, vous devez activer l\'affichage des détails dans les paramètres d\'improve.';
+l10n::$locales['Adjustments']                                                                                                      = 'Ajustements';
 l10n::$locales['Level:']                                                                                                           = 'Niveau :';
 l10n::$locales['List of ignored variables:']                                                                                       = 'Listes des variables ignorées :';
 l10n::$locales['If you have errors like "%s", you can add this var here. Use ; as separator and do not put $ ahead.']              = 'Si vous avez des erreurs comme "%s", vous pouvez ajouter ces variables ici. Utiliser ; comme séparateur et ne pas mettre $ devant.';
 l10n::$locales['For exemple: var;_othervar;avar']                                                                                  = 'Par exemple: var;othervar;avar';
-l10n::$locales['Some variables like core, _menu, are already set in ignored list.']                                                = 'Ceraines variables comme core, _menu, ... sont déjà dans la liste des variables ignorées.';
+l10n::$locales['Some variables like core, _menu, are already set in ignored list.']                                                = 'Certaines variables comme core, _menu, ... sont déjà dans la liste des variables ignorées.';
 l10n::$locales['Split report by file rather than all in the end.']                                                                 = 'Scinder le rapport par fichier plutôt qu\'un seul à la fin.';
 l10n::$locales['Enable this can cause timeout.']                                                                                   = 'Activer ceci peut causer de Timeout.';
 l10n::$locales['PHPStan configuration file:']                                                                                      = 'Fichier de configuration de PHPStan :';
@@ -143,15 +146,13 @@ l10n::$locales['Tabulations']                                                   
 l10n::$locales['Replace tabulation by four space in php files']                                                                    = 'Remplace les tabulation par quatre espaces dans les fichiers php';
 l10n::$locales['Replace tabulation by spaces']                                                                                     = 'Remplacer les tabulations';
 l10n::$locales['Zip module']                                                                                                       = 'Zipper le module';
-l10n::$locales['Compress module into a ready to install package']                                                                  = 'Compresser le module en un paquetage près à installer';
-l10n::$locales['Root']                                                                                                             = 'Racine';
+l10n::$locales['Compress module into a ready to install package']                                                                  = 'Compresser le module en un paquetage prêt à installer';
 l10n::$locales['Path to repository:']                                                                                              = 'Chemin vers le dépôt :';
 l10n::$locales['Preconization: %s']                                                                                                = 'Préconisation : %s';
 l10n::$locales['Blog\'s public directory']                                                                                         = 'Répertoire public du blog';
 l10n::$locales['Files']                                                                                                            = 'Fichiers';
 l10n::$locales['Name of exported package:']                                                                                        = 'Nom du paquetage exporté :';
 l10n::$locales['Name of second exported package:']                                                                                 = 'Nom du second paquetage exporté :';
-l10n::$locales['Overwrite existing package']                                                                                       = 'Écraser les paquetages existants';
 l10n::$locales['Extra files to exclude from package:']                                                                             = 'Fichiers supplémentaires à exclure du paquetage :';
 l10n::$locales['By default all these files are always removed from packages : %s']                                                 = 'Pas défaut tous ces fichiers sont toujours exclu des paquetages : %s';
 l10n::$locales['Remove comments from files']                                                                                       = 'Retirer les commentaires des fichiers';
@@ -160,4 +161,5 @@ l10n::$locales['Prepare comment removal']                                       
 l10n::$locales['Destination filename already exists']                                                                              = 'Le fichier de destination existe déjà';
 l10n::$locales['Destination path is not writable']                                                                                 = 'Le répertoire de destination n\'est pas accessible en écriture';
 l10n::$locales['Zip module into "%s"']                                                                                             = 'Zipper le module vers "%s"';
+l10n::$locales['Overwrite existing package']                                                                                       = 'Écraser les paquetages existants';
 l10n::$locales['Tiny tools to fix things for module devs']                                                                         = 'Outils simple pour aider les développeurs à fignoler leurs modules';
