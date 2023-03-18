@@ -98,8 +98,8 @@ class Config extends dcNsProcess
 
         foreach (array_merge($modules, array_flip($improve->disabled())) as $name => $id) {
             $items[] = (new Para())->items([
-                (new Checkbox(['disabled_' . $id, 'disabled[]'], array_key_exists($id, $improve->disabled())))->value($id),
-                (new Label($id))->class('classic')->for('disabled_' . $id),
+                (new Checkbox(['disabled[]', 'disabled_' . $id], array_key_exists($id, $improve->disabled())))->value($id),
+                (new Label($id, Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('disabled_' . $id),
             ]);
         }
 
@@ -109,7 +109,7 @@ class Config extends dcNsProcess
             (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
                 (new Para())->items([
                     (new Checkbox('nodetails', (bool) dcCore::app()->blog->settings->get(My::id())->get('nodetails')))->value('1'),
-                    (new Label(__('Hide details of rendered actions')))->class('classic')->for('nodetails'),
+                    (new Label(__('Hide details of rendered actions'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('nodetails'),
                 ]),
             ]),
         ])->render();
