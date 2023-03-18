@@ -51,13 +51,14 @@ class Manage extends dcNsProcess
     public static function init(): bool
     {
         if (defined('DC_CONTEXT_ADMIN')) {
-            dcPage::checkSuper();
+            self::$init = dcCore::app()->auth->isSuperAdmin() && version_compare(phpversion(), My::PHP_MIN, '>=');
+        }
 
+        if (self::$init) {
             self::$improve = new Core();
             self::$type    = self::getType();
             self::$module  = self::getModule();
             self::$action  = self::getAction();
-            self::$init    = true;
         }
 
         return self::$init;

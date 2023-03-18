@@ -43,10 +43,12 @@ class Config extends dcNsProcess
     public static function init(): bool
     {
         if (defined('DC_CONTEXT_ADMIN')) {
-            dcPage::checkSuper();
-            self::$init = true;
+            if (version_compare(phpversion(), My::PHP_MIN, '>=')) {
+                self::$init = dcCore::app()->auth->isSuperAdmin();
+            } else {
+                dcCore::app()->error->add(sprintf(__('%s required php >= %s'), My::id(), My::PHP_MIN));
+            }
         }
-
         return self::$init;
     }
 
