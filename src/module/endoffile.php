@@ -14,11 +14,21 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
+/* dotclear */
+use Dotclear\Helper\Html\Form\{
+    Checkbox,
+    Div,
+    Fieldset,
+    Label,
+    Legend,
+    Note,
+    Para
+};
+
 /* improve */
 use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
-use form;
 
 /**
  * Improve action module end of file
@@ -51,13 +61,16 @@ class endoffile extends Action
             $this->redirect($url);
         }
 
-        return
-        '<p><label class="classic" for="endoffile_psr2">' .
-        form::checkbox('endoffile_psr2', 255, $this->getSetting('psr2')) .
-        __('Add a blank line to the end of file') .
-        '</label></p><p class="form-note">' .
-        __('PSR2 must have a blank line, whereas PSR12 must not.') .
-        '</p>';
+        return (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
+                // endoffile_psr2
+                (new Para())->items([
+                    (new Checkbox('endoffile_psr2', !empty($this->getSetting('psr2'))))->value(1),
+                    (new Label(__('Add a blank line to the end of file'), Label::OUTSIDE_LABEL_AFTER))->for('endoffile_psr2')->class('classic'),
+                ]),
+                (new Note())->text(__('PSR2 must have a blank line, whereas PSR12 must not.'))->class('form-note'),
+            ]),
+        ])->render();
     }
 
     public function readFile(&$content): ?bool

@@ -106,7 +106,7 @@ class Config extends dcNsProcess
             (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled actions')))->fields($items),
             (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
                 (new Para())->items([
-                    (new Checkbox('nodetails', dcCore::app()->blog->settings->get(Core::id())->get('nodetails')))->value('1'),
+                    (new Checkbox('nodetails', (bool) dcCore::app()->blog->settings->get(Core::id())->get('nodetails')))->value('1'),
                     (new Label(__('Hide details of rendered actions')))->class('classic')->for('nodetails'),
                 ]),
             ]),

@@ -258,7 +258,7 @@ class Manage extends dcNsProcess
             echo '
             <h3>' . sprintf(__('Configure module "%s"'), self::$action->name()) . '</h3>
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>
-            <p class="info">' . html::escapeHTML(self::$action->description()) . '</p>
+            <h4>' . html::escapeHTML(self::$action->description()) . '</h4>
             <form action="' . dcCore::app()->adminurl->get('admin.plugin.' . Core::id()) . '" method="post" id="form-actions">' .
             (empty($res) ? '<p class="message">' . __('Nothing to configure') . '</p>' : $res) . '
             <p class="clear"><input type="submit" name="save" value="' . __('Save') . '" />' .

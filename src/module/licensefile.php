@@ -14,11 +14,21 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
+/* dotclear */
+use Dotclear\Helper\Html\Form\{
+    Checkbox,
+    Div,
+    Fieldset,
+    Label,
+    Legend,
+    Para,
+    Select
+};
+
 /* improve */
 use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
-use form;
 use files;
 
 /* php */
@@ -86,14 +96,20 @@ class licensefile extends Action
             $this->redirect($url);
         }
 
-        return '
-        <p class="field"><label for="action_version">' . __('License version:') . '</label>' .
-        form::combo('action_version', $this->action_version, $this->getSetting('action_version')) . '
-        </p>
-
-        <p class="field"><label for="action_full">' . __('Action on file:') . '</label>' .
-        form::combo('action_full', $this->action_full, $this->getSetting('action_full')) .
-        '</p>';
+        return (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Adjustments'))))->fields([
+                // action_version
+                (new Para())->items([
+                    (new Label(__('License version:')))->for('action_version'),
+                    (new Select('action_version'))->default($this->getSetting('action_version'))->items($this->action_version),
+                ]),
+                // action_full
+                (new Para())->items([
+                    (new Label(__('Action on file:')))->for('action_full'),
+                    (new Select('action_full'))->default($this->getSetting('action_full'))->items($this->action_full),
+                ]),
+            ]),
+        ])->render();
     }
 
     public function openModule(): ?bool

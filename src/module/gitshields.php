@@ -16,12 +16,21 @@ namespace Dotclear\Plugin\improve\Module;
 
 /* dotclear */
 use dcCore;
+use Dotclear\Helper\Html\Form\{
+    Checkbox,
+    Div,
+    Fieldset,
+    Input,
+    Label,
+    Legend,
+    Note,
+    Para
+};
 
 /* improve */
 use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
-use form;
 
 /**
  * Improve action module Github shields.io
@@ -89,16 +98,23 @@ class gitshields extends Action
             $this->redirect($url);
         }
 
-        return '
-        <p><label for="username">' . __('Your Github user name :') . '</label>' .
-        form::field('username', 60, 100, $this->username) . '
-        </p><p class="form-note">' . __('Used in your Github URL: http://github.com/username/module_id.') . '<br />' .
-        __('If you have badges not created by this tool in the README.md file you should remove them manually.') . '</p>
-
-        <p><label for="dotaddict">' .
-        form::checkbox('dotaddict', 1, $this->dotaddict) . ' ' .
-        __('Include Dotaddict badge') . '</label>
-        </p><p class="form-note">' . __('If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict.') . '</p>';
+        return (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
+                // username
+                (new Para())->items([
+                    (new Label(__('Your Github user name:')))->for('username'),
+                    (new Input('username'))->size(65)->maxlenght(255)->value($this->username),
+                ]),
+                (new Note())->text(__('Used in your Github URL: http://github.com/username/module_id.'))->class('form-note'),
+                (new Note())->text(__('If you have badges not created by this tool in the README.md file you should remove them manually.'))->class('form-note'),
+                // dotaddict
+                (new Para())->items([
+                    (new Checkbox('dotaddict', $this->dotaddict))->value(1),
+                    (new Label(__('Include Dotaddict badge'), Label::OUTSIDE_LABEL_AFTER))->for('dotaddict')->class('classic'),
+                ]),
+                (new Note())->text(__('If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict.'))->class('form-note'),
+            ]),
+        ])->render();
     }
 
     public function openModule(): ?bool

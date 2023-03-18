@@ -16,19 +16,28 @@ namespace Dotclear\Plugin\improve\Module;
 
 /* dotclear */
 use dcCore;
+use Dotclear\Helper\Html\Form\{
+    Checkbox,
+    Div,
+    Fieldset,
+    Input,
+    Label,
+    Legend,
+    Note,
+    Para
+};
 
 /* improve */
 use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
-use form;
 use path;
 use files;
 
 /**
  * Improve action module zip
  */
-class zip extends action
+class zip extends Action
 {
     /** @var array List of excluded file pattern */
     public static $exclude = [
@@ -106,53 +115,52 @@ class zip extends action
             $this->redirect($url);
         }
 
-        return '
-        <div class="fieldset">
-        <h4>' . __('Root') . '</h4>
-
-        <p><label for="pack_repository">' . __('Path to repository:') . ' ' .
-        form::field('pack_repository', 65, 255, $this->getSetting('pack_repository'), 'maximal') .
-        '</label></p>' .
-        '<p class="form-note">' . sprintf(
-            __('Preconization: %s'),
-            dcCore::app()->blog->public_path ?
-            path::real(dcCore::app()->blog->public_path) : __("Blog's public directory")
-        ) . '</p>
-        </div>
-
-        <div class="fieldset">
-        <h4>' . __('Files') . '</h4>
-
-        <p><label for="pack_filename">' . __('Name of exported package:') . ' ' .
-        form::field('pack_filename', 65, 255, $this->pack_filename, 'maximal') .
-        '</label></p>
-        <p class="form-note">' . sprintf(__('Preconization: %s'), '%type%-%id%') . '</p>
-
-        <p><label for="secondpack_filename">' . __('Name of second exported package:') . ' ' .
-        form::field('secondpack_filename', 65, 255, $this->getSetting('secondpack_filename'), 'maximal') .
-        '</label></p>
-        <p class="form-note">' . sprintf(__('Preconization: %s'), '%type%-%id%-%version%') . '</p>
-
-        <p><label class="classic" for="pack_overwrite">' .
-        form::checkbox('pack_overwrite', 1, !empty($this->getSetting('pack_overwrite'))) . ' ' .
-        __('Overwrite existing package') . '</label></p>
-
-        </div>
-
-        <div class="fieldset">
-        <h4>' . __('Content') . '</h4>
-
-        <p><label for="pack_excludefiles">' . __('Extra files to exclude from package:') . ' ' .
-        form::field('pack_excludefiles', 65, 255, $this->pack_excludefiles, 'maximal') .
-        '</label></p>
-        <p class="form-note">' . sprintf(__('Preconization: %s'), '*.zip,*.tar,*.tar.gz') . '<br />' .
-        sprintf(__('By default all these files are always removed from packages : %s'), implode(', ', self::$exclude)) . '</p>
-
-        <p><label class="classic" for="pack_nocomment">' .
-        form::checkbox('pack_nocomment', 1, $this->getSetting('pack_nocomment')) . ' ' .
-        __('Remove comments from files') . '</label></p>
-
-        </div>';
+        return (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Root'))))->fields([
+                // pack_repository
+                (new Para())->items([
+                    (new Label(__('Path to repository:')))->for('pack_repository'),
+                    (new Input('pack_repository'))->size(65)->maxlenght(255)->value($this->getSetting('pack_repository')),
+                ]),
+                (new Note())->text(sprintf(
+                    __('Preconization: %s'),
+                    dcCore::app()->blog->public_path ?
+                    path::real(dcCore::app()->blog->public_path) : __("Blog's public directory")
+                ))->class('form-note'),
+            ]),
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Files'))))->fields([
+                // pack_filename
+                (new Para())->items([
+                    (new Label(__('Name of exported package:')))->for('pack_filename'),
+                    (new Input('pack_filename'))->size(65)->maxlenght(255)->value($this->getSetting('pack_filename')),
+                ]),
+                (new Note())->text(sprintf(__('Preconization: %s'), '%type%-%id%'))->class('form-note'),
+                // secondpack_filename
+                (new Para())->items([
+                    (new Label(__('Name of second exported package:')))->for('secondpack_filename'),
+                    (new Input('secondpack_filename'))->size(65)->maxlenght(255)->value($this->getSetting('secondpack_filename')),
+                ]),
+                (new Note())->text(sprintf(__('Preconization: %s'), '%type%-%id%-%version%'))->class('form-note'),
+                // pack_overwrite
+                (new Para())->items([
+                    (new Checkbox('pack_overwrite', !empty($this->getSetting('pack_overwrite'))))->value(1),
+                    (new Label(__('Overwrite existing languages'), Label::OUTSIDE_LABEL_AFTER))->for('pack_overwrite')->class('classic'),
+                ]),
+            ]),
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
+                // pack_excludefiles
+                (new Para())->items([
+                    (new Label(__('Extra files to exclude from package:')))->for('pack_excludefiles'),
+                    (new Input('pack_excludefiles'))->size(65)->maxlenght(255)->value($this->getSetting('pack_excludefiles')),
+                ]),
+                (new Note())->text(sprintf(__('By default all these files are always removed from packages : %s'), implode(', ', self::$exclude)))->class('form-note'),
+                // pack_nocomment
+                (new Para())->items([
+                    (new Checkbox('pack_nocomment', !empty($this->getSetting('pack_nocomment'))))->value(1),
+                    (new Label(__('Remove comments from files'), Label::OUTSIDE_LABEL_AFTER))->for('pack_nocomment')->class('classic'),
+                ]),
+            ]),
+        ])->render();
     }
 
     public function closeModule(): ?bool

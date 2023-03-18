@@ -16,12 +16,22 @@ namespace Dotclear\Plugin\improve\Module;
 
 /* dotclear */
 use dcCore;
+use Dotclear\Helper\Html\Form\{
+    Checkbox,
+    Div,
+    Fieldset,
+    Label,
+    Legend,
+    Note,
+    Para,
+    Select,
+    Textarea
+};
 
 /* improve */
 use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
-use form;
 use html;
 
 /* php */
@@ -112,30 +122,42 @@ class phpheader extends Action
             $this->redirect($url);
         }
 
-        return '
-        <p><label for="bloc_action">' . __('Action:') . '</label>' .
-        form::combo('bloc_action', $this->action_bloc, $this->getSetting('bloc_action')) . '
-        </p>
-
-        <p><label class="classic" for="remove_old">' .
-        form::checkbox('remove_old', 1, $this->getSetting('remove_old')) . ' ' .
-        __('Remove old style bloc header (using #)') .
-        '</label></p>
-
-        <p><label class="classic" for="exclude_locales">' .
-        form::checkbox('exclude_locales', 1, $this->getSetting('exclude_locales')) . ' ' .
-        __('Do not add bloc to files from "locales" and "libs" folder') .
-        '</label></p>
-
-        <p>' . __('Bloc content:') . '</p>
-        <p class="area">' .
-        form::textarea('bloc_content', 50, 10, html::escapeHTML($this->bloc_content)) . '
-        </p><p class="form-note">' .
-        sprintf(
-            __('You can use wildcards %s'),
-            '%year%, %module_id%, %module_name%, %module_author%, %module_type%, %user_cn%, %user_name%, %user_email%, %user_url%'
-        ) . '<br />' . __('Do not put structural elements to the begining of lines.') . '</p>' .
-        '<div class="fieldset box"><h4>' . __('Exemple') . '</h4><pre class="code">' . self::$exemple . '</pre></div>';
+        return (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Adjustments'))))->fields([
+                // bloc_action
+                (new Para())->items([
+                    (new Label(__('Action:')))->for('bloc_action'),
+                    (new Select('bloc_action'))->default($this->getSetting('bloc_action'))->items($this->action_bloc),
+                ]),
+                // remove_old
+                (new Para())->items([
+                    (new Checkbox('remove_old', !empty($this->getSetting('remove_old'))))->value(1),
+                    (new Label(__('Remove old style bloc header (using #)'), Label::OUTSIDE_LABEL_AFTER))->for('remove_old')->class('classic'),
+                ]),
+                // exclude_locales
+                (new Para())->items([
+                    (new Checkbox('exclude_locales', !empty($this->getSetting('exclude_locales'))))->value(1),
+                    (new Label(__('Do not add bloc to files from "locales" and "libs" folder'), Label::OUTSIDE_LABEL_AFTER))->for('exclude_locales')->class('classic'),
+                ]),
+            ]),
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
+                // bloc_content
+                (new Para())->items([
+                    (new Label(__('Bloc content:')))->for('bloc_content'),
+                    (new Textarea('bloc_content', html::escapeHTML($this->bloc_content)))->cols(120)->rows(10),
+                ]),
+                (new Note())->text(sprintf(
+                    __('You can use wildcards %s'),
+                    '%year%, %module_id%, %module_name%, %module_author%, %module_type%, %user_cn%, %user_name%, %user_email%, %user_url%'
+                ))->class('form-note'),
+                (new Note())->text(__('Do not put structural elements to the begining of lines.'))->class('form-note'),
+                // exemple
+                (new Para())->items([
+                    (new Label(__('Exemple:')))->for('content_exemple'),
+                    (new Textarea('content_exemple', html::escapeHTML(self::$exemple)))->cols(120)->rows(10)->extra('readonly="true"'),
+                ]),
+            ]),
+        ])->render();
     }
 
     public function openModule(): ?bool

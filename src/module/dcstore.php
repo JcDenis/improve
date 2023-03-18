@@ -16,9 +16,17 @@ namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
 use Dotclear\Plugin\improve\Action;
+use Dotclear\Helper\Html\Form\{
+    Div,
+    Fieldset,
+    Input,
+    Label,
+    Legend,
+    Note,
+    Para
+};
 
 /* clearbricks */
-use form;
 use files;
 use text;
 use xmlTag;
@@ -64,19 +72,19 @@ class dcstore extends Action
             $this->redirect($url);
         }
 
-        return
-        '<p class="info">' . __('File will be overwritten if it exists') . '</p>' .
-        '<p><label class="classic" for="dcstore_pattern">' .
-        __('Predictable URL to zip file on the external repository') . '<br />' .
-        form::field('dcstore_pattern', 160, 255, $this->pattern) . '</label>' .
-        '</p>' .
-        '<p class="form-note">' .
-        sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.') .
-        '<br /> ' .
-        __('For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip') .
-        '<br />' .
-        __('Note on github, you must create a release and join to it the module zip file.') . '
-        </p>';
+        return (new Div())->items([
+            (new Note())->text(__('File will be overwritten if it exists'))->class('form-note'),
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
+                // phpexe_path
+                (new Para())->items([
+                    (new Label(__('Predictable URL to zip file on the external repository:')))->for('dcstore_pattern'),
+                    (new Input('dcstore_pattern'))->size(65)->maxlenght(255)->value($this->pattern),
+                ]),
+                (new Note())->text(sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.'))->class('form-note'),
+                (new Note())->text(__('For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip'))->class('form-note'),
+                (new Note())->text(__('Note on github, you must create a release and join to it the module zip file.'))->class('form-note'),
+            ]),
+        ])->render();
     }
 
     public function openModule(): ?bool

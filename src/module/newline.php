@@ -14,12 +14,22 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
+/* dotclear */
+use Dotclear\Helper\Html\Form\{
+    Div,
+    Fieldset,
+    Input,
+    Label,
+    Legend,
+    Note,
+    Para
+};
+
 /* improve */
 use Dotclear\Plugin\improve\Action;
 use Dotclear\Plugin\improve\Core;
 
 /* clearbricks */
-use form;
 
 /**
  * Improve action module new line
@@ -60,13 +70,16 @@ class newline extends Action
             $ext = [];
         }
 
-        return
-        '<p><label class="classic" for="newline_extensions">' .
-        __('List of files extension to work on:') . '<br />' .
-        form::field('newline_extensions', 65, 255, implode(',', $ext)) .
-        '</label></p><p class="form-note">' .
-         __('Use comma separated list of extensions without dot, recommand "php,js,xml,txt,md".') .
-         '</p>';
+        return (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
+                // newline_extensions
+                (new Para())->items([
+                    (new Label(__('List of files extension to work on:')))->for('newline_extensions'),
+                    (new Input('newline_extensions'))->size(65)->maxlenght(255)->value(implode(',', $ext)),
+                ]),
+                (new Note())->text(__('Use comma separated list of extensions without dot, recommand "php,js,xml,txt,md".'))->class('form-note'),
+            ]),
+        ])->render();
     }
 
     public function readFile(string &$content): ?bool

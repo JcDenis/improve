@@ -21,10 +21,19 @@ use Dotclear\Plugin\improve\Core;
 /* dotclear */
 use dcCore;
 use dcPage;
+use Dotclear\Helper\Html\Form\{
+    Div,
+    Fieldset,
+    Input,
+    Label,
+    Legend,
+    Note,
+    Para,
+    Textarea
+};
 
 /* clearbricks */
 use html;
-use form;
 use path;
 
 /* php */
@@ -99,22 +108,23 @@ class phpcsfixer extends Action
         }
         $content = (string) file_get_contents(__DIR__ . '/phpcsfixer/phpcsfixer.rules.php');
 
-        return
-        '<p><label class="classic" for="phpexe_path">' .
-        __('Root directory of PHP executable:') . '<br />' .
-        form::field('phpexe_path', 160, 255, $this->phpexe_path) . '</label>' .
-        '</p>' .
-        '<p class="form-note">' .
-            __('If this module does not work you can try to put here directory to php executable (without executable file name).') .
-        ' C:\path_to\php</p>' .
-
-        '<p><label for="file_content">' . __('PHP CS Fixer configuration file:') . '</strong></label></p>' .
-        '<p>' . form::textarea('file_content', 120, 60, [
-            'default'    => html::escapeHTML($content),
-            'class'      => 'maximal',
-            'extra_html' => 'readonly="true"',
-        ]) . '</p>' .
-        (
+        return (new Div())->items([
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Root'))))->fields([
+                // phpexe_path
+                (new Para())->items([
+                    (new Label(__('Root directory of PHP executable:')))->for('phpexe_path'),
+                    (new Input('phpexe_path'))->size(65)->maxlenght(255)->value($this->phpexe_path),
+                ]),
+                (new Note())->text(__('If this module does not work you can try to put here directory to php executable (without executable file name).'))->class('form-note'),
+            ]),
+            (new Fieldset())->class('fieldset')->legend((new Legend(__('Bootstrap'))))->fields([
+                // file_content
+                (new Para())->items([
+                    (new Label(__('PHP CS Fixer configuration file:')))->for('file_content'),
+                    (new Textarea('file_content', html::escapeHTML($content)))->class('maximal')->cols(120)->rows(14)->extra('readonly="true"'),
+                ]),
+            ]),
+        ])->render() . (
             !self::$user_ui_colorsyntax ? '' :
             dcPage::jsModuleLoad(Core::id() . '/inc/module/phpcsfixer/phpcsfixer.improve.js') .
             dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
