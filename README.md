@@ -24,6 +24,7 @@ It helps dev to clean up plugin or theme before publishing code.
 
   * admin permission
   * Dotclear 2.26-dev
+  * PHP 8.0
 
 ## USAGE
 

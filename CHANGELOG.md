@@ -5,6 +5,14 @@ dev
 - [ ] add module to minify .js
 - [ ] write documentation of php class
 
+1.1.1 - 2023.03.18
+- require php 8.0
+- use new Zip helper
+- use Html form for tools configuration
+- check php version
+- update to phpstan 1.10.7
+- update to php-cs-fixer 3.15.1
+
 1.1 - 2023.03.05 (pre)
 - require Dotclear 2.26-dev
 - use PHP namespace
