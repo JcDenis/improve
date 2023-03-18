@@ -40,7 +40,7 @@ class Install extends dcNsProcess
 
     public static function init(): bool
     {
-        self::$init = defined('DC_CONTEXT_ADMIN') && dcCore::app()->newVersion(Core::id(), dcCore::app()->plugins->moduleInfo(Core::id(), 'version'));
+        self::$init = defined('DC_CONTEXT_ADMIN') && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
 
         return self::$init;
     }
@@ -67,7 +67,7 @@ class Install extends dcNsProcess
     private static function putSettings(): void
     {
         foreach (self::$default_settings as $v) {
-            dcCore::app()->blog->settings->get(Core::id())->put(
+            dcCore::app()->blog->settings->get(My::id())->put(
                 $v[0],
                 $v[2],
                 $v[3],
@@ -81,11 +81,11 @@ class Install extends dcNsProcess
     /** Update improve < 0.8 : action modules settings name */
     private static function update_0_8_0(): void
     {
-        if (version_compare(dcCore::app()->getVersion(Core::id()) ?? '0', '0.8', '<')) {
-            foreach (dcCore::app()->blog->settings->get(Core::id())->dumpGlobalSettings() as $id => $values) {
+        if (version_compare(dcCore::app()->getVersion(My::id()) ?? '0', '0.8', '<')) {
+            foreach (dcCore::app()->blog->settings->get(My::id())->dumpGlobalSettings() as $id => $values) {
                 $newId = str_replace('ImproveAction', '', $id);
                 if ($id != $newId) {
-                    dcCore::app()->blog->settings->get(Core::id())->rename($id, strtolower($newId));
+                    dcCore::app()->blog->settings->get(My::id())->rename($id, strtolower($newId));
                 }
             }
         }
@@ -94,11 +94,11 @@ class Install extends dcNsProcess
     /** Update improve < 1.1 : use json_(en|de)code rather than (un)serialize */
     private static function update_1_1_0(): void
     {
-        if (version_compare(dcCore::app()->getVersion(Core::id()) ?? '0', '1.1', '<')) {
+        if (version_compare(dcCore::app()->getVersion(My::id()) ?? '0', '1.1', '<')) {
             foreach (['setting_', 'preferences'] as $key) {
                 $record = dcCore::app()->con->select(
                     'SELECT * FROM ' . dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME . ' ' .
-                    "WHERE setting_ns = '" . dcCore::app()->con->escape(Core::id()) . "' " .
+                    "WHERE setting_ns = '" . dcCore::app()->con->escape(My::id()) . "' " .
                     "AND setting_id LIKE '" . $key . "%' "
                 );
 

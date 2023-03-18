@@ -65,14 +65,14 @@ class Config extends dcNsProcess
             if (!empty($_POST['disabled']) && is_array($_POST['disabled'])) {
                 $pdisabled = implode(';', $_POST['disabled']);
             }
-            dcCore::app()->blog->settings->get(Core::id())->put('disabled', $pdisabled);
-            dcCore::app()->blog->settings->get(Core::id())->put('nodetails', !empty($_POST['nodetails']));
+            dcCore::app()->blog->settings->get(My::id())->put('disabled', $pdisabled);
+            dcCore::app()->blog->settings->get(My::id())->put('nodetails', !empty($_POST['nodetails']));
 
             dcPage::addSuccessNotice(__('Configuration successfully updated'));
 
             dcCore::app()->adminurl->redirect(
                 'admin.plugins',
-                ['module' => Core::id(), 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->__get('list')->getRedir()]
+                ['module' => My::id(), 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->__get('list')->getRedir()]
             );
         } catch (Exception $e) {
             dcCore::app()->error->add($e->getMessage());
@@ -106,7 +106,7 @@ class Config extends dcNsProcess
             (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled actions')))->fields($items),
             (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
                 (new Para())->items([
-                    (new Checkbox('nodetails', (bool) dcCore::app()->blog->settings->get(Core::id())->get('nodetails')))->value('1'),
+                    (new Checkbox('nodetails', (bool) dcCore::app()->blog->settings->get(My::id())->get('nodetails')))->value('1'),
                     (new Label(__('Hide details of rendered actions')))->class('classic')->for('nodetails'),
                 ]),
             ]),

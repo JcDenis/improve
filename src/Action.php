@@ -85,7 +85,7 @@ abstract class Action
     {
         $this->class_name = str_replace(Utils::getActionsNS(), '', get_called_class());
 
-        $settings = dcCore::app()->blog->settings->get(Core::id())->get('settings_' . $this->class_name);
+        $settings = dcCore::app()->blog->settings->get(My::id())->get('settings_' . $this->class_name);
         if (null != $settings) {
             $settings = json_decode($settings, true);
         }
@@ -94,7 +94,7 @@ abstract class Action
         $this->init();
 
         // can overload priority by settings
-        if (1 < ($p = (int) dcCore::app()->blog->settings->get(Core::id())->get('priority_' . $this->class_name))) {
+        if (1 < ($p = (int) dcCore::app()->blog->settings->get(My::id())->get('priority_' . $this->class_name))) {
             $this->priority = $p;
         }
     }
@@ -235,7 +235,7 @@ abstract class Action
      */
     final protected function redirect(string $url): bool
     {
-        dcCore::app()->blog->settings->get(Core::id())->put(
+        dcCore::app()->blog->settings->get(My::id())->put(
             'settings_' . $this->class_name,
             json_encode($this->settings),
             'string',

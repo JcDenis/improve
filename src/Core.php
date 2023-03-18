@@ -53,7 +53,7 @@ class Core
      */
     public function __construct()
     {
-        $disabled = explode(';', (string) dcCore::app()->blog->settings->get(self::id())->get('disabled'));
+        $disabled = explode(';', (string) dcCore::app()->blog->settings->get(My::id())->get('disabled'));
         $list     = new ArrayObject();
 
         try {
@@ -74,14 +74,14 @@ class Core
         uasort($this->actions, [$this, 'sortModules']);
     }
 
-    public static function id()
+    public static function id(): string
     {
         return basename(dirname(__DIR__));
     }
 
-    public static function name()
+    public static function name(): string
     {
-        return __('improve');
+        return __((string) dcCore::app()->plugins->moduleInfo(My::id(), 'name'));
     }
 
     public function getLogs(): array
@@ -101,7 +101,7 @@ class Core
         }
         $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcLog::LOG_TABLE_NAME);
         $cur->log_msg   = json_encode($this->logs);
-        $cur->log_table = self::id();
+        $cur->log_table = My::id();
         $id             = dcCore::app()->log->addLog($cur);
 
         return $id;
@@ -109,7 +109,7 @@ class Core
 
     public function readLogs(int $id): array
     {
-        $rs = dcCore::app()->log->getLogs(['log_table' => self::id(), 'log_id' => $id, 'limit' => 1]);
+        $rs = dcCore::app()->log->getLogs(['log_table' => My::id(), 'log_id' => $id, 'limit' => 1]);
         if ($rs->isEmpty()) {
             return [];
         }
@@ -120,14 +120,14 @@ class Core
         return is_array($res) ? $res : [];
     }
 
-    public function parselogs(int $id): array
+    public function parseLogs(int $id): array
     {
         $logs = $this->readLogs($id);
         if (empty($logs)) {
             return [];
         }
         $lines = [];
-        foreach ($logs[self::id()] as $path => $tools) {
+        foreach ($logs[My::id()] as $path => $tools) {
             $l_types = [];
             foreach (['success', 'warning', 'error'] as $type) {
                 $l_tools = [];
@@ -203,7 +203,7 @@ class Core
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs[self::id()][__('Begin')][] = $action->id();
+            $this->logs[My::id()][__('Begin')][] = $action->id();
             // info: set current module
             $action->setModule($module);
             $action->setPath(__('Begin'), '', true);
@@ -220,7 +220,7 @@ class Core
             }
             foreach ($workers as $action) {
                 // trace all path and action in logs
-                $this->logs[self::id()][$file[0]][] = $action->id();
+                $this->logs[My::id()][$file[0]][] = $action->id();
                 // info: set current path
                 $action->setPath($file[0], $file[1], $file[2]);
             }
@@ -259,7 +259,7 @@ class Core
         }
         foreach ($workers as $action) {
             // trace all path and action in logs
-            $this->logs[self::id()][__('End')][] = $action->id();
+            $this->logs[My::id()][__('End')][] = $action->id();
             // info: set current module
             $action->setPath(__('End'), '', true);
             // action: close module
@@ -313,7 +313,7 @@ class Core
 
     public function getURL(array $params = []): string
     {
-        return dcCore::app()->adminurl->get('admin.plugin.' . self::id(), $params, '&');
+        return dcCore::app()->adminurl->get('admin.plugin.' . My::id(), $params, '&');
     }
 
     /**

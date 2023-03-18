@@ -16,7 +16,7 @@ namespace Dotclear\Plugin\improve\Module;
 
 /* improve */
 use Dotclear\Plugin\improve\Action;
-use Dotclear\Plugin\improve\Core;
+use Dotclear\Plugin\improve\My;
 
 /* dotclear */
 use dcCore;
@@ -155,7 +155,7 @@ class phpstan extends Action
             ]),
         ])->render() . (
             !self::$user_ui_colorsyntax ? '' :
-            dcPage::jsModuleLoad(Core::id() . '/inc/module/phpstan/phpstan.improve.js') .
+            dcPage::jsModuleLoad(My::id() . '/inc/module/phpstan/phpstan.improve.js') .
             dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }

@@ -49,22 +49,22 @@ class Backend extends dcNsProcess
 
         dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs): void {
             $favs->register(
-                Core::id(),
+                My::id(),
                 [
-                    'title'      => Core::name(),
-                    'url'        => dcCore::app()->adminurl->get('admin.plugin.' . Core::id()),
-                    'small-icon' => dcPage::getPF(Core::id() . '/icon.svg'),
-                    'large-icon' => dcPage::getPF(Core::id() . '/icon.svg'),
+                    'title'      => My::name(),
+                    'url'        => dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
+                    'small-icon' => dcPage::getPF(My::id() . '/icon.svg'),
+                    'large-icon' => dcPage::getPF(My::id() . '/icon.svg'),
                     //'permissions' => null,
                 ]
             );
         });
 
         dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
-            Core::name(),
-            dcCore::app()->adminurl->get('admin.plugin.' . Core::id()),
-            dcPage::getPF(Core::id() . '/icon.svg'),
-            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . Core::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
+            My::name(),
+            dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
+            dcPage::getPF(My::id() . '/icon.svg'),
+            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . My::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
             dcCore::app()->auth->isSuperAdmin()
         );
 
