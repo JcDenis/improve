@@ -40,17 +40,16 @@ class Install extends dcNsProcess
 
     public static function init(): bool
     {
-        if (defined('DC_CONTEXT_ADMIN')) {
-            self::$init = version_compare(phpversion(), My::PHP_MIN, '>=')
-                && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
-        }
+        static::$init = defined('DC_CONTEXT_ADMIN')
+            && My::phpCompliant()
+            && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
 
-        return self::$init;
+        return static::$init;
     }
 
     public static function process(): bool
     {
-        if (!self::$init) {
+        if (!static::$init) {
             return false;
         }
 

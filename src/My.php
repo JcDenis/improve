@@ -39,4 +39,12 @@ class My
     {
         return __((string) dcCore::app()->plugins->moduleInfo(self::id(), 'name'));
     }
+
+    /**
+     * Check php version
+     */
+    public static function phpCompliant(): bool
+    {
+        return version_compare(phpversion(), self::PHP_MIN, '>=');
+    }
 }

@@ -50,18 +50,18 @@ class Manage extends dcNsProcess
 
     public static function init(): bool
     {
-        if (defined('DC_CONTEXT_ADMIN')) {
-            self::$init = dcCore::app()->auth->isSuperAdmin() && version_compare(phpversion(), My::PHP_MIN, '>=');
-        }
+        static::$init = defined('DC_CONTEXT_ADMIN')
+            && dcCore::app()->auth->isSuperAdmin()
+            && My::phpCompliant();
 
-        if (self::$init) {
+        if (static::$init) {
             self::$improve = new Core();
             self::$type    = self::getType();
             self::$module  = self::getModule();
             self::$action  = self::getAction();
         }
 
-        return self::$init;
+        return static::$init;
     }
 
     private static function getType(): string
@@ -166,7 +166,7 @@ class Manage extends dcNsProcess
 
     public static function process(): bool
     {
-        if (!self::$init) {
+        if (!static::$init) {
             return false;
         }
 
@@ -217,7 +217,7 @@ class Manage extends dcNsProcess
 
     public static function render(): void
     {
-        if (!self::$init) {
+        if (!static::$init) {
             return;
         }
 

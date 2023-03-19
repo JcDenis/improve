@@ -42,20 +42,16 @@ class Config extends dcNsProcess
 {
     public static function init(): bool
     {
-        if (defined('DC_CONTEXT_ADMIN')) {
-            if (version_compare(phpversion(), My::PHP_MIN, '>=')) {
-                self::$init = dcCore::app()->auth->isSuperAdmin();
-            } else {
-                dcCore::app()->error->add(sprintf(__('%s required php >= %s'), My::id(), My::PHP_MIN));
-            }
-        }
+        static::$init = defined('DC_CONTEXT_ADMIN')
+            && dcCore::app()->auth->isSuperAdmin()
+            && My::phpCompliant();
 
-        return self::$init;
+        return static::$init;
     }
 
     public static function process(): bool
     {
-        if (!self::$init) {
+        if (!static::$init) {
             return false;
         }
 
@@ -86,7 +82,7 @@ class Config extends dcNsProcess
 
     public static function render(): void
     {
-        if (!self::$init) {
+        if (!static::$init) {
             return;
         }
 
