@@ -105,14 +105,16 @@ class phpstan extends Action
     {
         if (!empty($_POST['save'])) {
             $this->setSettings([
-                'phpexe_path'  => (!empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : ''),
-                'run_level'    => (int) $_POST['run_level'],
-                'ignored_vars' => (!empty($_POST['ignored_vars']) ? $_POST['ignored_vars'] : ''),
-                'split_report' => !empty($_POST['split_report']),
+                'phpexe_path'     => (!empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : ''),
+                'run_level'       => (int) $_POST['run_level'],
+                'ignored_vars'    => (!empty($_POST['ignored_vars']) ? $_POST['ignored_vars'] : ''),
+                'ignored_default' => !empty($_POST['ignored_default']),
+                'split_report'    => !empty($_POST['split_report']),
+                'clear_cache'     => !empty($_POST['clear_cache']),
             ]);
             $this->redirect($url);
         }
-        $content = (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.conf');
+        $content = (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.full.conf');
 
         return (new Div())->items([
             (new Note())->text(__('You must enable improve details to view analyse results !'))->class('form-note'),
@@ -139,10 +141,22 @@ class phpstan extends Action
                     sprintf(__('If you have errors like "%s", you can add this var here. Use ; as separator and do not put $ ahead.'), 'Variable $var might not be defined') .
                     ' ' . __('For exemple: var;_othervar;avar') . '<br />' . __('Some variables like core, _menu, are already set in ignored list.')
                 )->class('form-note'),
+                // ignored_default
+                (new Para())->items([
+                    (new Checkbox('ignored_default', !empty($this->getSetting('ignored_default'))))->value(1),
+                    (new Label(__('Do not use rules from default ignored errors list.'), Label::OUTSIDE_LABEL_AFTER))->for('ignored_default')->class('classic'),
+                ]),
+                (new Note())->text(__('See ignored errors from configuration file below.'))->class('form-note'),
                 // split_report
                 (new Para())->items([
                     (new Checkbox('split_report', !empty($this->getSetting('split_report'))))->value(1),
                     (new Label(__('Split report by file rather than all in the end.'), Label::OUTSIDE_LABEL_AFTER))->for('split_report')->class('classic'),
+                ]),
+                (new Note())->text(__('Enable this can cause timeout.'))->class('form-note'),
+                // clear_cache
+                (new Para())->items([
+                    (new Checkbox('clear_cache', !empty($this->getSetting('clear_cache'))))->value(1),
+                    (new Label(__('Clear result cache before each analizes.'), Label::OUTSIDE_LABEL_AFTER))->for('clear_cache')->class('classic'),
                 ]),
                 (new Note())->text(__('Enable this can cause timeout.'))->class('form-note'),
             ]),
@@ -179,7 +193,9 @@ class phpstan extends Action
             return null;
         }
 
-        return $this->execFixer($this->path_full);
+        $clear = $this->getSetting('clear_cache') ? $this->execClear($this->path_full) : true;
+
+        return $clear && $this->execFixer($this->path_full);
     }
 
     public function closeModule(): ?bool
@@ -191,7 +207,22 @@ class phpstan extends Action
             return false;
         }
 
-        return $this->execFixer();
+        $clear = $this->getSetting('clear_cache') ? $this->execClear() : true;
+
+        return $clear && $this->execFixer();
+    }
+
+    private function execClear(string $path = null): bool
+    {
+        if (!empty($path)) {
+            $path .= ' ';
+        }
+
+        return $this->execCmd(sprintf(
+            '%sphp %s/phpstan/libs/phpstan.phar clear-result-cache',
+            $this->phpexe_path,
+            __DIR__
+        ), true);
     }
 
     private function execFixer(string $path = null): bool
@@ -200,13 +231,16 @@ class phpstan extends Action
             $path .= ' ';
         }
 
-        $command = sprintf(
+        return $this->execCmd(sprintf(
             '%sphp %s/phpstan/libs/phpstan.phar analyse ' . $path . '--configuration=%s',
             $this->phpexe_path,
             __DIR__,
             DC_VAR . '/phpstan.neon'
-        );
+        ));
+    }
 
+    private function execCmd(string $command, bool $from_clear = false): bool
+    {
         try {
             exec($command, $output, $error);
 
@@ -214,7 +248,7 @@ class phpstan extends Action
                 throw new Exception('oops');
             }
             if (count($output) < 4) {
-                $this->setSuccess(__('No errors found'));
+                $this->setSuccess($from_clear ? __('Cache cleared') : __('No errors found'));
             } else {
                 $this->setWarning(sprintf('<pre>%s</pre>', implode('<br />', $output)));
             }
@@ -248,6 +282,7 @@ class phpstan extends Action
 
     private function writeConf(): bool
     {
+        $full = $this->getSetting('ignored_default') ? '' : 'full.';
         $content = str_replace(
             [
                 '%LEVEL%',
@@ -257,11 +292,11 @@ class phpstan extends Action
             ],
             [
                 $this->run_level,
-                $this->module['sroot'],
-                DC_ROOT,
-                __DIR__ . '/phpstan',
+                (string) path::real($this->module['sroot'], false),
+                (string) path::real(DC_ROOT, false),
+                (string) path::real( __DIR__ . '/phpstan', false),
             ],
-            (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.conf')
+            (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.' . $full . 'conf')
         );
 
         $ignored = explode(';', $this->ignored_vars);
