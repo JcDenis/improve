@@ -5,6 +5,11 @@ dev
 - [ ] add module to minify .js
 - [ ] write documentation of php class
 
+1.1.2 - 2023.03.20
+- add option to phpstan to clear cache
+- add option to phpstan not ot use ignored errors
+- fix init check
+
 1.1.1 - 2023.03.18
 - require php 8.0
 - use new Zip helper
