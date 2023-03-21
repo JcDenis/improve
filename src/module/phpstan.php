@@ -89,7 +89,7 @@ class phpstan extends Action
 
     public function isConfigured(): bool
     {
-        return true;
+        return !dcCore::app()->blog->settings->get(My::id())->get('nodetails');
     }
 
     public function header(): ?string
