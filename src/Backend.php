@@ -14,16 +14,13 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-/* dotclear */
 use dcAdmin;
 use dcCore;
 use dcPage;
 use dcFavorites;
 use dcNsProcess;
-
-/* clearbricks */
+use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Clearbricks;
-use files;
 
 /**
  * Improve admin class
@@ -68,7 +65,7 @@ class Backend extends dcNsProcess
             dcCore::app()->auth->isSuperAdmin()
         );
 
-        foreach (files::scandir(Utils::getActionsDir()) as $file) {
+        foreach (Files::scandir(Utils::getActionsDir()) as $file) {
             if (is_file(Utils::getActionsDir() . $file) && '.php' == substr($file, -4)) {
                 Clearbricks::lib()->autoload([Utils::getActionsNS() . substr($file, 0, -4) => Utils::getActionsDir() . $file]);
                 dcCore::app()->addBehavior('improveAddAction', [Utils::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */

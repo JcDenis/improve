@@ -14,19 +14,24 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-/* dotclear */
 use dcCore;
 use dcPage;
 use dcAdminNotices;
 use dcThemes;
 use dcUtils;
 use dcNsProcess;
-
-/* clearbricks */
-use html;
-use form;
-
-/* php */
+use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\Html\Form\{
+    Checkbox,
+    Div,
+    Form,
+    Hidden,
+    Label,
+    Para,
+    Select,
+    Submit,
+    Text
+};
 use Exception;
 
 /**
@@ -233,27 +238,32 @@ class Manage extends dcNsProcess
             echo '
             <h3>' . sprintf(__('Configure module "%s"'), self::$action->name()) . '</h3>
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>
-            <h4>' . html::escapeHTML(self::$action->description()) . '</h4>
-            <form action="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '" method="post" id="form-actions">' .
-            (empty($res) ? '<p class="message">' . __('Nothing to configure') . '</p>' : $res) . '
-            <p class="clear"><input type="submit" name="save" value="' . __('Save') . '" />' .
-            form::hidden('type', self::$type) .
-            form::hidden('config', self::$action->id()) .
-            form::hidden('redir', $redir) .
-            dcCore::app()->formNonce() . '</p>' .
-            '</form>';
+            <h4>' . Html::escapeHTML(self::$action->description()) . '</h4>' .
+
+            (new Form('form-actions'))->method('post')->action(dcCore::app()->adminurl->get('admin.plugin.' . My::id()))->fields([
+                empty($res) ? (new Text('p', __('Nothing to configure')))->class('message') : (new Text('', $res)),
+                (new Para())->class('clear')->items([
+                    (new Submit(['save']))->value(__('Save')),
+                    (new Hidden('type', self::$type)),
+                    (new Hidden('config', self::$action->id())),
+                    (new Hidden('redir', $redir)),
+                    dcCore::app()->formNonce(false),
+                ]),
+            ])->render();
         }
     }
 
     private static function displayActions(): void
     {
         echo
-        '<form method="get" action="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '" id="improve_menu">' .
-        '<p class="anchor-nav"><label for="type" class="classic">' . __('Goto:') . ' </label>' .
-        form::combo('type', [__('Plugins') => 'plugin', __('Themes') => 'theme'], self::$type) . ' ' .
-        '<input type="submit" value="' . __('Ok') . '" />' .
-        form::hidden('p', My::id()) . '</p>' .
-        '</form>';
+        (new Form('improve_menu'))->method('get')->action(dcCore::app()->adminurl->get('admin.plugin.' . My::id()))->fields([
+            (new Para())->class('anchor-nav')->items([
+                (new Label(__('Goto:')))->for('type')->class('classic'),
+                (new Select('type'))->default(self::$type)->items([__('Plugins') => 'plugin', __('Themes') => 'theme']),
+                (new Submit('simenu'))->value(__('Save')),
+                (new Hidden('p', My::id())),
+            ]),
+        ])->render();
 
         $combo_modules = self::comboModules();
         if (count($combo_modules) == 1) {
@@ -272,17 +282,14 @@ class Manage extends dcNsProcess
                 }
                 echo
                 '<tr class="line' . ($action->isConfigured() ? '' : ' offline') . '">' .
-                '<td class="minimal">' . form::checkbox(
-                    ['actions[]',
-                        'action_' . $action->id(), ],
-                    $action->id(),
-                    in_array($action->id(), self::getPreference()) && $action->isConfigured(),
-                    '',
-                    '',
-                    !$action->isConfigured()
-                ) . '</td>' .
+                '<td class="minimal">' .
+                (new Checkbox(
+                    ['actions[]', 'action_' . $action->id()],
+                    in_array($action->id(), self::getPreference()) && $action->isConfigured()
+                ))->value($action->id())->disabled(!$action->isConfigured())->render() .
+                '</td>' .
                 '<td class="minimal nowrap">' .
-                    '<label for="action_' . $action->id() . '" class="classic">' . html::escapeHTML($action->name()) . '</label>' .
+                (new Label(Html::escapeHTML($action->name())))->for('action_' . $action->id())->class('classic')->render() .
                 '</td>' .
                 '<td class="maximal">' . $action->description() . '</td>' .
                 '<td class="minimal nowrap modules">' . (
@@ -294,19 +301,21 @@ class Manage extends dcNsProcess
                 '</tr>';
             }
 
-            echo '</tbody></table>
-            <div class="two-cols">
-            <p class="col left"><label for="save_preferences" class="classic">' .
-            form::checkbox('save_preferences', 1, !empty($_POST['save_preferences'])) .
-            __('Save fields selection as preference') . '</label></p>
-            <p class="col right"><label for="module" class="classic">' . __('Select a module:') . ' </label>' .
-            form::combo('module', $combo_modules, self::$module) .
-            ' <input type="submit" name="fix" value="' . __('Fix it') . '" />' .
-            form::hidden(['type'], self::$type) .
-            dcCore::app()->formNonce() . '
-            </p>
-            </div>
-            <br class="clear" />
+            echo '</tbody></table>' .
+            (new Div())->class('two-cols')->items([
+                (new Para())->class('col left')->items([
+                    (new Checkbox('save_preferences', !empty($_POST['save_preferences'])))->value(1),
+                    (new Label(__('Save fields selection as preference'), Label::OUTSIDE_LABEL_AFTER))->for('save_preferences')->class('classic'),
+                ]),
+                (new Para())->class('col right')->items([
+                    (new Label(__('Select a module:')))->for('module')->class('classic'),
+                    (new Select('module'))->default(self::$module)->items($combo_modules),
+                    (new Submit('fix'))->value(__('Fix it')),
+                    (new Hidden(['type'], self::$type)),
+                    dcCore::app()->formNonce(false),
+                ]),
+            ])->render() .
+            '<br class="clear" />
             </form>';
 
             if (!empty($_REQUEST['upd']) && !dcCore::app()->blog->settings->get(My::id())->get('nodetails')) {

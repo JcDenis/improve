@@ -14,8 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-/* clearbricks */
-use path;
+use Dotclear\Helper\File\Path;
 
 /**
  * Improve module helper
@@ -179,7 +178,7 @@ class Module
                 'name'  => $name,
                 'oname' => $oname,
                 'sname' => self::sanitizeString($name),
-                'sroot' => path::real($properties['root']),
+                'sroot' => Path::real($properties['root']),
             ]
         );
     }

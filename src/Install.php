@@ -14,12 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-/* dotclear */
 use dcCore;
 use dcNamespace;
 use dcNsProcess;
-
-/* php */
 use Exception;
 
 /**

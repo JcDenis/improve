@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* dotclear */
 use Dotclear\Helper\Html\Form\{
     Div,
     Fieldset,
@@ -24,12 +23,8 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-
-/* improve */
 use Dotclear\Plugin\improve\Action;
 use Dotclear\Plugin\improve\Core;
-
-/* clearbricks */
 
 /**
  * Improve action module new line

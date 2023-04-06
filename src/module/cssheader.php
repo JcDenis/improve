@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* dotclear */
 use dcCore;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
@@ -27,14 +26,8 @@ use Dotclear\Helper\Html\Form\{
     Select,
     Textarea
 };
-
-/* improve */
+use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\improve\Action;
-
-/* clearbricks */
-use html;
-
-/* php */
 use Exception;
 
 /**
@@ -145,7 +138,7 @@ class cssheader extends Action
                 // bloc_content
                 (new Para())->items([
                     (new Label(__('Bloc content:')))->for('bloc_content'),
-                    (new Textarea('bloc_content', html::escapeHTML($this->bloc_content)))->cols(120)->rows(10),
+                    (new Textarea('bloc_content', Html::escapeHTML($this->bloc_content)))->cols(120)->rows(10),
                 ]),
                 (new Note())->text(sprintf(
                     __('You can use wildcards %s'),
@@ -155,7 +148,7 @@ class cssheader extends Action
                 // exemple
                 (new Para())->items([
                     (new Label(__('Exemple:')))->for('content_exemple'),
-                    (new Textarea('content_exemple', html::escapeHTML(self::$exemple)))->cols(120)->rows(10)->extra('readonly="true"'),
+                    (new Textarea('content_exemple', Html::escapeHTML(self::$exemple)))->cols(120)->rows(10)->readonly(true),
                 ]),
             ]),
         ])->render();

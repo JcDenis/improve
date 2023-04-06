@@ -14,8 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* improve */
+use DOMDocument;
 use Dotclear\Plugin\improve\Action;
+use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Html\Form\{
     Div,
     Fieldset,
@@ -25,14 +26,8 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-
-/* clearbricks */
-use files;
-use text;
-use xmlTag;
-use DOMDocument;
-
-/* php */
+use Dotclear\Helper\Html\XmlTag;
+use Dotclear\Helper\Text;
 use Exception;
 
 /**
@@ -97,7 +92,7 @@ class dcstore extends Action
         $content = $this->prettyXML($content);
 
         try {
-            files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'dcstore.xml', $content);
+            Files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'dcstore.xml', $content);
             $this->setSuccess(__('Write dcstore.xml file.'));
         } catch (Exception $e) {
             $this->setError(__('Failed to write dcstore.xml file'));
@@ -111,7 +106,7 @@ class dcstore extends Action
     public function generateXML(): string
     {
         $xml = ['<modules xmlns:da="http://dotaddict.org/da/">'];
-        $rsp = new xmlTag('module');
+        $rsp = new XmlTag('module');
 
         # id
         $rsp->id = $this->module->getId();
@@ -168,35 +163,35 @@ class dcstore extends Action
         if (empty($this->module->get('dc_min'))) {
             $this->setWarning(__('no minimum dotclear version'));
         } else {
-            $rsp->insertNode(new xmlTag('da:dcmin', $this->module->get('dc_min')));
+            $rsp->insertNode(new XmlTag('da:dcmin', $this->module->get('dc_min')));
         }
 
         # da details
         if (empty($this->module->get('details'))) {
             $this->setWarning(__('no details URL'));
         } else {
-            $rsp->insertNode(new xmlTag('da:details', $this->module->get('details')));
+            $rsp->insertNode(new XmlTag('da:details', $this->module->get('details')));
         }
 
         # da sshot
-        //$rsp->insertNode(new xmlTag('da:sshot', $this->module['sshot']));
+        //$rsp->insertNode(new XmlTag('da:sshot', $this->module['sshot']));
 
         # da section
         if (!empty($this->module->get('section'))) {
-            $rsp->insertNode(new xmlTag('da:section', $this->module->get('section')));
+            $rsp->insertNode(new XmlTag('da:section', $this->module->get('section')));
         }
 
         # da support
         if (empty($this->module->get('support'))) {
             $this->setWarning(__('no support URL'));
         } else {
-            $rsp->insertNode(new xmlTag('da:support', $this->module->get('support')));
+            $rsp->insertNode(new XmlTag('da:support', $this->module->get('support')));
         }
 
         # da tags
-        //$rsp->insertNode(new xmlTag('da:tags', $this->module['tags']));
+        //$rsp->insertNode(new XmlTag('da:tags', $this->module['tags']));
 
-        $res = new xmlTag('modules', $rsp);
+        $res = new XmlTag('modules', $rsp);
         $res->insertAttr('xmlns:da', 'http://dotaddict.org/da/');
 
         return self::prettyXML($res->toXML());
@@ -218,7 +213,7 @@ class dcstore extends Action
 
     private function parseFilePattern(): string
     {
-        return text::tidyURL(str_replace(
+        return Text::tidyURL(str_replace(
             [
                 '%type%',
                 '%id%',

@@ -14,13 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* improve */
-use Dotclear\Plugin\improve\Action;
-use Dotclear\Plugin\improve\My;
-
-/* dotclear */
 use dcCore;
 use dcPage;
+use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -33,12 +29,9 @@ use Dotclear\Helper\Html\Form\{
     Para,
     Textarea
 };
-
-/* clearbricks */
-use html;
-use path;
-
-/* php */
+use Dotclear\Helper\Html\Html;
+use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\My;
 use Exception;
 
 /**
@@ -164,7 +157,7 @@ class phpstan extends Action
                 // file_content
                 (new Para())->items([
                     (new Label(__('PHPStan configuration file:')))->for('file_content'),
-                    (new Textarea('file_content', html::escapeHTML($content)))->class('maximal')->cols(120)->rows(14)->extra('readonly="true"'),
+                    (new Textarea('file_content', Html::escapeHTML($content)))->class('maximal')->cols(120)->rows(14)->readonly(true),
                 ]),
             ]),
         ])->render() . (
@@ -273,7 +266,7 @@ class phpstan extends Action
         if (empty($phpexe_path) && !empty(PHP_BINDIR)) {
             $phpexe_path = PHP_BINDIR;
         }
-        $phpexe_path = (string) path::real($phpexe_path);
+        $phpexe_path = (string) Path::real($phpexe_path);
         if (!empty($phpexe_path)) {
             $phpexe_path .= '/';
         }
@@ -292,9 +285,9 @@ class phpstan extends Action
             ],
             [
                 $this->run_level,
-                (string) path::real($this->module->get('root'), false),
-                (string) path::real(DC_ROOT, false),
-                (string) path::real(__DIR__ . '/phpstan', false),
+                (string) Path::real($this->module->get('root'), false),
+                (string) Path::real(DC_ROOT, false),
+                (string) Path::real(__DIR__ . '/phpstan', false),
             ],
             (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.' . $full . 'conf')
         );

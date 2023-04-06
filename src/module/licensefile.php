@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* dotclear */
+use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -24,14 +24,7 @@ use Dotclear\Helper\Html\Form\{
     Para,
     Select
 };
-
-/* improve */
 use Dotclear\Plugin\improve\Action;
-
-/* clearbricks */
-use files;
-
-/* php */
 use Exception;
 
 /**
@@ -137,7 +130,7 @@ class licensefile extends Action
 
                 return null;
             }
-            files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'LICENSE', str_replace("\r\n", "\n", $full));
+            Files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'LICENSE', str_replace("\r\n", "\n", $full));
             $this->setSuccess(__('Write new license file "LICENSE"'));
         } catch (Exception $e) {
             $this->setError(__('Failed to write new license file'));
@@ -154,7 +147,7 @@ class licensefile extends Action
             if ($only_one && $file != 'LICENSE') {
                 continue;
             }
-            if (!files::isDeletable($this->module->get('root') . DIRECTORY_SEPARATOR . $file)) {
+            if (!Files::isDeletable($this->module->get('root') . DIRECTORY_SEPARATOR . $file)) {
                 $this->setWarning(sprintf(__('Old license file is not deletable (%s)'), $file));
             } elseif (!@unlink($this->module->get('root') . DIRECTORY_SEPARATOR . $file)) {
                 $this->setError(sprintf(__('Failed to delete old license file (%s)'), $file));

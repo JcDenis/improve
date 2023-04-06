@@ -14,16 +14,11 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-/* dotclear */
+use ArrayObject;
 use dcCore;
 use dcModuleDefine;
 use dcPage;
-
-/* clearbricks */
-use http;
-
-/* php */
-use ArrayObject;
+use Dotclear\Helper\Network\Http;
 
 /**
  * Improve action class helper
@@ -247,7 +242,7 @@ abstract class Action
         );
         dcCore::app()->blog->triggerBlog();
         dcPage::addSuccessNotice(__('Configuration successfully updated'));
-        http::redirect($url);
+        Http::redirect($url);
 
         return true;
     }

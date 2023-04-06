@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* dotclear */
 use dcCore;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
@@ -26,11 +25,7 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-
-/* improve */
 use Dotclear\Plugin\improve\Action;
-
-/* clearbricks */
 
 /**
  * Improve action module Github shields.io

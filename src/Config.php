@@ -14,12 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-/* dotclear */
 use dcCore;
 use dcPage;
 use dcNsProcess;
-
-/* clearbricks */
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -29,8 +26,6 @@ use Dotclear\Helper\Html\Form\{
     Para,
     Text
 };
-
-/* php */
 use Exception;
 
 /**

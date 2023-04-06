@@ -14,8 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* dotclear */
 use dcCore;
+use Dotclear\Helper\File\Files;
+use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -26,13 +27,7 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-
-/* improve */
 use Dotclear\Plugin\improve\Action;
-
-/* clearbricks */
-use path;
-use files;
 
 /**
  * Improve action module zip
@@ -125,7 +120,7 @@ class zip extends Action
                 (new Note())->text(sprintf(
                     __('Preconization: %s'),
                     dcCore::app()->blog->public_path ?
-                    path::real(dcCore::app()->blog->public_path) : __("Blog's public directory")
+                    Path::real(dcCore::app()->blog->public_path) : __("Blog's public directory")
                 ))->class('form-note'),
             ]),
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Files'))))->fields([
@@ -199,7 +194,7 @@ class zip extends Action
         );
         $parts = explode('/', $file);
         foreach ($parts as $i => $part) {
-            $parts[$i] = files::tidyFileName($part);
+            $parts[$i] = Files::tidyFileName($part);
         }
         $path = $this->getSetting('pack_repository') . '/' . implode('/', $parts) . '.zip';
         if (file_exists($path) && empty($this->getSetting('pack_overwrite'))) {
@@ -223,7 +218,7 @@ class zip extends Action
             $zip->addExclusion($e);
         }
         $zip->addDirectory(
-            path::real($this->module->get('root')),
+            Path::real($this->module->get('root')),
             $this->module->getId(),
             true
         );

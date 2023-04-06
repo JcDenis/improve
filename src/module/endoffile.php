@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* dotclear */
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -24,11 +23,7 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-
-/* improve */
 use Dotclear\Plugin\improve\Action;
-
-/* clearbricks */
 
 /**
  * Improve action module end of file

@@ -14,17 +14,12 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-/* dotclear */
+use ArrayObject;
 use dcCore;
 use dcLog;
 use dcModuleDefine;
-
-/* clearbricks */
-use path;
-use files;
-
-/* php */
-use ArrayObject;
+use Dotclear\Helper\File\Files;
+use Dotclear\Helper\File\Path;
 use Exception;
 
 /**
@@ -248,7 +243,7 @@ class Core
                                 ));
                             }
                         }
-                        files::putContent($file[0], $content);
+                        Files::putContent($file[0], $content);
                     }
                     foreach ($workers as $action) {
                         // action: after closing a file. full path, extension
@@ -280,7 +275,7 @@ class Core
 
     private static function getModuleFiles(string $path, string $dir = '', array $res = []): array
     {
-        $path = path::real($path);
+        $path = Path::real($path);
         if (!$path) {
             return [];
         }
@@ -291,7 +286,7 @@ class Core
             $dir = $path;
         }
         $res[] = [$dir, '', false];
-        $files = files::scandir($path);
+        $files = Files::scandir($path);
 
         foreach ($files as $file) {
             if (substr($file, 0, 1) == '.') {
@@ -304,7 +299,7 @@ class Core
                     $res
                 );
             } else {
-                $res[] = [$dir . '/' . $file, files::getExtension($file), true];
+                $res[] = [$dir . '/' . $file, Files::getExtension($file), true];
             }
         }
 
@@ -330,7 +325,7 @@ class Core
         }
         if (!empty($in)) {
             foreach ($in as $v) {
-                $v = trim(files::getExtension('a.' . $v));
+                $v = trim(Files::getExtension('a.' . $v));
                 if (!empty($v)) {
                     $out[] = $v;
                 }

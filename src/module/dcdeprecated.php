@@ -14,12 +14,9 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* improve */
+use Dotclear\Helper\File\Files;
+use Dotclear\Helper\File\Path;
 use Dotclear\Plugin\improve\Action;
-
-/* clearbricks */
-use files;
-use path;
 
 /**
  * Improve action module Dotclear depreciated
@@ -45,11 +42,11 @@ class dcdeprecated extends Action
 
     private function loadDeprecatedDefinition(): void
     {
-        $path = path::real(__DIR__ . '/dcdeprecated');
+        $path = Path::real(__DIR__ . '/dcdeprecated');
         if (!$path || !is_dir($path) || !is_readable($path)) {
             return;
         }
-        $files = files::scandir($path);
+        $files = Files::scandir($path);
 
         foreach ($files as $file) {
             if (substr($file, 0, 1) == '.') {

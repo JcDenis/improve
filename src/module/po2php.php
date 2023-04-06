@@ -14,13 +14,10 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-/* improve */
 use Dotclear\Plugin\improve\Action;
 
 /* clearbricks */
 use l10n;
-
-/* php */
 
 /**
  * Improve action module dcstore.xml
