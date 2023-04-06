@@ -218,7 +218,7 @@ class zip extends Action
             $zip->addExclusion($e);
         }
         $zip->addDirectory(
-            Path::real($this->module->get('root')),
+            (string) Path::real($this->module->get('root')),
             $this->module->getId(),
             true
         );

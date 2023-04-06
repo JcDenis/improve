@@ -97,18 +97,18 @@ class Install extends dcNsProcess
             foreach (['setting_', 'preferences'] as $key) {
                 $record = dcCore::app()->con->select(
                     'SELECT * FROM ' . dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME . ' ' .
-                    "WHERE setting_ns = '" . dcCore::app()->con->escape(My::id()) . "' " .
+                    "WHERE setting_ns = '" . dcCore::app()->con->escapeStr(My::id()) . "' " .
                     "AND setting_id LIKE '" . $key . "%' "
                 );
 
                 while ($record->fetch()) {
                     try {
-                        $value              = @unserialize($record->f('setting_value'));
-                        $cur                = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME);
-                        $cur->setting_value = json_encode(is_array($value) ? $value : []);
+                        $value = @unserialize($record->f('setting_value'));
+                        $cur   = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcNamespace::NS_TABLE_NAME);
+                        $cur->setField('setting_value', json_encode(is_array($value) ? $value : []));
                         $cur->update(
-                            "WHERE setting_id = '" . $record->f('setting_id') . "' and setting_ns = '" . dcCore::app()->con->escape($record->f('setting_ns')) . "' " .
-                            'AND blog_id ' . (null === $record->f('blog_id') ? 'IS NULL ' : ("= '" . dcCore::app()->con->escape($record->f('blog_id')) . "' "))
+                            "WHERE setting_id = '" . $record->f('setting_id') . "' and setting_ns = '" . dcCore::app()->con->escapeStr($record->f('setting_ns')) . "' " .
+                            'AND blog_id ' . (null === $record->f('blog_id') ? 'IS NULL ' : ("= '" . dcCore::app()->con->escapeStr($record->f('blog_id')) . "' "))
                         );
                     } catch(Exception) {
                     }

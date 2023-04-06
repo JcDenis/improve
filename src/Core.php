@@ -56,7 +56,7 @@ class Core
             dcCore::app()->callBehavior('improveAddAction', $list);
 
             foreach ($list as $action) {
-                if ($action instanceof Action && !isset($this->actions[$action->id()])) {
+                if (($action instanceof Action) && !isset($this->actions[$action->id()])) {
                     if (in_array($action->id(), $disabled)) {
                         $this->disabled[$action->id()] = $action->name();
                     } else {
@@ -95,12 +95,11 @@ class Core
         if (empty($this->logs)) {
             return 0;
         }
-        $cur            = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcLog::LOG_TABLE_NAME);
-        $cur->log_msg   = json_encode($this->logs);
-        $cur->log_table = My::id();
-        $id             = dcCore::app()->log->addLog($cur);
+        $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcLog::LOG_TABLE_NAME);
+        $cur->setField('log_msg', json_encode($this->logs));
+        $cur->setField('log_table', My::id());
 
-        return $id;
+        return dcCore::app()->log->addLog($cur);
     }
 
     public function readLogs(int $id): array
