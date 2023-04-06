@@ -129,7 +129,7 @@ class Manage extends dcNsProcess
         }
 
         $combo_modules = [];
-        $modules = self::$type == 'plugin' ? dcCore::app()->plugins->getDefines() : dcCore::app()->themes->getDefines();
+        $modules       = self::$type == 'plugin' ? dcCore::app()->plugins->getDefines() : dcCore::app()->themes->getDefines();
         if (dcCore::app()->blog->settings->get(My::id())->get('combosortby') == 'id') {
             uasort($modules, fn ($a, $b) => strtolower($a->getId()) <=> strtolower($b->getId()));
         } else {

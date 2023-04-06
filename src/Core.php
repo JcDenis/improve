@@ -108,9 +108,9 @@ class Core
         if ($rs->isEmpty()) {
             return [];
         }
-        dcCore::app()->log->delLogs($rs->__get('log_id'));
+        dcCore::app()->log->delLogs($rs->f('log_id'));
 
-        $res = json_decode($rs->__get('log_msg'), true);
+        $res = json_decode($rs->f('log_msg'), true);
 
         return is_array($res) ? $res : [];
     }
