@@ -137,7 +137,7 @@ class phpcsfixer extends Action
             '%sphp %s/phpcsfixer/libs/php-cs-fixer.phar fix %s --config=%s/phpcsfixer/phpcsfixer.rules.php --using-cache=no',
             $this->phpexe_path,
             __DIR__,
-            $this->module['sroot'],
+            $this->module->get('root'),
             __DIR__
         );
 

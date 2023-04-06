@@ -54,13 +54,6 @@ class Manage extends dcNsProcess
             && dcCore::app()->auth->isSuperAdmin()
             && My::phpCompliant();
 
-        if (static::$init) {
-            self::$improve = new Core();
-            self::$type    = self::getType();
-            self::$module  = self::getModule();
-            self::$action  = self::getAction();
-        }
-
         return static::$init;
     }
 
@@ -125,43 +118,21 @@ class Manage extends dcNsProcess
 
     private static function comboModules(): array
     {
-        $allow_distrib = (bool) dcCore::app()->blog->settings->get(My::id())->get('allow_distrib');
-        $official      = [
-            'plugin' => explode(',', DC_DISTRIB_PLUGINS),
-            'theme'  => explode(',', DC_DISTRIB_THEMES),
-        ];
-
         if (!(dcCore::app()->themes instanceof dcThemes)) {
             dcCore::app()->themes = new dcThemes();
             dcCore::app()->themes->loadModules(dcCore::app()->blog->themes_path, null);
         }
 
         $combo_modules = [];
-        $modules       = self::getModules(self::$type == 'plugin' ? 'plugins' : 'themes');
-        foreach ($modules as $id => $m) {
-            if (!$m['root_writable'] || !$allow_distrib && in_array($id, $official[self::$type])) {
+        foreach (self::$type == 'plugin' ? dcCore::app()->plugins->getDefines() : dcCore::app()->themes->getDefines() as $module) {
+            if (!$module->get('root_writable') || !dcCore::app()->blog->settings->get(My::id())->get('allow_distrib') && $module->get('distributed')) {
                 continue;
             }
-            $combo_modules[sprintf(__('%s (%s)'), __($m['name']), $id)] = $id;
+            $combo_modules[sprintf(__('%s (%s)'), __($module->get('name')), $module->getId())] = $module->getId();
         }
         dcUtils::lexicalKeySort($combo_modules);
 
         return array_merge([__('Select a module') => '-'], $combo_modules);
-    }
-
-    public static function getModules(string $type, ?string $id = null): ?array
-    {
-        $type = $type == 'themes' ? 'themes' : 'plugins';
-
-        $modules = array_merge(dcCore::app()->{$type}->getDisabledModules(), dcCore::app()->{$type}->getModules());
-
-        if (empty($id)) {
-            return $modules;
-        } elseif (array_key_exists($id, $modules)) {
-            return $modules[$id];
-        }
-
-        return null;
     }
 
     public static function process(): bool
@@ -169,6 +140,11 @@ class Manage extends dcNsProcess
         if (!static::$init) {
             return false;
         }
+
+        self::$improve = new Core();
+        self::$type    = self::getType();
+        self::$module  = self::getModule();
+        self::$action  = self::getAction();
 
         $log_id = '';
         $done   = self::setPreferences();
@@ -181,9 +157,7 @@ class Manage extends dcNsProcess
             } else {
                 try {
                     $time = self::$improve->fixModule(
-                        self::$type,
-                        self::$module,
-                        self::getModules(self::$type == 'plugin' ? 'plugins' : 'themes', self::$module),
+                        self::$type == 'plugin' ? dcCore::app()->plugins->getDefine(self::$module) : dcCore::app()->themes->getDefine(self::$module),
                         $_POST['actions']
                     );
                     $log_id = self::$improve->writeLogs();

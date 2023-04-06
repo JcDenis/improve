@@ -189,10 +189,10 @@ class zip extends Action
         $file = str_replace(
             self::$filename_wildcards,
             [
-                $this->module['type'],
-                $this->module['id'],
-                $this->module['version'],
-                $this->module['author'],
+                $this->module->get('type'),
+                $this->module->getId(),
+                $this->module->get('version'),
+                $this->module->get('author'),
                 time(),
             ],
             $file
@@ -223,8 +223,8 @@ class zip extends Action
             $zip->addExclusion($e);
         }
         $zip->addDirectory(
-            path::real($this->module['root']),
-            $this->module['id'],
+            path::real($this->module->get('root')),
+            $this->module->getId(),
             true
         );
         $zip->close();

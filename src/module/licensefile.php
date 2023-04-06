@@ -131,13 +131,13 @@ class licensefile extends Action
     private function writeFullLicense(): ?bool
     {
         try {
-            $full = file_get_contents(__DIR__ . '/licensefile/' . $this->getSetting('action_version') . '.full.txt');
+            $full = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'licensefile' . DIRECTORY_SEPARATOR . $this->getSetting('action_version') . '.full.txt');
             if (empty($full)) {
                 $this->setError(__('Failed to load license content'));
 
                 return null;
             }
-            files::putContent($this->module['root'] . '/LICENSE', str_replace("\r\n", "\n", $full));
+            files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'LICENSE', str_replace("\r\n", "\n", $full));
             $this->setSuccess(__('Write new license file "LICENSE"'));
         } catch (Exception $e) {
             $this->setError(__('Failed to write new license file'));
@@ -150,13 +150,13 @@ class licensefile extends Action
 
     private function deleteFullLicense(bool $only_one = false): bool
     {
-        foreach (self::fileExists($this->module['root']) as $file) {
+        foreach (self::fileExists($this->module->get('root')) as $file) {
             if ($only_one && $file != 'LICENSE') {
                 continue;
             }
-            if (!files::isDeletable($this->module['root'] . '/' . $file)) {
+            if (!files::isDeletable($this->module->get('root') . DIRECTORY_SEPARATOR . $file)) {
                 $this->setWarning(sprintf(__('Old license file is not deletable (%s)'), $file));
-            } elseif (!@unlink($this->module['root'] . '/' . $file)) {
+            } elseif (!@unlink($this->module->get('root') . DIRECTORY_SEPARATOR . $file)) {
                 $this->setError(sprintf(__('Failed to delete old license file (%s)'), $file));
             } else {
                 $this->setSuccess(sprintf(__('Delete old license file "%s"'), $file));

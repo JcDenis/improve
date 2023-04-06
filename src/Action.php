@@ -16,6 +16,7 @@ namespace Dotclear\Plugin\improve;
 
 /* dotclear */
 use dcCore;
+use dcModuleDefine;
 use dcPage;
 
 /* clearbricks */
@@ -36,8 +37,8 @@ use ArrayObject;
  */
 abstract class Action
 {
-    /** @var array<string,mixed>  Current module */
-    protected $module = [];
+    /** @var dcModuleDefine  Current module */
+    protected $module;
 
     /** @var string     Current full path */
     protected $path_full = '';
@@ -84,6 +85,7 @@ abstract class Action
     final public function __construct()
     {
         $this->class_name = str_replace(Utils::getActionsNS(), '', get_called_class());
+        $this->module     = new dcModuleDefine('undefined');
 
         $settings = dcCore::app()->blog->settings->get(My::id())->get('settings_' . $this->class_name);
         if (null != $settings) {
@@ -291,9 +293,9 @@ abstract class Action
      *
      * @see Improve::sanitizeModule()
      *
-     * @param      array<string> $module      Full array of module definitons
+     * @param      dcModuleDefine $module      Module definitons
      */
-    final public function setModule(array $module): bool
+    final public function setModule(dcModuleDefine $module): bool
     {
         $this->module = $module;
 

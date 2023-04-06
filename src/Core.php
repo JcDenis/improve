@@ -17,6 +17,7 @@ namespace Dotclear\Plugin\improve;
 /* dotclear */
 use dcCore;
 use dcLog;
+use dcModuleDefine;
 
 /* clearbricks */
 use path;
@@ -190,10 +191,9 @@ class Core
         return $this->disabled;
     }
 
-    public function fixModule(string $type, string $id, array $properties, array $actions): float
+    public function fixModule(dcModuleDefine $module, array $actions): float
     {
         $time_start = microtime(true);
-        $module     = Module::clean($type, $id, $properties);
 
         $workers = [];
         foreach ($actions as $action) {
@@ -210,10 +210,10 @@ class Core
             // action: open module
             $action->openModule();
         }
-        if (!isset($module['sroot']) || !$module['root_writable'] || !is_writable($module['sroot'])) {
+        if (!$module->get('root_writable') || !is_writable($module->get('root'))) {
             throw new Exception(__('Module path is not writable'));
         }
-        $tree = self::getModuleFiles($module['sroot']);
+        $tree = self::getModuleFiles($module->get('root'));
         foreach ($tree as $file) {
             if (!file_exists($file[0])) {
                 continue;

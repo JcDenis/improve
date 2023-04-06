@@ -154,9 +154,9 @@ class gitshields extends Action
                 ],
                 [
                     $this->username,
-                    $this->module['id'],
+                    $this->module->getId(),
                     $dotclear = $this->getDotclearVersion(),
-                    $this->module['type'],
+                    $this->module->get('type'),
                     '', '',
                 ],
                 $v
@@ -169,8 +169,8 @@ class gitshields extends Action
     private function getDotclearVersion(): string
     {
         $version = null;
-        if (!empty($this->module['requires']) && is_array($this->module['requires'])) {
-            foreach ($this->module['requires'] as $req) {
+        if (!empty($this->module->get('requires')) && is_array($this->module->get('requires'))) {
+            foreach ($this->module->get('requires') as $req) {
                 if (!is_array($req)) {
                     $req = [$req];
                 }
@@ -180,8 +180,8 @@ class gitshields extends Action
                     break;
                 }
             }
-        } elseif (!empty($this->module['dc_min'])) {
-            $version = $this->module['dc_min'];
+        } elseif (!empty($this->module->get('dc_min'))) {
+            $version = $this->module->get('dc_min');
         }
 
         return $version ?: dcCore::app()->getVersion('core');

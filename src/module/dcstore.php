@@ -97,7 +97,7 @@ class dcstore extends Action
         $content = $this->prettyXML($content);
 
         try {
-            files::putContent($this->module['sroot'] . '/dcstore.xml', $content);
+            files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'dcstore.xml', $content);
             $this->setSuccess(__('Write dcstore.xml file.'));
         } catch (Exception $e) {
             $this->setError(__('Failed to write dcstore.xml file'));
@@ -114,37 +114,34 @@ class dcstore extends Action
         $rsp = new xmlTag('module');
 
         # id
-        if (empty($this->module['id'])) {
-            $this->setError(__('unkow module id'));
-        }
-        $rsp->id = $this->module['id'];
+        $rsp->id = $this->module->getId();
 
         # name
-        if (empty($this->module['oname'])) {
+        if (empty($this->module->get('name'))) {
             $this->setError(__('unknow module name'));
         }
-        $rsp->name($this->module['oname']);
+        $rsp->name($this->module->get('name'));
 
         # version
-        if (empty($this->module['version'])) {
+        if (empty($this->module->get('version'))) {
             $this->setError(__('unknow module version'));
         }
-        $rsp->version($this->module['version']);
+        $rsp->version($this->module->get('version'));
 
         # author
-        if (empty($this->module['author'])) {
+        if (empty($this->module->get('author'))) {
             $this->setError(__('unknow module author'));
         }
-        $rsp->author($this->module['author']);
+        $rsp->author($this->module->get('author'));
 
         # desc
-        if (empty($this->module['desc'])) {
+        if (empty($this->module->get('desc'))) {
             $this->setError(__('unknow module description'));
         }
-        $rsp->desc($this->module['desc']);
+        $rsp->desc($this->module->get('desc'));
 
         # repository
-        if (empty($this->module['repository'])) {
+        if (empty($this->module->get('repository'))) {
             $this->setError(__('no repository set in _define.php'));
         }
 
@@ -156,44 +153,44 @@ class dcstore extends Action
         $rsp->file($file_pattern);
 
         # da dc_min or requires core
-        if (!empty($this->module['requires']) && is_array($this->module['requires'])) {
-            foreach ($this->module['requires'] as $req) {
+        if (!empty($this->module->get('requires')) && is_array($this->module->get('requires'))) {
+            foreach ($this->module->get('requires') as $req) {
                 if (!is_array($req)) {
                     $req = [$req];
                 }
                 if ($req[0] == 'core') {
-                    $this->module['dc_min'] = $req[1];
+                    $this->module->set('dc_min', $req[1]);
 
                     break;
                 }
             }
         }
-        if (empty($this->module['dc_min'])) {
+        if (empty($this->module->get('dc_min'))) {
             $this->setWarning(__('no minimum dotclear version'));
         } else {
-            $rsp->insertNode(new xmlTag('da:dcmin', $this->module['dc_min']));
+            $rsp->insertNode(new xmlTag('da:dcmin', $this->module->get('dc_min')));
         }
 
         # da details
-        if (empty($this->module['details'])) {
+        if (empty($this->module->get('details'))) {
             $this->setWarning(__('no details URL'));
         } else {
-            $rsp->insertNode(new xmlTag('da:details', $this->module['details']));
+            $rsp->insertNode(new xmlTag('da:details', $this->module->get('details')));
         }
 
         # da sshot
         //$rsp->insertNode(new xmlTag('da:sshot', $this->module['sshot']));
 
         # da section
-        if (!empty($this->module['section'])) {
-            $rsp->insertNode(new xmlTag('da:section', $this->module['section']));
+        if (!empty($this->module->get('section'))) {
+            $rsp->insertNode(new xmlTag('da:section', $this->module->get('section')));
         }
 
         # da support
-        if (empty($this->module['support'])) {
+        if (empty($this->module->get('support'))) {
             $this->setWarning(__('no support URL'));
         } else {
-            $rsp->insertNode(new xmlTag('da:support', $this->module['support']));
+            $rsp->insertNode(new xmlTag('da:support', $this->module->get('support')));
         }
 
         # da tags
@@ -229,10 +226,10 @@ class dcstore extends Action
                 '%author%',
             ],
             [
-                $this->module['type'],
-                $this->module['id'],
-                $this->module['version'],
-                $this->module['author'],
+                $this->module->get('type'),
+                $this->module->getId(),
+                $this->module->get('version'),
+                $this->module->get('author'),
             ],
             $this->pattern
         ));

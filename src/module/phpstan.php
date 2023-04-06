@@ -292,7 +292,7 @@ class phpstan extends Action
             ],
             [
                 $this->run_level,
-                (string) path::real($this->module['sroot'], false),
+                (string) path::real($this->module->get('root'), false),
                 (string) path::real(DC_ROOT, false),
                 (string) path::real(__DIR__ . '/phpstan', false),
             ],
