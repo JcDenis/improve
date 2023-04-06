@@ -20,7 +20,6 @@ use dcPage;
 use dcFavorites;
 use dcNsProcess;
 use Dotclear\Helper\File\Files;
-use Dotclear\Helper\Clearbricks;
 
 /**
  * Improve admin class
@@ -65,10 +64,14 @@ class Backend extends dcNsProcess
             dcCore::app()->auth->isSuperAdmin()
         );
 
-        foreach (Files::scandir(Utils::getActionsDir()) as $file) {
-            if (is_file(Utils::getActionsDir() . $file) && '.php' == substr($file, -4)) {
-                Clearbricks::lib()->autoload([Utils::getActionsNS() . substr($file, 0, -4) => Utils::getActionsDir() . $file]);
-                dcCore::app()->addBehavior('improveAddAction', [Utils::getActionsNS() . substr($file, 0, -4), 'create']); /* @phpstan-ignore-line */
+        $dir = __DIR__ . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR;
+        $ns  = __NAMESPACE__ . '\\Module\\';
+
+        dcCore::app()->autoload->addNamespace($ns, $dir);
+
+        foreach (Files::scandir($dir) as $file) {
+            if (str_ends_with($file, '.php') && is_file($dir . $file)) {
+                dcCore::app()->addBehavior('improveAddAction', [$ns . basename($file, '.php'), 'create']); /* @phpstan-ignore-line */
             }
         }
 

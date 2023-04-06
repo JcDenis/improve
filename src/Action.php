@@ -79,7 +79,7 @@ abstract class Action
      */
     final public function __construct()
     {
-        $this->class_name = str_replace(Utils::getActionsNS(), '', get_called_class());
+        $this->class_name = str_replace(__NAMESPACE__ . '\\Module\\', '', get_called_class());
         $this->module     = new dcModuleDefine('undefined');
 
         $settings = dcCore::app()->blog->settings->get(My::id())->get('settings_' . $this->class_name);
