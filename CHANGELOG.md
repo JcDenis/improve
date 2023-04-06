@@ -5,6 +5,14 @@ dev
 - [ ] add module to minify .js
 - [ ] write documentation of php class
 
+1.1.3 - 2023.04.06
+- disable phpstan if option nodetails is active
+- add option to show distributed modules
+- add option to sort modules by name or id
+- use dcModulesDefine rather than properties array
+- use latest dotclear Helper
+- use dotclear autoloader rather than clearbricks one
+
 1.1.2 - 2023.03.20
 - add option to phpstan to clear cache
 - add option to phpstan not ot use ignored errors
