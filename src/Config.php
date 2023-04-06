@@ -24,6 +24,7 @@ use Dotclear\Helper\Html\Form\{
     Label,
     Legend,
     Para,
+    Select,
     Text
 };
 use Exception;
@@ -61,6 +62,8 @@ class Config extends dcNsProcess
             }
             dcCore::app()->blog->settings->get(My::id())->put('disabled', $pdisabled);
             dcCore::app()->blog->settings->get(My::id())->put('nodetails', !empty($_POST['nodetails']));
+            dcCore::app()->blog->settings->get(My::id())->put('allow_distrib', !empty($_POST['allow_distrib']));
+            dcCore::app()->blog->settings->get(My::id())->put('combosortby', $_POST['combosortby'] ?: 'name');
 
             dcPage::addSuccessNotice(__('Configuration successfully updated'));
 
@@ -102,6 +105,14 @@ class Config extends dcNsProcess
                 (new Para())->items([
                     (new Checkbox('nodetails', (bool) dcCore::app()->blog->settings->get(My::id())->get('nodetails')))->value('1'),
                     (new Label(__('Hide details of rendered actions'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('nodetails'),
+                ]),
+                (new Para())->items([
+                    (new Checkbox('allow_distrib', (bool) dcCore::app()->blog->settings->get(My::id())->get('allow_distrib')))->value('1'),
+                    (new Label(__('Show dotclear distributed modules'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('allow_distrib'),
+                ]),
+                (new Para())->items([
+                    (new Label(__('Sort modules seletion by:')))->for('combosortby'),
+                    (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default(dcCore::app()->blog->settings->get(My::id())->get('combosortby')),
                 ]),
             ]),
         ])->render();

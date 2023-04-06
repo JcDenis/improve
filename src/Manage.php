@@ -129,13 +129,22 @@ class Manage extends dcNsProcess
         }
 
         $combo_modules = [];
-        foreach (self::$type == 'plugin' ? dcCore::app()->plugins->getDefines() : dcCore::app()->themes->getDefines() as $module) {
+        $modules = self::$type == 'plugin' ? dcCore::app()->plugins->getDefines() : dcCore::app()->themes->getDefines();
+        if (dcCore::app()->blog->settings->get(My::id())->get('combosortby') == 'id') {
+            uasort($modules, fn ($a, $b) => strtolower($a->getId()) <=> strtolower($b->getId()));
+        } else {
+            uasort($modules, fn ($a, $b) => strtolower(dcUtils::removeDiacritics($a->get('name'))) <=> strtolower(dcUtils::removeDiacritics($b->get('name'))));
+        }
+        foreach ($modules as $module) {
             if (!$module->get('root_writable') || !dcCore::app()->blog->settings->get(My::id())->get('allow_distrib') && $module->get('distributed')) {
                 continue;
             }
-            $combo_modules[sprintf(__('%s (%s)'), __($module->get('name')), $module->getId())] = $module->getId();
+            if (dcCore::app()->blog->settings->get(My::id())->get('combosortby') == 'id') {
+                $combo_modules[sprintf(__('%s (%s)'), $module->getId(), __($module->get('name')))] = $module->getId();
+            } else {
+                $combo_modules[sprintf(__('%s (%s)'), __($module->get('name')), $module->getId())] = $module->getId();
+            }
         }
-        dcUtils::lexicalKeySort($combo_modules);
 
         return array_merge([__('Select a module') => '-'], $combo_modules);
     }
