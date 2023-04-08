@@ -97,7 +97,7 @@ class gitshields extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
                 // username
                 (new Para())->items([
-                    (new Label(__('Your Github user name:')))->for('username'),
+                    (new Label(__('Your Github user name:'), Label::OUTSIDE_LABEL_BEFORE))->for('username'),
                     (new Input('username'))->size(65)->maxlenght(255)->value($this->username),
                 ]),
                 (new Note())->text(__('Used in your Github URL: http://github.com/username/module_id.'))->class('form-note'),

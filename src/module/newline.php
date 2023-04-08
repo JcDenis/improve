@@ -69,7 +69,7 @@ class newline extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
                 // newline_extensions
                 (new Para())->items([
-                    (new Label(__('List of files extension to work on:')))->for('newline_extensions'),
+                    (new Label(__('List of files extension to work on:'), Label::OUTSIDE_LABEL_BEFORE))->for('newline_extensions'),
                     (new Input('newline_extensions'))->size(65)->maxlenght(255)->value(implode(',', $ext)),
                 ]),
                 (new Note())->text(__('Use comma separated list of extensions without dot, recommand "php,js,xml,txt,md".'))->class('form-note'),

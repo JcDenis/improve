@@ -93,12 +93,12 @@ class licensefile extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Adjustments'))))->fields([
                 // action_version
                 (new Para())->items([
-                    (new Label(__('License version:')))->for('action_version'),
+                    (new Label(__('License version:'), Label::OUTSIDE_LABEL_BEFORE))->for('action_version'),
                     (new Select('action_version'))->default($this->getSetting('action_version'))->items($this->action_version),
                 ]),
                 // action_full
                 (new Para())->items([
-                    (new Label(__('Action on file:')))->for('action_full'),
+                    (new Label(__('Action on file:'), Label::OUTSIDE_LABEL_BEFORE))->for('action_full'),
                     (new Select('action_full'))->default($this->getSetting('action_full'))->items($this->action_full),
                 ]),
             ]),

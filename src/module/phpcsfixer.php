@@ -105,7 +105,7 @@ class phpcsfixer extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Root'))))->fields([
                 // phpexe_path
                 (new Para())->items([
-                    (new Label(__('Root directory of PHP executable:')))->for('phpexe_path'),
+                    (new Label(__('Root directory of PHP executable:'), Label::OUTSIDE_LABEL_BEFORE))->for('phpexe_path'),
                     (new Input('phpexe_path'))->size(65)->maxlenght(255)->value($this->phpexe_path),
                 ]),
                 (new Note())->text(__('If this module does not work you can try to put here directory to php executable (without executable file name).'))->class('form-note'),
@@ -113,7 +113,7 @@ class phpcsfixer extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Bootstrap'))))->fields([
                 // file_content
                 (new Para())->items([
-                    (new Label(__('PHP CS Fixer configuration file:')))->for('file_content'),
+                    (new Label(__('PHP CS Fixer configuration file:'), Label::OUTSIDE_LABEL_BEFORE))->for('file_content'),
                     (new Textarea('file_content', Html::escapeHTML($content)))->class('maximal')->cols(120)->rows(14)->readonly(true),
                 ]),
             ]),

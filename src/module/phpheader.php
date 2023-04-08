@@ -119,7 +119,7 @@ class phpheader extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Adjustments'))))->fields([
                 // bloc_action
                 (new Para())->items([
-                    (new Label(__('Action:')))->for('bloc_action'),
+                    (new Label(__('Action:'), Label::OUTSIDE_LABEL_BEFORE))->for('bloc_action'),
                     (new Select('bloc_action'))->default($this->getSetting('bloc_action'))->items($this->action_bloc),
                 ]),
                 // remove_old
@@ -136,7 +136,7 @@ class phpheader extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
                 // bloc_content
                 (new Para())->items([
-                    (new Label(__('Bloc content:')))->for('bloc_content'),
+                    (new Label(__('Bloc content:'), Label::OUTSIDE_LABEL_BEFORE))->for('bloc_content'),
                     (new Textarea('bloc_content', Html::escapeHTML($this->bloc_content)))->cols(120)->rows(10),
                 ]),
                 (new Note())->text(sprintf(
@@ -146,7 +146,7 @@ class phpheader extends Action
                 (new Note())->text(__('Do not put structural elements to the begining of lines.'))->class('form-note'),
                 // exemple
                 (new Para())->items([
-                    (new Label(__('Exemple:')))->for('content_exemple'),
+                    (new Label(__('Exemple:'), Label::OUTSIDE_LABEL_BEFORE))->for('content_exemple'),
                     (new Textarea('content_exemple', Html::escapeHTML(self::$exemple)))->cols(120)->rows(10)->readonly(true),
                 ]),
             ]),

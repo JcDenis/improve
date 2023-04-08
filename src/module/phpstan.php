@@ -114,7 +114,7 @@ class phpstan extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Root'))))->fields([
                 // phpexe_path
                 (new Para())->items([
-                    (new Label(__('Root directory of PHP executable:')))->for('phpexe_path'),
+                    (new Label(__('Root directory of PHP executable:'), Label::OUTSIDE_LABEL_BEFORE))->for('phpexe_path'),
                     (new Input('phpexe_path'))->size(65)->maxlenght(255)->value($this->phpexe_path),
                 ]),
                 (new Note())->text(__('If this module does not work you can try to put here directory to php executable (without executable file name).'))->class('form-note'),
@@ -122,12 +122,12 @@ class phpstan extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Adjustments'))))->fields([
                 // run_level
                 (new Para())->items([
-                    (new Label(__('Level:')))->for('run_level')->class('classic'),
+                    (new Label(__('Level:'), Label::OUTSIDE_LABEL_BEFORE))->for('run_level')->class('classic'),
                     (new Number('run_level'))->min(0)->max(50)->value($this->run_level),
                 ]),
                 // ignored_vars
                 (new Para())->items([
-                    (new Label(__('List of ignored variables:')))->for('ignored_vars'),
+                    (new Label(__('List of ignored variables:'), Label::OUTSIDE_LABEL_BEFORE))->for('ignored_vars'),
                     (new Input('ignored_vars'))->size(65)->maxlenght(255)->value($this->ignored_vars),
                 ]),
                 (new Note())->text(
@@ -156,7 +156,7 @@ class phpstan extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Bootstrap'))))->fields([
                 // file_content
                 (new Para())->items([
-                    (new Label(__('PHPStan configuration file:')))->for('file_content'),
+                    (new Label(__('PHPStan configuration file:'), Label::OUTSIDE_LABEL_BEFORE))->for('file_content'),
                     (new Textarea('file_content', Html::escapeHTML($content)))->class('maximal')->cols(120)->rows(14)->readonly(true),
                 ]),
             ]),

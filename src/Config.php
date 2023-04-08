@@ -111,7 +111,7 @@ class Config extends dcNsProcess
                     (new Label(__('Show dotclear distributed modules'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('allow_distrib'),
                 ]),
                 (new Para())->items([
-                    (new Label(__('Sort modules seletion by:')))->for('combosortby'),
+                    (new Label(__('Sort modules seletion by:'), Label::OUTSIDE_LABEL_BEFORE))->for('combosortby'),
                     (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default(dcCore::app()->blog->settings->get(My::id())->get('combosortby')),
                 ]),
             ]),

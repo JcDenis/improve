@@ -267,7 +267,7 @@ class Manage extends dcNsProcess
         echo
         (new Form('improve_menu'))->method('get')->action(dcCore::app()->adminurl->get('admin.plugin.' . My::id()))->fields([
             (new Para())->class('anchor-nav')->items([
-                (new Label(__('Goto:')))->for('type')->class('classic'),
+                (new Label(__('Goto:'), Label::OUTSIDE_LABEL_BEFORE))->for('type')->class('classic'),
                 (new Select('type'))->default(self::$type)->items([__('Plugins') => 'plugin', __('Themes') => 'theme']),
                 (new Submit('simenu'))->value(__('Save')),
                 (new Hidden('p', My::id())),
@@ -298,7 +298,7 @@ class Manage extends dcNsProcess
                 ))->value($action->id())->disabled(!$action->isConfigured())->render() .
                 '</td>' .
                 '<td class="minimal nowrap">' .
-                (new Label(Html::escapeHTML($action->name())))->for('action_' . $action->id())->class('classic')->render() .
+                (new Label(Html::escapeHTML($action->name()), Label::OUTSIDE_LABEL_AFTER))->for('action_' . $action->id())->class('classic')->render() .
                 '</td>' .
                 '<td class="maximal">' . $action->description() . '</td>' .
                 '<td class="minimal nowrap modules">' . (
@@ -317,7 +317,7 @@ class Manage extends dcNsProcess
                     (new Label(__('Save fields selection as preference'), Label::OUTSIDE_LABEL_AFTER))->for('save_preferences')->class('classic'),
                 ]),
                 (new Para())->class('col right')->items([
-                    (new Label(__('Select a module:')))->for('module')->class('classic'),
+                    (new Label(__('Select a module:'), Label::OUTSIDE_LABEL_BEFORE))->for('module')->class('classic'),
                     (new Select('module'))->default(self::$module)->items($combo_modules),
                     (new Submit('fix'))->value(__('Fix it')),
                     (new Hidden(['type'], self::$type)),

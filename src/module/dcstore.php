@@ -72,7 +72,7 @@ class dcstore extends Action
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
                 // phpexe_path
                 (new Para())->items([
-                    (new Label(__('Predictable URL to zip file on the external repository:')))->for('dcstore_pattern'),
+                    (new Label(__('Predictable URL to zip file on the external repository:'), Label::OUTSIDE_LABEL_BEFORE))->for('dcstore_pattern'),
                     (new Input('dcstore_pattern'))->size(65)->maxlenght(255)->value($this->pattern),
                 ]),
                 (new Note())->text(sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.'))->class('form-note'),
