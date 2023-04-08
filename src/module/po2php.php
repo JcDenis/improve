@@ -14,10 +14,8 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
+use Dotclear\Helper\L10n;
 use Dotclear\Plugin\improve\Action;
-
-/* clearbricks */
-use l10n;
 
 /**
  * Improve action module dcstore.xml
@@ -58,7 +56,7 @@ class po2php extends Action
             return null;
         }
 
-        if (l10n::generatePhpFileFromPo(substr($this->path_full, 0, -3), $this->license)) {
+        if (L10n::generatePhpFileFromPo(substr($this->path_full, 0, -3), $this->license)) {
             $this->setSuccess(__('Compile .po file to .lang.php'));
         } else {
             $this->setError(__('Failed to compile .po file'));
