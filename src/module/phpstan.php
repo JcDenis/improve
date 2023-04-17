@@ -282,12 +282,14 @@ class phpstan extends Action
                 '%MODULE_ROOT%',
                 '%DC_ROOT%',
                 '%BOOTSTRAP_ROOT%',
+                '%SCAN_DIRECTORIES%'
             ],
             [
                 $this->run_level,
                 (string) Path::real($this->module->get('root'), false),
                 (string) Path::real(DC_ROOT, false),
                 (string) Path::real(__DIR__ . '/phpstan', false),
+                $this->getScanDirectories(),
             ],
             (string) file_get_contents(__DIR__ . '/phpstan/phpstan.rules.' . $full . 'conf')
         );
@@ -305,5 +307,20 @@ class phpstan extends Action
         }
 
         return (bool) file_put_contents(DC_VAR . '/phpstan.neon', $content);
+    }
+
+    private function getScanDirectories()
+    {
+        $ret = '';
+        if ($this->module->get('type') == 'plugin') {
+            $paths = explode(PATH_SEPARATOR, DC_PLUGINS_ROOT);
+            foreach($paths as $path) {
+                $path = Path::real($path, false);
+                if ($path !== false && $path != Path::real(DC_ROOT . DIRECTORY_SEPARATOR . 'plugins', false)) {
+                    $ret .= '    - ' . $path . "\n";
+                }
+            }
+        }
+        return $ret;
     }
 }
