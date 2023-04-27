@@ -23,8 +23,10 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-use Dotclear\Plugin\improve\Action;
-use Dotclear\Plugin\improve\Core;
+use Dotclear\Plugin\improve\{
+    Action,
+    Core
+};
 
 /**
  * Improve action module new line

@@ -14,8 +14,10 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Module;
 
-use Dotclear\Helper\File\Files;
-use Dotclear\Helper\File\Path;
+use Dotclear\Helper\File\{
+    Files,
+    Path
+};
 use Dotclear\Plugin\improve\Action;
 
 /**

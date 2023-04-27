@@ -15,8 +15,10 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve\Module;
 
 use dcCore;
-use Dotclear\Helper\File\Files;
-use Dotclear\Helper\File\Path;
+use Dotclear\Helper\File\{
+    Files,
+    Path
+};
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,

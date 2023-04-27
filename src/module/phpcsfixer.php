@@ -28,8 +28,10 @@ use Dotclear\Helper\Html\Form\{
     Textarea
 };
 use Dotclear\Helper\Html\Html;
-use Dotclear\Plugin\improve\Action;
-use Dotclear\Plugin\improve\My;
+use Dotclear\Plugin\improve\{
+    Action,
+    My
+};
 use Exception;
 
 /**

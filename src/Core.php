@@ -18,8 +18,10 @@ use ArrayObject;
 use dcCore;
 use dcLog;
 use dcModuleDefine;
-use Dotclear\Helper\File\Files;
-use Dotclear\Helper\File\Path;
+use Dotclear\Helper\File\{
+    Files,
+    Path
+};
 use Exception;
 
 /**
