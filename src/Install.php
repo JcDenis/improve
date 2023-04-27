@@ -66,7 +66,7 @@ class Install extends dcNsProcess
     private static function putSettings(): void
     {
         foreach (self::$default_settings as $v) {
-            dcCore::app()->blog->settings->get(My::id())->put(
+            dcCore::app()->blog?->settings->get(My::id())->put(
                 $v[0],
                 $v[2],
                 $v[3],
@@ -80,7 +80,7 @@ class Install extends dcNsProcess
     /** Update improve < 0.8 : action modules settings name */
     private static function update_0_8_0(): void
     {
-        if (version_compare(dcCore::app()->getVersion(My::id()) ?? '0', '0.8', '<')) {
+        if (!is_null(dcCore::app()->blog) && version_compare(dcCore::app()->getVersion(My::id()) ?? '0', '0.8', '<')) {
             foreach (dcCore::app()->blog->settings->get(My::id())->dumpGlobalSettings() as $id => $values) {
                 $newId = str_replace('ImproveAction', '', $id);
                 if ($id != $newId) {

@@ -82,7 +82,7 @@ abstract class Action
         $this->class_name = str_replace(__NAMESPACE__ . '\\Module\\', '', get_called_class());
         $this->module     = new dcModuleDefine('undefined');
 
-        $settings = dcCore::app()->blog->settings->get(My::id())->get('settings_' . $this->class_name);
+        $settings = dcCore::app()->blog?->settings->get(My::id())->get('settings_' . $this->class_name);
         if (null != $settings) {
             $settings = json_decode($settings, true);
         }
@@ -91,7 +91,7 @@ abstract class Action
         $this->init();
 
         // can overload priority by settings
-        if (1 < ($p = (int) dcCore::app()->blog->settings->get(My::id())->get('priority_' . $this->class_name))) {
+        if (1 < ($p = (int) dcCore::app()->blog?->settings->get(My::id())->get('priority_' . $this->class_name))) {
             $this->priority = $p;
         }
     }
@@ -232,16 +232,18 @@ abstract class Action
      */
     final protected function redirect(string $url): bool
     {
-        dcCore::app()->blog->settings->get(My::id())->put(
-            'settings_' . $this->class_name,
-            json_encode($this->settings),
-            'string',
-            null,
-            true,
-            true
-        );
-        dcCore::app()->blog->triggerBlog();
-        dcPage::addSuccessNotice(__('Configuration successfully updated'));
+        if (!is_null(dcCore::app()->blog)) {
+            dcCore::app()->blog->settings->get(My::id())->put(
+                'settings_' . $this->class_name,
+                json_encode($this->settings),
+                'string',
+                null,
+                true,
+                true
+            );
+            dcCore::app()->blog->triggerBlog();
+            dcPage::addSuccessNotice(__('Configuration successfully updated'));
+        }
         Http::redirect($url);
 
         return true;

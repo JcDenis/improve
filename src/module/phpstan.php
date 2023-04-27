@@ -75,16 +75,18 @@ class phpstan extends Action
         $ignored_vars       = $this->getSetting('ignored_vars');
         $this->ignored_vars = is_string($ignored_vars) ? $ignored_vars : '';
 
-        dcCore::app()->auth->user_prefs->addWorkspace('interface');
-        self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
-        self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
+        if (null !== dcCore::app()->auth?->user_prefs) {
+            dcCore::app()->auth->user_prefs->addWorkspace('interface');
+            self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
+            self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
+        }
 
         return true;
     }
 
     public function isConfigured(): bool
     {
-        return !dcCore::app()->blog->settings->get(My::id())->get('nodetails');
+        return !dcCore::app()->blog?->settings->get(My::id())->get('nodetails');
     }
 
     public function header(): ?string
@@ -284,7 +286,7 @@ class phpstan extends Action
                 '%MODULE_ROOT%',
                 '%DC_ROOT%',
                 '%BOOTSTRAP_ROOT%',
-                '%SCAN_DIRECTORIES%'
+                '%SCAN_DIRECTORIES%',
             ],
             [
                 $this->run_level,
@@ -311,18 +313,19 @@ class phpstan extends Action
         return (bool) file_put_contents(DC_VAR . '/phpstan.neon', $content);
     }
 
-    private function getScanDirectories()
+    private function getScanDirectories(): string
     {
         $ret = '';
         if ($this->module->get('type') == 'plugin') {
             $paths = explode(PATH_SEPARATOR, DC_PLUGINS_ROOT);
-            foreach($paths as $path) {
+            foreach ($paths as $path) {
                 $path = Path::real($path, false);
                 if ($path !== false && $path != Path::real(DC_ROOT . DIRECTORY_SEPARATOR . 'plugins', false)) {
                     $ret .= '    - ' . $path . "\n";
                 }
             }
         }
+
         return $ret;
     }
 }

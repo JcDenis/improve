@@ -51,11 +51,10 @@ class Manage extends dcNsProcess
     /** @var Action|null $action Current action module */
     private static $action = null;
 
-    protected static $init = false;
-
     public static function init(): bool
     {
         static::$init = defined('DC_CONTEXT_ADMIN')
+            && !is_null(dcCore::app()->auth)
             && dcCore::app()->auth->isSuperAdmin()
             && My::phpCompliant();
 
@@ -86,7 +85,7 @@ class Manage extends dcNsProcess
     {
         try {
             if (!empty(self::$type)) {
-                $preferences = dcCore::app()->blog->settings->get(My::id())->get('preferences');
+                $preferences = dcCore::app()->blog?->settings->get(My::id())->get('preferences');
                 if (is_string($preferences)) {
                     $preferences = json_decode($preferences, true);
                     if (is_array($preferences)) {
@@ -102,7 +101,7 @@ class Manage extends dcNsProcess
 
     private static function setPreferences(): bool
     {
-        if (!empty($_POST['save_preferences'])) {
+        if (!empty($_POST['save_preferences']) && !is_null(dcCore::app()->blog)) {
             $preferences              = self::getPreference(true);
             $preferences[self::$type] = [];
             if (!empty($_POST['actions'])) {
@@ -123,6 +122,10 @@ class Manage extends dcNsProcess
 
     private static function comboModules(): array
     {
+        if (is_null(dcCore::app()->blog)) {
+            return [];
+        }
+
         if (!(dcCore::app()->themes instanceof dcThemes)) {
             dcCore::app()->themes = new dcThemes();
             dcCore::app()->themes->loadModules(dcCore::app()->blog->themes_path, null);
@@ -175,7 +178,7 @@ class Manage extends dcNsProcess
                         $_POST['actions']
                     );
                     $log_id = self::$improve->writeLogs();
-                    dcCore::app()->blog->triggerBlog();
+                    dcCore::app()->blog?->triggerBlog();
 
                     if (self::$improve->hasLog('error')) {
                         $notice = ['type' => dcAdminNotices::NOTICE_ERROR, 'msg' => __('Fix of "%s" complete in %s secondes with errors')];
@@ -197,7 +200,7 @@ class Manage extends dcNsProcess
         }
 
         if ($done) {
-            dcCore::app()->adminurl->redirect('admin.plugin.' . My::id(), ['type' => self::$type, 'module' => self::$module, 'upd' => $log_id]);
+            dcCore::app()->adminurl?->redirect('admin.plugin.' . My::id(), ['type' => self::$type, 'module' => self::$module, 'upd' => $log_id]);
         }
 
         return true;
@@ -234,14 +237,14 @@ class Manage extends dcNsProcess
 
     private static function displayConfigurator(): void
     {
-        $back_url = $_REQUEST['redir'] ?? dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['type' => self::$type]);
+        $back_url = $_REQUEST['redir'] ?? dcCore::app()->adminurl?->get('admin.plugin.' . My::id(), ['type' => self::$type]);
 
         if (null === self::$action) {
             echo '
             <p class="warning">' . __('Unknow module') . '</p>
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>';
         } else {
-            $redir = $_REQUEST['redir'] ?? dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['type' => self::$type, 'config' => self::$action->id()]);
+            $redir = $_REQUEST['redir'] ?? dcCore::app()->adminurl?->get('admin.plugin.' . My::id(), ['type' => self::$type, 'config' => self::$action->id()]);
             $res   = self::$action->configure($redir);
 
             echo '
@@ -249,7 +252,7 @@ class Manage extends dcNsProcess
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>
             <h4>' . Html::escapeHTML(self::$action->description()) . '</h4>' .
 
-            (new Form('form-actions'))->method('post')->action(dcCore::app()->adminurl->get('admin.plugin.' . My::id()))->fields([
+            (new Form('form-actions'))->method('post')->action(dcCore::app()->adminurl?->get('admin.plugin.' . My::id()))->fields([
                 empty($res) ? (new Text('p', __('Nothing to configure')))->class('message') : (new Text('', $res)),
                 (new Para())->class('clear')->items([
                     (new Submit(['save']))->value(__('Save')),
@@ -265,7 +268,7 @@ class Manage extends dcNsProcess
     private static function displayActions(): void
     {
         echo
-        (new Form('improve_menu'))->method('get')->action(dcCore::app()->adminurl->get('admin.plugin.' . My::id()))->fields([
+        (new Form('improve_menu'))->method('get')->action(dcCore::app()->adminurl?->get('admin.plugin.' . My::id()))->fields([
             (new Para())->class('anchor-nav')->items([
                 (new Label(__('Goto:'), Label::OUTSIDE_LABEL_BEFORE))->for('type')->class('classic'),
                 (new Select('type'))->default(self::$type)->items([__('Plugins') => 'plugin', __('Themes') => 'theme']),
@@ -278,7 +281,7 @@ class Manage extends dcNsProcess
         if (count($combo_modules) == 1) {
             echo '<p class="message">' . __('No module to manage') . '</p>';
         } else {
-            echo '<form action="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id()) . '" method="post" id="form-actions">' .
+            echo '<form action="' . dcCore::app()->adminurl?->get('admin.plugin.' . My::id()) . '" method="post" id="form-actions">' .
             '<table><caption class="hidden">' . __('Actions') . '</caption><thead><tr>' .
             '<th colspan="2" class="first">' . __('Action') . '</td>' .
             '<th scope="col">' . __('Description') . '</td>' .
@@ -303,7 +306,7 @@ class Manage extends dcNsProcess
                 '<td class="maximal">' . $action->description() . '</td>' .
                 '<td class="minimal nowrap modules">' . (
                     false === $action->configurator() ? '' :
-                        '<a class="module-config" href="' . dcCore::app()->adminurl->get('admin.plugin.' . My::id(), ['type' => self::$type, 'config' => $action->id()]) .
+                        '<a class="module-config" href="' . dcCore::app()->adminurl?->get('admin.plugin.' . My::id(), ['type' => self::$type, 'config' => $action->id()]) .
                         '" title="' . sprintf(__("Configure action '%s'"), $action->name()) . '">' . __('Configure') . '</a>'
                 ) . '</td>' .
                 (DC_DEBUG ? '<td class="minimal"><span class="debug">' . $action->priority() . '</span></td>' : '') . /* @phpstan-ignore-line */
@@ -327,7 +330,7 @@ class Manage extends dcNsProcess
             '<br class="clear" />
             </form>';
 
-            if (!empty($_REQUEST['upd']) && !dcCore::app()->blog->settings->get(My::id())->get('nodetails')) {
+            if (!empty($_REQUEST['upd']) && !dcCore::app()->blog?->settings->get(My::id())->get('nodetails')) {
                 $logs = self::$improve->parseLogs((int) $_REQUEST['upd']);
 
                 if (!empty($logs)) {

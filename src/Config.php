@@ -39,6 +39,7 @@ class Config extends dcNsProcess
     public static function init(): bool
     {
         static::$init = defined('DC_CONTEXT_ADMIN')
+            && !is_null(dcCore::app()->auth)
             && dcCore::app()->auth->isSuperAdmin()
             && My::phpCompliant();
 
@@ -53,6 +54,10 @@ class Config extends dcNsProcess
 
         if (empty($_POST['save'])) {
             return true;
+        }
+
+        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+            return false;
         }
 
         try {
@@ -84,8 +89,13 @@ class Config extends dcNsProcess
             return;
         }
 
-        $improve = new Core();
-        $modules = $items = [];
+        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+            return;
+        }
+
+        $improve  = new Core();
+        $modules  = $items = [];
+        $settings = dcCore::app()->blog->settings->get(My::id());
 
         foreach ($improve->modules() as $action) {
             $modules[$action->name()] = $action->id();
@@ -103,16 +113,16 @@ class Config extends dcNsProcess
             (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled actions')))->fields($items),
             (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
                 (new Para())->items([
-                    (new Checkbox('nodetails', (bool) dcCore::app()->blog->settings->get(My::id())->get('nodetails')))->value('1'),
+                    (new Checkbox('nodetails', (bool) $settings->get('nodetails')))->value('1'),
                     (new Label(__('Hide details of rendered actions'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('nodetails'),
                 ]),
                 (new Para())->items([
-                    (new Checkbox('allow_distrib', (bool) dcCore::app()->blog->settings->get(My::id())->get('allow_distrib')))->value('1'),
+                    (new Checkbox('allow_distrib', (bool) $settings->get('allow_distrib')))->value('1'),
                     (new Label(__('Show dotclear distributed modules'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('allow_distrib'),
                 ]),
                 (new Para())->items([
                     (new Label(__('Sort modules seletion by:'), Label::OUTSIDE_LABEL_BEFORE))->for('combosortby'),
-                    (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default(dcCore::app()->blog->settings->get(My::id())->get('combosortby')),
+                    (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default($settings->get('combosortby')),
                 ]),
             ]),
         ])->render();

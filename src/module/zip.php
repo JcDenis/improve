@@ -121,7 +121,7 @@ class zip extends Action
                 ]),
                 (new Note())->text(sprintf(
                     __('Preconization: %s'),
-                    dcCore::app()->blog->public_path ?
+                    dcCore::app()->blog?->public_path ?
                     Path::real(dcCore::app()->blog->public_path) : __("Blog's public directory")
                 ))->class('form-note'),
             ]),

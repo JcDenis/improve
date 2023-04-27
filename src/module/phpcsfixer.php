@@ -72,9 +72,11 @@ class phpcsfixer extends Action
 
         $this->getPhpPath();
 
-        dcCore::app()->auth->user_prefs->addWorkspace('interface');
-        self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
-        self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
+        if (null !== dcCore::app()->auth?->user_prefs) {
+            dcCore::app()->auth->user_prefs->addWorkspace('interface');
+            self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
+            self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
+        }
 
         return true;
     }

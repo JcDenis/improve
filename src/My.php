@@ -22,7 +22,7 @@ use dcCore;
 class My
 {
     /** @var string Required php version */
-    public const PHP_MIN = '8.0';
+    public const PHP_MIN = '8.1';
 
     /**
      * This module id

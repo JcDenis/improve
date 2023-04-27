@@ -109,31 +109,31 @@ class dcstore extends Action
         $rsp = new XmlTag('module');
 
         # id
-        $rsp->id = $this->module->getId();
+        $rsp->insertAttr('id', $this->module->getId());
 
         # name
         if (empty($this->module->get('name'))) {
             $this->setError(__('unknow module name'));
         }
-        $rsp->name($this->module->get('name'));
+        $rsp->insertNode(new XmlTag('name', $this->module->get('name')));
 
         # version
         if (empty($this->module->get('version'))) {
             $this->setError(__('unknow module version'));
         }
-        $rsp->version($this->module->get('version'));
+        $rsp->insertNode(new XmlTag('version', $this->module->get('version')));
 
         # author
         if (empty($this->module->get('author'))) {
             $this->setError(__('unknow module author'));
         }
-        $rsp->author($this->module->get('author'));
+        $rsp->insertNode(new XmlTag('author', $this->module->get('author')));
 
         # desc
         if (empty($this->module->get('desc'))) {
             $this->setError(__('unknow module description'));
         }
-        $rsp->desc($this->module->get('desc'));
+        $rsp->insertNode(new XmlTag('desc', $this->module->get('desc')));
 
         # repository
         if (empty($this->module->get('repository'))) {
@@ -145,7 +145,7 @@ class dcstore extends Action
         if (empty($file_pattern)) {
             $this->setError(__('no zip file pattern set in configuration'));
         }
-        $rsp->file($file_pattern);
+        $rsp->insertNode(new XmlTag('file', $file_pattern));
 
         # da dc_min or requires core
         if (!empty($this->module->get('requires')) && is_array($this->module->get('requires'))) {

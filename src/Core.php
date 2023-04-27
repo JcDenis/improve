@@ -51,7 +51,7 @@ class Core
      */
     public function __construct()
     {
-        $disabled = explode(';', (string) dcCore::app()->blog->settings->get(My::id())->get('disabled'));
+        $disabled = explode(';', (string) dcCore::app()->blog?->settings->get(My::id())->get('disabled'));
         $list     = new ArrayObject();
 
         try {
@@ -305,11 +305,6 @@ class Core
         }
 
         return $res;
-    }
-
-    public function getURL(array $params = []): string
-    {
-        return dcCore::app()->adminurl->get('admin.plugin.' . My::id(), $params, '&');
     }
 
     /**

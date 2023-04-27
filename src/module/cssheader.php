@@ -156,6 +156,12 @@ class cssheader extends Action
 
     public function openModule(): ?bool
     {
+        if (is_null(dcCore::app()->auth)) {
+            $this->setWarning(__('Auth is not set'));
+
+            return null;
+        }
+
         $bloc = trim($this->bloc_content);
 
         if (empty($bloc)) {
