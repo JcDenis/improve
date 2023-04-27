@@ -208,7 +208,8 @@ class zip extends Action
             return;
         }
         @set_time_limit(300);
-        $zip = new zip\Zip($path);
+        $fp  = fopen($path, 'wb');
+        $zip = new zip\Zip($fp);
         foreach ($exclude as $e) {
             $e = '#(^|/)(' . str_replace(
                 ['.', '*'],
@@ -223,6 +224,7 @@ class zip extends Action
             true
         );
         $zip->close();
+        $zip->write();
         unset($zip);
 
         $this->setSuccess(sprintf(__('Zip module into "%s"'), $path));
