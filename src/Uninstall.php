@@ -14,89 +14,59 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-class Uninstall
-{
-    private static $pid    = '';
-    protected static $init = false;
+use dcCore;
+use dcNsProcess;
+use Dotclear\Plugin\Uninstaller\Uninstaller;
 
+class Uninstall extends dcNsProcess
+{
     public static function init(): bool
     {
-        self::$pid  = basename(dirname(__DIR__));
-        self::$init = defined('DC_RC_PATH');
+        static::$init = defined('DC_CONTEXT_ADMIN');
 
-        return self::$init;
+        return static::$init;
     }
 
-    public static function process($uninstaller)
+    public static function process(): bool
     {
-        if (!self::$init) {
+        if (!static::$init || !dcCore::app()->plugins->moduleExists('Uninstaller')) {
             return false;
         }
 
-        $uninstaller->addUserAction(
-            /* type */
-            'settings',
-            /* action */
-            'delete_all',
-            /* ns */
-            self::$pid,
-            /* desc */
-            __('delete all settings')
-        );
+        Uninstaller::instance()
+            ->addUserAction(
+                'settings',
+                'delete_all',
+                My::id()
+            )
+            ->addUserAction(
+                'plugins',
+                'delete',
+                My::id()
+            )
+            ->addUserAction(
+                'versions',
+                'delete',
+                My::id()
+            )
+            ->addDirectAction(
+                'settings',
+                'delete_all',
+                My::id()
+            )
+            ->addDirectAction(
+                'plugins',
+                'delete',
+                My::id()
+            )
+            ->addDirectAction(
+                'versions',
+                'delete',
+                My::id()
+            )
+        ;
 
-        $uninstaller->addUserAction(
-            /* type */
-            'plugins',
-            /* action */
-            'delete',
-            /* ns */
-            self::$pid,
-            /* desc */
-            __('delete plugin files')
-        );
-
-        $uninstaller->addUserAction(
-            /* type */
-            'versions',
-            /* action */
-            'delete',
-            /* ns */
-            self::$pid,
-            /* desc */
-            __('delete the version number')
-        );
-
-        $uninstaller->addDirectAction(
-            /* type */
-            'settings',
-            /* action */
-            'delete_all',
-            /* ns */
-            self::$pid,
-            /* desc */
-            sprintf(__('delete all %s settings'), self::$pid)
-        );
-
-        $uninstaller->addDirectAction(
-            /* type */
-            'plugins',
-            /* action */
-            'delete',
-            /* ns */
-            self::$pid,
-            /* desc */
-            sprintf(__('delete %s plugin files'), self::$pid)
-        );
-
-        $uninstaller->addDirectAction(
-            /* type */
-            'versions',
-            /* action */
-            'delete',
-            /* ns */
-            self::$pid,
-            /* desc */
-            sprintf(__('delete %s version number'), self::$pid)
-        );
+        // no custom action
+        return false;
     }
 }
