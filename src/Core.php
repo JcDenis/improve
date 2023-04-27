@@ -29,57 +29,59 @@ use Exception;
  */
 class Core
 {
-    /** @var array  Allowed file extensions to open */
+    /** @var    Tasks   $tasks  The tasks stack instance */
+    public readonly Tasks $tasks;
+
+    /** @var    array<int,string>   $disabled   Disabled tasks modules */
+    private $disabled = [];
+
+    /** @var    array<string,array>     $logs   Logs by actions modules */
+    private $logs = [];
+
+    /** @var    array<string,boolean>   $has_log    Has log of given type */
+    private $has_log = ['success' => false, 'warning' => false, 'error' => false];
+
+    /** @var    array   $readfile_extensions    Allowed file extensions to open */
     private static $readfile_extensions = [
         'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md', 'po',
     ];
 
-    /** @var array<Action> $actions Loaded actions modules */
-    private $actions = [];
-
-    /** @var array<string>  $disabled Disabled actions modules */
-    private $disabled = [];
-
-    /** @var array<string, array> $logs Logs by actions modules */
-    private $logs = [];
-
-    /** @var array<string, boolean>  $has_log   Has log of given type */
-    private $has_log = ['success' => false, 'warning' => false, 'error' => false];
+    /** @var    Core    $instance   Core instance */
+    private static $instance;
 
     /**
      * Constructor
      */
-    public function __construct()
+    protected function __construct()
     {
-        $disabled = explode(';', (string) dcCore::app()->blog?->settings->get(My::id())->get('disabled'));
-        $list     = new ArrayObject();
-
-        try {
-            dcCore::app()->callBehavior('improveAddAction', $list);
-
-            foreach ($list as $action) {
-                if (($action instanceof Action) && !isset($this->actions[$action->id()])) {
-                    if (in_array($action->id(), $disabled)) {
-                        $this->disabled[$action->id()] = $action->name();
-                    } else {
-                        $this->actions[$action->id()] = $action;
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+        $this->tasks = new Tasks();
+        $disable = explode(';', (string) dcCore::app()->blog?->settings->get(My::id())->get('disabled'));
+        foreach($disable as $id) {
+            $this->tasks->get($id)?->disable();
         }
-        uasort($this->actions, [$this, 'sortModules']);
     }
 
-    public static function id(): string
+    protected function __clone()
     {
-        return basename(dirname(__DIR__));
     }
 
-    public static function name(): string
+    public function __wakeup()
     {
-        return __((string) dcCore::app()->plugins->moduleInfo(My::id(), 'name'));
+        throw new Exception('nope');
+    }
+
+    /**
+     * Get singleton instance.
+     *
+     * @return  Core    Core instance
+     */
+    public static function instance(): Core
+    {
+        if (!is_a(self::$instance, Core::class)) {
+            self::$instance = new Core();
+        }
+
+        return self::$instance;
     }
 
     public function getLogs(): array
@@ -151,50 +153,16 @@ class Core
         return $lines;
     }
 
-    /**
-     * Get a loaded action module
-     *
-     * @param  string $id Module id
-     *
-     * @return Action     action instance
-     */
-    public function module(string $id): ?Action
-    {
-        if (empty($id)) {
-            return null;
-        }
-
-        return $this->actions[$id] ?? null;
-    }
-
-    /**
-     * Get all loaded action modules
-     *
-     * @return Action[]     action instance
-     */
-    public function modules(): array
-    {
-        return $this->actions;
-    }
-
-    /**
-     * Get disabled action modules
-     *
-     * @return array    Array of id/name modules
-     */
-    public function disabled(): array
-    {
-        return $this->disabled;
-    }
-
     public function fixModule(dcModuleDefine $module, array $actions): float
     {
         $time_start = microtime(true);
 
         $workers = [];
         foreach ($actions as $action) {
-            if (isset($this->actions[$action]) && $this->actions[$action]->isConfigured()) {
-                $workers[] = $this->actions[$action];
+            if ($this->tasks->get($action)?->isConfigured() 
+                && $this->tasks->get($action)?->isDisabled() === false
+            ) {
+                $workers[] = $this->tasks->get($action);
             }
         }
         foreach ($workers as $action) {
@@ -329,22 +297,5 @@ class Core
         }
 
         return $out;
-    }
-
-    /**
-     * Sort modules by priority then name
-     *
-     * @param  Action    $a  ImproveAction instance
-     * @param  Action    $b  ImproveAction instance
-     *
-     * @return integer              Is higher
-     */
-    private function sortModules(Action $a, Action $b): int
-    {
-        if ($a->priority() == $b->priority()) {
-            return strcasecmp($a->name(), $b->name());
-        }
-
-        return $a->priority() < $b->priority() ? -1 : 1;
     }
 }

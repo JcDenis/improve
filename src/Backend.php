@@ -19,6 +19,7 @@ use dcCore;
 use dcPage;
 use dcFavorites;
 use dcNsProcess;
+use Dotclear\App;
 use Dotclear\Helper\File\Files;
 
 /**
@@ -56,29 +57,31 @@ class Backend extends dcNsProcess
             dcCore::app()->auth->isSuperAdmin()
         );
 
-        dcCore::app()->addBehavior('adminDashboardFavoritesV2', function (dcFavorites $favs): void {
-            $favs->register(
-                My::id(),
-                [
-                    'title'      => My::name(),
-                    'url'        => dcCore::app()->adminurl?->get('admin.plugin.' . My::id()),
-                    'small-icon' => dcPage::getPF(My::id() . '/icon.svg'),
-                    'large-icon' => dcPage::getPF(My::id() . '/icon.svg'),
-                    //'permissions' => null,
-                ]
-            );
-        });
+        dcCore::app()->addBehaviors([
+            'adminDashboardFavoritesV2' => function (dcFavorites $favs): void {
+                $favs->register(
+                    My::id(),
+                    [
+                        'title'      => My::name(),
+                        'url'        => dcCore::app()->adminurl?->get('admin.plugin.' . My::id()),
+                        'small-icon' => dcPage::getPF(My::id() . '/icon.svg'),
+                        'large-icon' => dcPage::getPF(My::id() . '/icon.svg'),
+                        //'permissions' => null,
+                    ]
+                );
+            },
 
-        $dir = __DIR__ . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR;
-        $ns  = __NAMESPACE__ . '\\Module\\';
-
-        dcCore::app()->autoload->addNamespace($ns, $dir);
-
-        foreach (Files::scandir($dir) as $file) {
-            if (str_ends_with($file, '.php') && is_file($dir . $file)) {
-                dcCore::app()->addBehavior('improveAddAction', [$ns . basename($file, '.php'), 'create']); /* @phpstan-ignore-line */
-            }
-        }
+            // Add actions to improve
+            'improveTaskAdd' => function (Tasks $actions): void {
+                $dir = __DIR__ . DIRECTORY_SEPARATOR . 'Task' . DIRECTORY_SEPARATOR;
+                foreach (Files::scandir($dir) as $file) {
+                    if (str_ends_with($file, '.php') && is_file($dir . $file)) {
+                        $class = __NAMESPACE__ . '\\Task\\' . basename($file, '.php');
+                        $actions->add(new $class());
+                    }
+                }
+            },
+        ]);
 
         return true;
     }

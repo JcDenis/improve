@@ -78,7 +78,7 @@ class Manage extends dcNsProcess
 
     private static function getAction(): ?Action
     {
-        return empty($_REQUEST['config']) ? null : self::$improve->module($_REQUEST['config']);
+        return empty($_REQUEST['config']) ? null : self::$improve->tasks->get($_REQUEST['config']);
     }
 
     private static function getPreference(bool $all = false): array
@@ -105,8 +105,8 @@ class Manage extends dcNsProcess
             $preferences              = self::getPreference(true);
             $preferences[self::$type] = [];
             if (!empty($_POST['actions'])) {
-                foreach (self::$improve->modules() as $action) {
-                    if (in_array(self::$type, $action->types()) && in_array($action->id(), $_POST['actions'])) {
+                foreach (self::$improve->tasks->dump() as $action) {
+                    if (!$action->isDisabled() && in_array(self::$type, $action->types()) && in_array($action->id(), $_POST['actions'])) {
                         $preferences[self::$type][] = $action->id();
                     }
                 }
@@ -158,7 +158,7 @@ class Manage extends dcNsProcess
             return false;
         }
 
-        self::$improve = new Core();
+        self::$improve = Core::instance();
         self::$type    = self::getType();
         self::$module  = self::getModule();
         self::$action  = self::getAction();
@@ -288,8 +288,8 @@ class Manage extends dcNsProcess
             '<th scope="col">' . __('Configuration') . '</td>' .
             (DC_DEBUG ? '<th scope="col">' . __('Priority') . '</td>' : '') . /* @phpstan-ignore-line */
             '</tr></thead><tbody>';
-            foreach (self::$improve->modules() as $action) {
-                if (!in_array(self::$type, $action->types())) {
+            foreach (self::$improve->tasks->dump() as $action) {
+                if ($action->isDisabled() || !in_array(self::$type, $action->types())) {
                     continue;
                 }
                 echo
@@ -340,7 +340,7 @@ class Manage extends dcNsProcess
                         foreach ($types as $type => $tools) {
                             echo '<div class="' . $type . '"><ul>';
                             foreach ($tools as $tool => $msgs) {
-                                $a = self::$improve->module($tool);
+                                $a = self::$improve->tasks->get($tool);
                                 if (null !== $a) {
                                     echo '<li>' . $a->name() . '<ul>';
                                     foreach ($msgs as $msg) {

@@ -22,15 +22,8 @@ use Dotclear\Helper\Network\Http;
 
 /**
  * Improve action class helper
- *
- * Action class must extends class action.
- * If your class signature is myActionClass extends plugins\improve\class\action,
- * do dcCore::app()->addBehavior('ImproveAddAction'), ['myClass', 'create']);
- * your action class is automatically created,
- * then function init() of your class wil be called.
- * One class must manage only one action.
  */
-abstract class Action
+abstract class AbstractTask
 {
     /** @var dcModuleDefine  Current module */
     protected $module;
@@ -56,6 +49,9 @@ abstract class Action
     /** @var array List of allowed properties */
     protected static $allowed_properties = ['id', 'name', 'description', 'priority', 'configurator', 'types'];
 
+    /** @var    bool    Is disabled action */
+    private $disabled = false;
+
     /** @var string Module id */
     private $id = '';
 
@@ -79,7 +75,7 @@ abstract class Action
      */
     final public function __construct()
     {
-        $this->class_name = str_replace(__NAMESPACE__ . '\\Module\\', '', get_called_class());
+        $this->class_name = str_replace(__NAMESPACE__ . '\\Task\\', '', get_called_class());
         $this->module     = new dcModuleDefine('undefined');
 
         $settings = dcCore::app()->blog?->settings->get(My::id())->get('settings_' . $this->class_name);
@@ -97,15 +93,21 @@ abstract class Action
     }
 
     /**
-     * Helper to create an instance of a ImproveAction child class.
-     *
-     * @param      ArrayObject  $list    ArrayObject of actions list
+     * Set action as disabled.
      */
-    final public static function create(ArrayObject $list): void
+    final public function disable()
     {
-        $child = static::class;
-        $class = new $child();
-        $list->append($class);
+        $this->disabled = true;
+    }
+
+    /**
+     * Check if actio is disabled.
+     * 
+     * @return  bool True on disabled
+     */
+    final public function isDisabled()
+    {
+        return $this->disabled;
     }
 
     /**

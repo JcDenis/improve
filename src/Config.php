@@ -93,18 +93,14 @@ class Config extends dcNsProcess
             return;
         }
 
-        $improve  = new Core();
-        $modules  = $items = [];
+        $improve  = Core::instance();
+        $items    = [];
         $settings = dcCore::app()->blog->settings->get(My::id());
 
-        foreach ($improve->modules() as $action) {
-            $modules[$action->name()] = $action->id();
-        }
-
-        foreach (array_merge($modules, array_flip($improve->disabled())) as $name => $id) {
+        foreach ($improve->tasks->dump() as $action) {
             $items[] = (new Para())->items([
-                (new Checkbox(['disabled[]', 'disabled_' . $id], array_key_exists($id, $improve->disabled())))->value($id),
-                (new Label($id, Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('disabled_' . $id),
+                (new Checkbox(['disabled[]', 'disabled_' . $action->id()], $action->isDisabled()))->value($action->id()),
+                (new Label($action->id(), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('disabled_' . $action->id()),
             ]);
         }
 
