@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use dcCore;
 use Dotclear\Helper\Html\Form\{
@@ -25,12 +25,12 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 
 /**
  * Improve action module Github shields.io
  */
-class gitshields extends Action
+class gitshields extends AbstractTask
 {
     /** @var string Username of git repo */
     private $username = '';

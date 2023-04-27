@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use Dotclear\Helper\Html\Form\{
     Div,
@@ -24,14 +24,14 @@ use Dotclear\Helper\Html\Form\{
     Para
 };
 use Dotclear\Plugin\improve\{
-    Action,
+    AbstractTask,
     Core
 };
 
 /**
  * Improve action module new line
  */
-class newline extends Action
+class newline extends AbstractTask
 {
     protected function init(): bool
     {

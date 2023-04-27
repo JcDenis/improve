@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module\zip;
+namespace Dotclear\Plugin\improve\Task\zip;
 
 class Zip extends \Dotclear\Helper\File\Zip\Zip
 {

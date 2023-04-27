@@ -12,14 +12,14 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 
 /**
  * Improve action module tab
  */
-class tab extends action
+class tab extends AbstractTask
 {
     protected function init(): bool
     {

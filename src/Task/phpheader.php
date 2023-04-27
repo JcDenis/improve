@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use dcCore;
 use Dotclear\Helper\Html\Form\{
@@ -27,13 +27,13 @@ use Dotclear\Helper\Html\Form\{
     Textarea
 };
 use Dotclear\Helper\Html\Html;
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 use Exception;
 
 /**
  * Improve action module php header
  */
-class phpheader extends Action
+class phpheader extends AbstractTask
 {
     /** @var string Exemple of header */
     private static $exemple = <<<EOF

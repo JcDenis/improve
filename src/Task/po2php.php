@@ -12,15 +12,15 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use Dotclear\Helper\L10n;
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 
 /**
  * Improve action module dcstore.xml
  */
-class po2php extends Action
+class po2php extends AbstractTask
 {
     /** @var string License bloc */
     private $license = <<<EOF

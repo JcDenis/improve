@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use dcCore;
 use dcPage;
@@ -31,7 +31,7 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\improve\{
-    Action,
+    AbstractTask,
     My
 };
 use Exception;
@@ -39,7 +39,7 @@ use Exception;
 /**
  * Improve action module PHPStan
  */
-class phpstan extends Action
+class phpstan extends AbstractTask
 {
     /** @var boolean User pref to use colored synthax */
     protected static $user_ui_colorsyntax = false;
@@ -166,7 +166,7 @@ class phpstan extends Action
             ]),
         ])->render() . (
             !self::$user_ui_colorsyntax ? '' :
-            dcPage::jsModuleLoad(My::id() . '/inc/module/phpstan/phpstan.improve.js') .
+            dcPage::jsModuleLoad(My::id() . '/src/Task/phpstan/phpstan.improve.js') .
             dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }

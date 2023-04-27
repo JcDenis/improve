@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use dcCore;
 use dcPage;
@@ -29,7 +29,7 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\improve\{
-    Action,
+    AbstractTask,
     My
 };
 use Exception;
@@ -37,7 +37,7 @@ use Exception;
 /**
  * Improve action module PHP CS Fixer
  */
-class phpcsfixer extends Action
+class phpcsfixer extends AbstractTask
 {
     /** @var array<int,string> Type of runtime errors */
     protected static $errors = [
@@ -123,7 +123,7 @@ class phpcsfixer extends Action
             ]),
         ])->render() . (
             !self::$user_ui_colorsyntax ? '' :
-            dcPage::jsModuleLoad(My::id() . '/inc/module/phpcsfixer/phpcsfixer.improve.js') .
+            dcPage::jsModuleLoad(My::id() . '/src/Task/phpcsfixer/phpcsfixer.improve.js') .
             dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }

@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use Dotclear\Helper\Html\Form\{
     Checkbox,
@@ -23,12 +23,12 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 
 /**
  * Improve action module end of file
  */
-class endoffile extends Action
+class endoffile extends AbstractTask
 {
     protected function init(): bool
     {

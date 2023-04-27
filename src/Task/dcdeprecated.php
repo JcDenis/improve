@@ -12,18 +12,18 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use Dotclear\Helper\File\{
     Files,
     Path
 };
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 
 /**
  * Improve action module Dotclear depreciated
  */
-class dcdeprecated extends Action
+class dcdeprecated extends AbstractTask
 {
     /** @var array Deprecated functions [filetype [pattern, deprecated, replacement, version, help link]] */
     private $deprecated = ['php' => [], 'js' => []];

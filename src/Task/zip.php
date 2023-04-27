@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use dcCore;
 use Dotclear\Helper\File\{
@@ -29,12 +29,12 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 
 /**
  * Improve action module zip
  */
-class zip extends Action
+class zip extends AbstractTask
 {
     /** @var array List of excluded file pattern */
     public static $exclude = [

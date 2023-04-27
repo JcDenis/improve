@@ -12,10 +12,9 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use DOMDocument;
-use Dotclear\Plugin\improve\Action;
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Html\Form\{
     Div,
@@ -28,12 +27,13 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\XmlTag;
 use Dotclear\Helper\Text;
+use Dotclear\Plugin\improve\AbstractTask;
 use Exception;
 
 /**
  * Improve action module dcstore.xml
  */
-class dcstore extends Action
+class dcstore extends AbstractTask
 {
     /** @var string Settings dcstore zip url pattern */
     private $pattern = '';

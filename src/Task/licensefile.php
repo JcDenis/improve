@@ -12,7 +12,7 @@
  */
 declare(strict_types=1);
 
-namespace Dotclear\Plugin\improve\Module;
+namespace Dotclear\Plugin\improve\Task;
 
 use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Html\Form\{
@@ -24,13 +24,13 @@ use Dotclear\Helper\Html\Form\{
     Para,
     Select
 };
-use Dotclear\Plugin\improve\Action;
+use Dotclear\Plugin\improve\AbstractTask;
 use Exception;
 
 /**
  * Improve action module license file
  */
-class licensefile extends Action
+class licensefile extends AbstractTask
 {
     /** @var array Possible license filenames */
     protected static $license_filenames = [
