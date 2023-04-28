@@ -15,14 +15,13 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve;
 
 use dcCore;
-use Exception;
 
 /**
  * The Tasks stack.
  */
 class Tasks
 {
-    /** @var    array<string,AbstractTask>   $stack   The tasks stack */
+    /** @var    array<string,Task>   $stack   The tasks stack */
     private array $stack = [];
 
     /**
@@ -33,21 +32,21 @@ class Tasks
         # --BEHAVIOR-- improveTaskAdd: Tasks
         dcCore::app()->callBehavior('improveTaskAdd', $this);
 
-        uasort($this->stack, fn ($a, $b) => $a->name() <=> $b->name());
-        uasort($this->stack, fn ($a, $b) => $a->priority() <=> $b->priority());
+        uasort($this->stack, fn ($a, $b) => $a->properties->name <=> $b->properties->name);
+        uasort($this->stack, fn ($a, $b) => $a->properties->priority <=> $b->properties->priority);
     }
 
     /**
      * Add an task.
      *
-     * @param   AbstractTask    $task   The task instance
+     * @param   Task    $task   The task instance
      *
      * @return  Tasks   Self instance
      */
-    public function add(AbstractTask $task): Tasks
+    public function add(Task $task): Tasks
     {
-        if (!isset($this->stack[$task->id()])) {
-            $this->stack[$task->id()] = $task;
+        if (!isset($this->stack[$task->properties->id])) {
+            $this->stack[$task->properties->id] = $task;
         }
 
         return $this;
@@ -56,7 +55,7 @@ class Tasks
     /**
      * Get all tasks.
      *
-     * @return  array<string,AbstractTask>  The tasks stack
+     * @return  array<string,Task>  The tasks stack
      */
     public function dump(): array
     {
@@ -68,9 +67,9 @@ class Tasks
      *
      * @param   string  $id     The task id
      *
-     * @return  null|AbstractTask   The task
+     * @return  null|Task   The task
      */
-    public function get(string $id): ?AbstractTask
+    public function get(string $id): ?Task
     {
         return $this->stack[$id] ?? null;
     }

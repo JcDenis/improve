@@ -14,23 +14,30 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
 
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    TaskDescriptor
+};
 
 /**
  * Improve action module tab
  */
-class tab extends AbstractTask
+class Tab extends Task
 {
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'tab',
+            name: __('Tabulations'),
+            description: __('Replace tabulation by four space in php files'),
+            configurator: false,
+            types: ['plugin', 'theme'],
+            priority: 820
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'          => 'tab',
-            'name'        => __('Tabulations'),
-            'description' => __('Replace tabulation by four space in php files'),
-            'priority'    => 820,
-            'types'       => ['plugin', 'theme'],
-        ]);
-
         return true;
     }
 
@@ -41,7 +48,7 @@ class tab extends AbstractTask
         }
         $clean = preg_replace('/(\t)/', '    ', $content);// . "\n";
         if ($content != $clean) {
-            $this->setSuccess(__('Replace tabulation by spaces'));
+            $this->success->add(__('Replace tabulation by spaces'));
             $content = $clean;
         }
 

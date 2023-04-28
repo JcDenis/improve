@@ -27,13 +27,16 @@ use Dotclear\Helper\Html\Form\{
     Textarea
 };
 use Dotclear\Helper\Html\Html;
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    TaskDescriptor
+};
 use Exception;
 
 /**
  * Improve action module php header
  */
-class phpheader extends AbstractTask
+class PhpHeader extends Task
 {
     /** @var string Exemple of header */
     private static $exemple = <<<EOF
@@ -73,17 +76,20 @@ class phpheader extends AbstractTask
     /** @var string Settings bloc content */
     private $bloc_content = '';
 
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'phpheader',
+            name: __('PHP header'),
+            description: __('Add or remove phpdoc header bloc from php file'),
+            configurator: true,
+            types: ['plugin', 'theme'],
+            priority: 340
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'phpheader',
-            'name'         => __('PHP header'),
-            'description'  => __('Add or remove phpdoc header bloc from php file'),
-            'priority'     => 340,
-            'configurator' => true,
-            'types'        => ['plugin', 'theme'],
-        ]);
-
         $this->action_bloc = [
             __('Do nothing')                       => 0,
             __('Add bloc if it does not exist')    => 'create',
@@ -92,7 +98,7 @@ class phpheader extends AbstractTask
             __('Remove existing bloc header')      => 'remove',
         ];
 
-        $bloc_content       = $this->getSetting('bloc_content');
+        $bloc_content       = $this->settings->get('bloc_content');
         $this->bloc_content = is_string($bloc_content) ? $bloc_content : '';
 
         return true;
@@ -100,13 +106,13 @@ class phpheader extends AbstractTask
 
     public function isConfigured(): bool
     {
-        return !empty($this->getSetting('bloc_action')) || !empty($this->getSetting('remove_old'));
+        return !empty($this->settings->get('bloc_action')) || !empty($this->settings->get('remove_old'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setSettings([
+            $this->settings->set([
                 'bloc_action'     => !empty($_POST['bloc_action']) ? $_POST['bloc_action'] : '',
                 'bloc_content'    => !empty($_POST['bloc_content']) ? $_POST['bloc_content'] : '',
                 'remove_old'      => !empty($_POST['remove_old']),
@@ -120,16 +126,16 @@ class phpheader extends AbstractTask
                 // bloc_action
                 (new Para())->items([
                     (new Label(__('Action:'), Label::OUTSIDE_LABEL_BEFORE))->for('bloc_action'),
-                    (new Select('bloc_action'))->default($this->getSetting('bloc_action'))->items($this->action_bloc),
+                    (new Select('bloc_action'))->default($this->settings->get('bloc_action'))->items($this->action_bloc),
                 ]),
                 // remove_old
                 (new Para())->items([
-                    (new Checkbox('remove_old', !empty($this->getSetting('remove_old'))))->value(1),
+                    (new Checkbox('remove_old', !empty($this->settings->get('remove_old'))))->value(1),
                     (new Label(__('Remove old style bloc header (using #)'), Label::OUTSIDE_LABEL_AFTER))->for('remove_old')->class('classic'),
                 ]),
                 // exclude_locales
                 (new Para())->items([
-                    (new Checkbox('exclude_locales', !empty($this->getSetting('exclude_locales'))))->value(1),
+                    (new Checkbox('exclude_locales', !empty($this->settings->get('exclude_locales'))))->value(1),
                     (new Label(__('Do not add bloc to files from "locales" and "libs" folder'), Label::OUTSIDE_LABEL_AFTER))->for('exclude_locales')->class('classic'),
                 ]),
             ]),
@@ -156,7 +162,7 @@ class phpheader extends AbstractTask
     public function openModule(): ?bool
     {
         if (is_null(dcCore::app()->auth)) {
-            $this->setWarning(__('Auth is not set'));
+            $this->warning->add(__('Auth is not set'));
 
             return null;
         }
@@ -164,7 +170,7 @@ class phpheader extends AbstractTask
         $bloc = trim($this->bloc_content);
 
         if (empty($bloc)) {
-            $this->setWarning(__('bloc is empty'));
+            $this->waring->set(__('bloc is empty'));
 
             return null;
         }
@@ -194,11 +200,11 @@ class phpheader extends AbstractTask
                     (string) $bloc
                 )
             );
-            $this->setSuccess(__('Prepare header info'));
+            $this->success->add(__('Prepare header info'));
 
             return null;
         } catch (Exception $e) {
-            $this->setError(__('Failed to parse bloc'));
+            $this->error->add(__('Failed to parse bloc'));
 
             return null;
         }
@@ -208,9 +214,9 @@ class phpheader extends AbstractTask
     {
         $skipped         = $this->stop_scan;
         $this->stop_scan = false;
-        if (!empty($this->getSetting('exclude_locales')) && preg_match('/\/(locales|libs)(\/.*?|)$/', $this->path_full)) {
+        if (!empty($this->settings->get('exclude_locales')) && preg_match('/\/(locales|libs)(\/.*?|)$/', $this->path_full)) {
             if (!$skipped) {
-                $this->setSuccess(__('Skip directory'));
+                $this->success->add(__('Skip directory'));
             }
             $this->stop_scan = true;
         }
@@ -220,26 +226,26 @@ class phpheader extends AbstractTask
 
     public function readFile(&$content): ?bool
     {
-        if ($this->stop_scan || $this->path_extension != 'php' || $this->hasError()) {
+        if ($this->stop_scan || $this->path_extension != 'php' || !$this->error->empty()) {
             return null;
         }
 
-        if (!empty($this->getSetting('remove_old'))) {
+        if (!empty($this->settings->get('remove_old'))) {
             $content = $this->deleteOldBloc($content);
         }
-        if (empty($this->getSetting('bloc_action'))) {
+        if (empty($this->settings->get('bloc_action'))) {
             return null;
         }
         $clean = $this->deleteDocBloc($content);
-        if ($this->getSetting('bloc_action') == 'remove') {
+        if ($this->settings->get('bloc_action') == 'remove') {
             $content = $clean;
 
             return null;
         }
-        if ($content != $clean && $this->getSetting('bloc_action') == 'create') {
+        if ($content != $clean && $this->settings->get('bloc_action') == 'create') {
             return null;
         }
-        if ($content == $clean && $this->getSetting('bloc_action') == 'replace') {
+        if ($content == $clean && $this->settings->get('bloc_action') == 'replace') {
             return null;
         }
 
@@ -265,7 +271,7 @@ class phpheader extends AbstractTask
         );
         if ($count && $res) {
             $res = str_replace("\n * \n", "\n *\n", $res);
-            $this->setSuccess(__('Write new doc bloc content'));
+            $this->success->add(__('Write new doc bloc content'));
         }
 
         return (string) $res;
@@ -287,7 +293,7 @@ class phpheader extends AbstractTask
             $count
         );
         if ($count) {
-            $this->setSuccess(__('Delete old doc bloc content'));
+            $this->success->add(__('Delete old doc bloc content'));
         }
 
         return (string) $res;
@@ -309,7 +315,7 @@ class phpheader extends AbstractTask
             $count
         );
         if ($count) {
-            $this->setSuccess(__('Delete old style bloc content'));
+            $this->success->add(__('Delete old style bloc content'));
         }
 
         return (string) $res;

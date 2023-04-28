@@ -18,35 +18,36 @@ use Dotclear\Helper\File\{
     Files,
     Path
 };
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    TaskDescriptor
+};
 
 /**
  * Improve action module Dotclear depreciated
  */
-class dcdeprecated extends AbstractTask
+class DcDeprecated extends Task
 {
     /** @var array Deprecated functions [filetype [pattern, deprecated, replacement, version, help link]] */
     private $deprecated = ['php' => [], 'js' => []];
 
-    protected function init(): bool
+    protected function getProperties(): TaskDescriptor
     {
-        $this->setProperties([
-            'id'          => 'dcdeprecated',
-            'name'        => __('Dotclear deprecated'),
-            'description' => __('Search for use of deprecated Dotclear functions'),
-            'priority'    => 520,
-            'types'       => ['plugin', 'theme'],
-        ]);
-        $this->loadDeprecatedDefinition();
-
-        return true;
+        return new TaskDescriptor(
+            id: 'dcdeprecated',
+            name: __('Dotclear deprecated'),
+            description: __('Search for use of deprecated Dotclear functions'),
+            configurator: false,
+            types: ['plugin', 'theme'],
+            priority: 520
+        );
     }
 
-    private function loadDeprecatedDefinition(): void
+    protected function init(): bool
     {
         $path = Path::real(__DIR__ . '/dcdeprecated');
         if (!$path || !is_dir($path) || !is_readable($path)) {
-            return;
+            return false;
         }
         $files = Files::scandir($path);
 
@@ -62,6 +63,8 @@ class dcdeprecated extends AbstractTask
                 $this->deprecated['js'] = array_merge($this->deprecated['js'], $tmp['js']);
             }
         }
+
+        return true;
     }
 
     public function isConfigured(): bool
@@ -76,7 +79,7 @@ class dcdeprecated extends AbstractTask
         }
         foreach ($this->deprecated[$this->path_extension] as $d) {
             if (preg_match('/' . $d[0] . '/i', $content)) {
-                $this->setWarning(sprintf(__('Possible use of deprecated "%s", you should use "%s" instead since Dotclear %s.'), $d[1], __($d[2]), $d[3]) . (empty($d[4]) ? '' : ' <a href="' . $d['4'] . '">' . __('Help') . '</a> '));
+                $this->warning->add(sprintf(__('Possible use of deprecated "%s", you should use "%s" instead since Dotclear %s.'), $d[1], __($d[2]), $d[3]) . (empty($d[4]) ? '' : ' <a href="' . $d['4'] . '">' . __('Help') . '</a> '));
             }
         }
 

@@ -25,12 +25,15 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    TaskDescriptor
+};
 
 /**
  * Improve action module Github shields.io
  */
-class gitshields extends AbstractTask
+class GitShields extends Task
 {
     /** @var string Username of git repo */
     private $username = '';
@@ -60,33 +63,36 @@ class gitshields extends AbstractTask
         'license'   => '[![License](https://img.shields.io/github/license/%username%/%module%)](https://github.com/%username%/%module%/blob/master/LICENSE)',
     ];
 
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'gitshields',
+            name: __('Shields badges'),
+            description: __('Add and maintain shields.io badges to the REDAME.md file'),
+            configurator: true,
+            types: ['plugin', 'theme'],
+            priority: 380
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'gitshields',
-            'name'         => __('Shields badges'),
-            'description'  => __('Add and maintain shields.io badges to the REDAME.md file'),
-            'priority'     => 380,
-            'configurator' => true,
-            'types'        => ['plugin', 'theme'],
-        ]);
-
-        $username        = $this->getSetting('username');
+        $username        = $this->settings->get('username');
         $this->username  = is_string($username) ? $username : '';
-        $this->dotaddict = (bool) $this->getSetting('dotaddict');
+        $this->dotaddict = (bool) $this->settings->get('dotaddict');
 
         return true;
     }
 
     public function isConfigured(): bool
     {
-        return !empty($this->getSetting('username'));
+        return !empty($this->settings->get('username'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save']) && !empty($_POST['username'])) {
-            $this->setSettings([
+            $this->settings->set([
                 'username'  => (string) $_POST['username'],
                 'dotaddict' => !empty($_POST['dotaddict']),
             ]);
@@ -158,7 +164,7 @@ class gitshields extends AbstractTask
             ));
         }
         $this->blocs = $blocs;
-        $this->setSuccess(__('Prepare custom shield info'));
+        $this->success->add(__('Prepare custom shield info'));
     }
 
     private function getDotclearVersion(): string
@@ -192,7 +198,7 @@ class gitshields extends AbstractTask
             $count
         );
         if ($count && $res) {
-            $this->setSuccess(__('Write new shield bloc'));
+            $this->success->add(__('Write new shield bloc'));
         }
 
         return (string) $res;
@@ -208,7 +214,7 @@ class gitshields extends AbstractTask
             $count
         );
         if ($count && $res) {
-            $this->setSuccess(__('Delete old shield bloc'));
+            $this->success->add(__('Delete old shield bloc'));
         }
 
         return (string) $res;

@@ -24,45 +24,49 @@ use Dotclear\Helper\Html\Form\{
     Para
 };
 use Dotclear\Plugin\improve\{
-    AbstractTask,
-    Core
+    Task,
+    Core,
+    TaskDescriptor
 };
 
 /**
  * Improve action module new line
  */
-class newline extends AbstractTask
+class NewLine extends Task
 {
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'newline',
+            name: __('Newlines'),
+            description: __('Replace bad and repetitive and empty newline by single newline in files'),
+            configurator: true,
+            types: ['plugin', 'theme'],
+            priority: 840
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'newline',
-            'name'         => __('Newlines'),
-            'description'  => __('Replace bad and repetitive and empty newline by single newline in files'),
-            'priority'     => 840,
-            'configurator' => true,
-            'types'        => ['plugin', 'theme'],
-        ]);
-
         return true;
     }
 
     public function isConfigured(): bool
     {
-        return !empty($this->getSetting('extensions'));
+        return !empty($this->settings->get('extensions'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save']) && !empty($_POST['newline_extensions'])) {
-            $this->setSettings(
+            $this->settings->set(
                 'extensions',
                 Core::cleanExtensions($_POST['newline_extensions'])
             );
             $this->redirect($url);
         }
 
-        $ext = $this->getSetting('extensions');
+        $ext = $this->settings->get('extensions');
         if (!is_array($ext)) {
             $ext = [];
         }
@@ -81,7 +85,7 @@ class newline extends AbstractTask
 
     public function readFile(string &$content): ?bool
     {
-        $ext = $this->getSetting('extensions');
+        $ext = $this->settings->get('extensions');
         if (!is_array($ext) || !in_array($this->path_extension, $ext)) {
             return null;
         }
@@ -99,7 +103,7 @@ class newline extends AbstractTask
             )
         );
         if ($content != $clean) {
-            $this->setSuccess(__('Replace bad new lines'));
+            $this->success->add(__('Replace bad new lines'));
             $content = $clean;
         }
 

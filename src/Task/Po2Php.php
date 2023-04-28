@@ -15,12 +15,15 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve\Task;
 
 use Dotclear\Helper\L10n;
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    TaskDescriptor
+};
 
 /**
  * Improve action module dcstore.xml
  */
-class po2php extends AbstractTask
+class Po2Php extends Task
 {
     /** @var string License bloc */
     private $license = <<<EOF
@@ -32,16 +35,20 @@ class po2php extends AbstractTask
          */
         EOF;
 
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'po2php',
+            name: __('Translation files'),
+            description: __('Compile existing translation .po files to fresh .lang.php files'),
+            configurator: false,
+            types: ['plugin', 'theme'],
+            priority: 310
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'          => 'po2php',
-            'name'        => __('Translation files'),
-            'description' => __('Compile existing translation .po files to fresh .lang.php files'),
-            'priority'    => 310,
-            'types'       => ['plugin', 'theme'],
-        ]);
-
         return true;
     }
 
@@ -57,9 +64,9 @@ class po2php extends AbstractTask
         }
 
         if (L10n::generatePhpFileFromPo(substr($this->path_full, 0, -3), $this->license)) {
-            $this->setSuccess(__('Compile .po file to .lang.php'));
+            $this->success->add(__('Compile .po file to .lang.php'));
         } else {
-            $this->setError(__('Failed to compile .po file'));
+            $this->error->add(__('Failed to compile .po file'));
         }
 
         return true;

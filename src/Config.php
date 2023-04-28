@@ -97,10 +97,10 @@ class Config extends dcNsProcess
         $items    = [];
         $settings = dcCore::app()->blog->settings->get(My::id());
 
-        foreach ($improve->tasks->dump() as $action) {
+        foreach ($improve->tasks->dump() as $task) {
             $items[] = (new Para())->items([
-                (new Checkbox(['disabled[]', 'disabled_' . $action->id()], $action->isDisabled()))->value($action->id()),
-                (new Label($action->id(), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('disabled_' . $action->id()),
+                (new Checkbox(['disabled[]', 'disabled_' . $task->properties->id], $task->isDisabled()))->value($task->properties->id),
+                (new Label($task->properties->id, Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('disabled_' . $task->properties->id),
             ]);
         }
 

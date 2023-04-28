@@ -27,29 +27,35 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\XmlTag;
 use Dotclear\Helper\Text;
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    taskDescriptor
+};
 use Exception;
 
 /**
  * Improve action module dcstore.xml
  */
-class dcstore extends AbstractTask
+class DcStore extends Task
 {
     /** @var string Settings dcstore zip url pattern */
     private $pattern = '';
 
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'dcstore',
+            name: __('Store file'),
+            description: __('Re-create dcstore.xml file according to _define.php variables'),
+            configurator: true,
+            types: ['plugin', 'theme'],
+            priority: 420
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'dcstore',
-            'name'         => __('Store file'),
-            'description'  => __('Re-create dcstore.xml file according to _define.php variables'),
-            'priority'     => 420,
-            'configurator' => true,
-            'types'        => ['plugin', 'theme'],
-        ]);
-
-        $pattern       = $this->getSetting('pattern');
+        $pattern       = $this->settings->get('pattern');
         $this->pattern = is_string($pattern) ? $pattern : '';
 
         return true;
@@ -57,13 +63,13 @@ class dcstore extends AbstractTask
 
     public function isConfigured(): bool
     {
-        return !empty($this->getSetting('pattern'));
+        return !empty($this->settings->get('pattern'));
     }
 
     public function configure($url): ?string
     {
         if (!empty($_POST['save']) && !empty($_POST['dcstore_pattern'])) {
-            $this->setSettings('pattern', (string) $_POST['dcstore_pattern']);
+            $this->settings->set('pattern', (string) $_POST['dcstore_pattern']);
             $this->redirect($url);
         }
 
@@ -85,7 +91,7 @@ class dcstore extends AbstractTask
     public function openModule(): ?bool
     {
         $content = $this->generateXML();
-        if ($this->hasError()) {
+        if (!$this->error->empty()) {
             return false;
         }
 
@@ -93,9 +99,9 @@ class dcstore extends AbstractTask
 
         try {
             Files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'dcstore.xml', $content);
-            $this->setSuccess(__('Write dcstore.xml file.'));
+            $this->success->add(__('Write dcstore.xml file.'));
         } catch (Exception $e) {
-            $this->setError(__('Failed to write dcstore.xml file'));
+            $this->error->add(__('Failed to write dcstore.xml file'));
 
             return false;
         }
@@ -113,37 +119,37 @@ class dcstore extends AbstractTask
 
         # name
         if (empty($this->module->get('name'))) {
-            $this->setError(__('unknow module name'));
+            $this->error->add(__('unknow module name'));
         }
         $rsp->insertNode(new XmlTag('name', $this->module->get('name')));
 
         # version
         if (empty($this->module->get('version'))) {
-            $this->setError(__('unknow module version'));
+            $this->error->add(__('unknow module version'));
         }
         $rsp->insertNode(new XmlTag('version', $this->module->get('version')));
 
         # author
         if (empty($this->module->get('author'))) {
-            $this->setError(__('unknow module author'));
+            $this->error->add(__('unknow module author'));
         }
         $rsp->insertNode(new XmlTag('author', $this->module->get('author')));
 
         # desc
         if (empty($this->module->get('desc'))) {
-            $this->setError(__('unknow module description'));
+            $this->error->add(__('unknow module description'));
         }
         $rsp->insertNode(new XmlTag('desc', $this->module->get('desc')));
 
         # repository
         if (empty($this->module->get('repository'))) {
-            $this->setError(__('no repository set in _define.php'));
+            $this->error->add(__('no repository set in _define.php'));
         }
 
         # file
         $file_pattern = $this->parseFilePattern();
         if (empty($file_pattern)) {
-            $this->setError(__('no zip file pattern set in configuration'));
+            $this->error->add(__('no zip file pattern set in configuration'));
         }
         $rsp->insertNode(new XmlTag('file', $file_pattern));
 
@@ -161,14 +167,14 @@ class dcstore extends AbstractTask
             }
         }
         if (empty($this->module->get('dc_min'))) {
-            $this->setWarning(__('no minimum dotclear version'));
+            $this->warning->add(__('no minimum dotclear version'));
         } else {
             $rsp->insertNode(new XmlTag('da:dcmin', $this->module->get('dc_min')));
         }
 
         # da details
         if (empty($this->module->get('details'))) {
-            $this->setWarning(__('no details URL'));
+            $this->warning->add(__('no details URL'));
         } else {
             $rsp->insertNode(new XmlTag('da:details', $this->module->get('details')));
         }
@@ -183,7 +189,7 @@ class dcstore extends AbstractTask
 
         # da support
         if (empty($this->module->get('support'))) {
-            $this->setWarning(__('no support URL'));
+            $this->warning->add(__('no support URL'));
         } else {
             $rsp->insertNode(new XmlTag('da:support', $this->module->get('support')));
         }

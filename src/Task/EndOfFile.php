@@ -23,24 +23,30 @@ use Dotclear\Helper\Html\Form\{
     Note,
     Para
 };
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    TaskDescriptor
+};
 
 /**
  * Improve action module end of file
  */
-class endoffile extends AbstractTask
+class EndOfFile extends Task
 {
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'endoffile',
+            name: __('End of files'),
+            description: __('Remove php tag and empty lines from end of files'),
+            configurator: true,
+            types: ['plugin', 'theme'],
+            priority: 860
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'endoffile',
-            'name'         => __('End of files'),
-            'description'  => __('Remove php tag and empty lines from end of files'),
-            'priority'     => 860,
-            'configurator' => true,
-            'types'        => ['plugin', 'theme'],
-        ]);
-
         return true;
     }
 
@@ -52,7 +58,7 @@ class endoffile extends AbstractTask
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setSettings('psr2', !empty($_POST['endoffile_psr2']));
+            $this->settings->set('psr2', !empty($_POST['endoffile_psr2']));
             $this->redirect($url);
         }
 
@@ -60,7 +66,7 @@ class endoffile extends AbstractTask
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
                 // endoffile_psr2
                 (new Para())->items([
-                    (new Checkbox('endoffile_psr2', !empty($this->getSetting('psr2'))))->value(1),
+                    (new Checkbox('endoffile_psr2', !empty($this->settings->get('psr2'))))->value(1),
                     (new Label(__('Add a blank line to the end of file'), Label::OUTSIDE_LABEL_AFTER))->for('endoffile_psr2')->class('classic'),
                 ]),
                 (new Note())->text(__('PSR2 must have a blank line, whereas PSR12 must not.'))->class('form-note'),
@@ -77,9 +83,9 @@ class endoffile extends AbstractTask
             ['/(\s*)(\?>\s*)$/', '/\n+$/'],
             '',
             $content
-        ) . ($this->getSetting('psr2') ? "\n" : '');
+        ) . ($this->settings->get('psr2') ? "\n" : '');
         if ($content != $clean) {
-            $this->setSuccess(__('Replace end of file'));
+            $this->success->add(__('Replace end of file'));
             $content = $clean;
         }
 

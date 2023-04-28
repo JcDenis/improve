@@ -29,15 +29,16 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\improve\{
-    AbstractTask,
-    My
+    Task,
+    My,
+    TaskDescriptor
 };
 use Exception;
 
 /**
  * Improve action module PHP CS Fixer
  */
-class phpcsfixer extends AbstractTask
+class PhpCsFixer extends Task
 {
     /** @var array<int,string> Type of runtime errors */
     protected static $errors = [
@@ -59,17 +60,20 @@ class phpcsfixer extends AbstractTask
     /** @var string Settings PHP executable path */
     private $phpexe_path = '';
 
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'phpcsfixer',
+            name: __('PHP CS Fixer'),
+            description: __('Fix PSR coding style using Php CS Fixer'),
+            configurator: true,
+            types: ['plugin', 'theme'],
+            priority: 920
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'phpcsfixer',
-            'name'         => __('PHP CS Fixer'),
-            'description'  => __('Fix PSR coding style using Php CS Fixer'),
-            'priority'     => 920,
-            'configurator' => true,
-            'types'        => ['plugin', 'theme'],
-        ]);
-
         $this->getPhpPath();
 
         if (null !== dcCore::app()->auth?->user_prefs) {
@@ -98,7 +102,7 @@ class phpcsfixer extends AbstractTask
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setSettings([
+            $this->settings->set([
                 'phpexe_path' => !empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : '',
             ]);
             $this->redirect($url);
@@ -142,18 +146,18 @@ class phpcsfixer extends AbstractTask
             exec($command, $output, $error);
             if (empty($output)) {
                 if (isset(self::$errors[$error])) {
-                    $this->setError(self::$errors[$error]);
+                    $this->error->add(self::$errors[$error]);
 
                     return false;
                 }
 
                 throw new Exception('oops');
             }
-            $this->setSuccess(sprintf('<pre>%s</pre>', implode('<br />', $output)));
+            $this->success->add(sprintf('<pre>%s</pre>', implode('<br />', $output)));
 
             return true;
         } catch (Exception $e) {
-            $this->setError(__('Failed to run php-cs-fixer'));
+            $this->error->add(__('Failed to run php-cs-fixer'));
 
             return false;
         }
@@ -164,7 +168,7 @@ class phpcsfixer extends AbstractTask
      */
     private function getPhpPath(): void
     {
-        $phpexe_path = $this->getSetting('phpexe_path');
+        $phpexe_path = $this->settings->get('phpexe_path');
         if (!is_string($phpexe_path)) {
             $phpexe_path = '';
         }

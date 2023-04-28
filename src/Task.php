@@ -14,101 +14,65 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use ArrayObject;
-use dcCore;
 use dcModuleDefine;
-use dcPage;
 use Dotclear\Helper\Network\Http;
 
 /**
  * Improve action class helper
  */
-abstract class AbstractTask
+abstract class Task
 {
-    /** @var dcModuleDefine  Current module */
-    protected $module;
+    /** @var    TaskDescriptor  Task descriptor instance */
+    public readonly TaskDescriptor $properties;
 
-    /** @var string     Current full path */
-    protected $path_full = '';
+    /** @var    TaskMessages    Task success messages instance */
+    public readonly TaskMessages $success;
 
-    /** @var string     Current file extension */
-    protected $path_extension = '';
+    /** @var    TaskMessages    Task warning messages instance */
+    public readonly TaskMessages $warning;
 
-    /** @var boolean    Current path is directory */
-    protected $path_is_dir = null;
+    /** @var    TaskMessages    Task error messages instance */
+    public readonly TaskMessages $error;
 
-    /** @var string The child class name */
-    private $class_name = '';
+    /** @var    TaskSettings    Task settings instance */
+    protected readonly TaskSettings $settings;
 
-    /** @var array<string, array>  Messages logs */
-    private $logs = ['success' => [], 'warning' => [], 'error' => []];
-
-    /** @var array<string>  Action module settings */
-    private $settings = [];
-
-    /** @var array List of allowed properties */
-    protected static $allowed_properties = ['id', 'name', 'description', 'priority', 'configurator', 'types'];
+    /** @var    dcModuleDefine  Current module */
+    protected dcModuleDefine $module;
 
     /** @var    bool    Is disabled action */
-    private $disabled = false;
+    private bool $disabled = false;
 
-    /** @var string Module id */
-    private $id = '';
+    /** @var    string  Current full path */
+    protected string $path_full = '';
 
-    /** @var string Module name */
-    private $name = '';
+    /** @var    string  Current file extension */
+    protected string $path_extension = '';
 
-    /** @var string Module description */
-    private $description = '';
-
-    /** @var integer Module id */
-    private $priority = 500;
-
-    /** @var boolean Module has config page */
-    private $configurator = false;
-
-    /** @var array Module supported types */
-    private $types = ['plugin'];
+    /** @var    null|bool    Current path is directory */
+    protected ?bool $path_is_dir = null;
 
     /**
      * Action constructor inits properties and settings of a child class.
      */
     final public function __construct()
     {
-        $this->class_name = str_replace(__NAMESPACE__ . '\\Task\\', '', get_called_class());
+        $this->success    = new TaskMessages();
+        $this->warning    = new TaskMessages();
+        $this->error      = new TaskMessages();
+        $this->properties = $this->getProperties();
+        $this->settings   = new TaskSettings($this->properties->id);
         $this->module     = new dcModuleDefine('undefined');
 
-        $settings = dcCore::app()->blog?->settings->get(My::id())->get('settings_' . $this->class_name);
-        if (null != $settings) {
-            $settings = json_decode($settings, true);
-        }
-        $this->settings = is_array($settings) ? $settings : [];
-
         $this->init();
-
-        // can overload priority by settings
-        if (1 < ($p = (int) dcCore::app()->blog?->settings->get(My::id())->get('priority_' . $this->class_name))) {
-            $this->priority = $p;
-        }
     }
 
     /**
-     * Set action as disabled.
+     * Get task description.
+     *
+     * @return     TaskDescriptor   The task description
      */
-    final public function disable()
-    {
-        $this->disabled = true;
-    }
-
-    /**
-     * Check if actio is disabled.
-     * 
-     * @return  bool True on disabled
-     */
-    final public function isDisabled()
-    {
-        return $this->disabled;
-    }
+    abstract protected function getProperties(): TaskDescriptor;
 
     /**
      * Action initialisation function.
@@ -120,135 +84,47 @@ abstract class AbstractTask
      */
     abstract protected function init(): bool;
 
-    /// @name Properties methods
-    //@{
     /**
-     * Get a definition property of action class
+     * Get a setting.
      *
-     * @param      string   $key     a property or setting id
+     * @param   string  $key    The setting ID
      *
-     * @return     mixed    Value of property or setting of action.
+     * @return  mixed   Value of property or setting of action.
      */
     final public function get(string $key)
     {
-        if (isset($this->settings[$key])) {
-            return $this->settings[$key];
-        }
-
-        return null;
-    }
-
-    /** Get action module id */
-    final public function id(): string
-    {
-        return $this->id;
-    }
-
-    /** Get action module name */
-    final public function name(): string
-    {
-        return $this->name;
-    }
-
-    /** Get action module description */
-    final public function description(): string
-    {
-        return $this->description;
-    }
-
-    /** Get action module priority */
-    final public function priority(): int
-    {
-        return $this->priority;
-    }
-
-    /** Get action module configuration url if any */
-    final public function configurator(): bool
-    {
-        return $this->configurator;
-    }
-
-    /** Get action module supported types */
-    final public function types(): array
-    {
-        return $this->types;
+        return $this->settings->get($key);
     }
 
     /**
-     * Set properties of action class
-     *
-     * @param      array    $properties   Properties
-     *
-     * @return     boolean              Success
+     * Set task as disabled.
      */
-    final protected function setProperties(array $properties): bool
+    final public function disable()
     {
-        foreach ($properties as $key => $value) {
-            if (in_array($key, self::$allowed_properties)) {
-                $this->{$key} = $value;
-            }
-        }
-
-        return true;
-    }
-    //@}
-
-    /// @name Settings methods
-    //@{
-    /**
-     * Get a settings of action class
-     *
-     * @param      string $setting     a settings id
-     *
-     * @return     mixed  A setting of action.
-     */
-    final protected function getSetting(string $setting)
-    {
-        return $this->settings[$setting] ?? null;
+        $this->disabled = true;
     }
 
     /**
-     * Set one or more setting of action class
+     * Check if task is disabled.
      *
-     * @param      mixed  $settings     one or more settings
-     * @param      mixed  $value        value for a single setting
-     *
-     * @return     mixed  A setting of action.
+     * @return  bool True on disabled
      */
-    final protected function setSettings($settings, $value = null)
+    final public function isDisabled()
     {
-        $settings = is_array($settings) ? $settings : [$settings => $value];
-        foreach ($settings as $k => $v) {
-            $this->settings[$k] = $v;
-        }
-
-        return true;
+        return $this->disabled;
     }
 
     /**
-     * Redirection after settings update
+     * Do HTTP redirection.
      *
-     * This save settings update before redirect.
+     * Used after settings form validation to save settings.
      *
-     * @param      string $url      redirect url after settings update
+     * @param   string  $url    The URL redirection
      */
-    final protected function redirect(string $url): bool
+    final protected function redirect(string $url): void
     {
-        if (!is_null(dcCore::app()->blog)) {
-            dcCore::app()->blog->settings->get(My::id())->put(
-                'settings_' . $this->class_name,
-                json_encode($this->settings),
-                'string',
-                null,
-                true,
-                true
-            );
-            dcCore::app()->blog->triggerBlog();
-            dcPage::addSuccessNotice(__('Configuration successfully updated'));
-        }
+        $this->settings->save();
         Http::redirect($url);
-
-        return true;
     }
 
     /**
@@ -285,7 +161,6 @@ abstract class AbstractTask
     {
         return null;
     }
-    //@}
 
     /**
      * Set in class var current module definitions.
@@ -313,6 +188,10 @@ abstract class AbstractTask
         $this->path_full      = $path_full;
         $this->path_extension = $path_extension;
         $this->path_is_dir    = $path_is_dir;
+
+        $this->success->path($path_full);
+        $this->warning->path($path_full);
+        $this->error->path($path_full);
 
         return true;
     }
@@ -372,135 +251,6 @@ abstract class AbstractTask
     public function closeModule(): ?bool
     {
         return null;
-    }
-    //@}
-
-    /// @name Logs methods
-    //@{
-    /**
-     * Set an action log.
-     *
-     * Log must be use every time an action something happen.
-     *
-     * @param      string $type        type of message, can be error, warning, succes
-     * @param      string $message     message to log
-     *
-     * @return     boolean  True if message is logged.
-     */
-    final public function setLog(string $type, string $message): bool
-    {
-        if (empty($this->path_full) || !array_key_exists($type, $this->logs)) {
-            return false;
-        }
-        $this->logs[$type][$this->path_full][] = $message;
-
-        return true;
-    }
-
-    /**
-     * Check if action class has log of given type.
-     *
-     * @param      string $type        type of message, can be error, warning, succes
-     *
-     * @return     boolean  True if messages exist.
-     */
-    final public function hasLog(string $type): bool
-    {
-        return array_key_exists($type, $this->logs) && !empty($this->logs[$type]);
-    }
-
-    /**
-     * Get action logs.
-     *
-     * @param      string|null $type        type of message, can be error, warning, succes
-     *
-     * @return     array  Arry of given type of log or all if type is null
-     */
-    final public function getLogs($type = null): array
-    {
-        if (null === $type) {
-            return $this->logs;
-        }
-        if (empty($this->path_full)
-            || !array_key_exists($type, $this->logs)
-            || !array_key_exists($this->path_full, $this->logs[$type])
-        ) {
-            return [];
-        }
-
-        return $this->logs[$type][$this->path_full];
-    }
-
-    /**
-     * Set a log of type error.
-     */
-    final public function setError(string $message): bool
-    {
-        return $this->setLog('error', $message);
-    }
-
-    /**
-     * Check logs of type error exists.
-     */
-    final public function hasError(): bool
-    {
-        return !empty($this->getLogs('error'));
-    }
-
-    /**
-     * Get logs of type error.
-     */
-    final public function getErrors(): array
-    {
-        return $this->getLogs('error');
-    }
-
-    /**
-     * Set a log of type warning.
-     */
-    final public function setWarning(string $message): bool
-    {
-        return $this->setLog('warning', $message);
-    }
-
-    /**
-     * Check logs of type error warnings.
-     */
-    final public function hasWarning(): bool
-    {
-        return !empty($this->getLogs('warning'));
-    }
-
-    /**
-     * Get logs of type warning.
-     */
-    final public function getWarnings(): array
-    {
-        return $this->getLogs('warning');
-    }
-
-    /**
-     * Set a log of type success.
-     */
-    final public function setSuccess(string $message): bool
-    {
-        return $this->setLog('success', $message);
-    }
-
-    /**
-     * Check logs of type error success.
-     */
-    final public function hasSuccess(): bool
-    {
-        return !empty($this->getLogs('success'));
-    }
-
-    /**
-     * Get logs of type success.
-     */
-    final public function getSuccess(): array
-    {
-        return $this->getLogs('success');
     }
     //@}
 }

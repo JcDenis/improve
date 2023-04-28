@@ -31,15 +31,16 @@ use Dotclear\Helper\Html\Form\{
 };
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\improve\{
-    AbstractTask,
-    My
+    Task,
+    My,
+    TaskDescriptor
 };
 use Exception;
 
 /**
  * Improve action module PHPStan
  */
-class phpstan extends AbstractTask
+class PhpStan extends Task
 {
     /** @var boolean User pref to use colored synthax */
     protected static $user_ui_colorsyntax = false;
@@ -56,23 +57,26 @@ class phpstan extends AbstractTask
     /** @var string Settings PHP executable path */
     private $phpexe_path = '';
 
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'phpstan',
+            name: __('PHPStan'),
+            description: __('Analyse php code using PHPStan'),
+            configurator: true,
+            types: ['plugin'],
+            priority: 910
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'phpstan',
-            'name'         => __('PHPStan'),
-            'description'  => __('Analyse php code using PHPStan'),
-            'priority'     => 910,
-            'configurator' => true,
-            'types'        => ['plugin'],
-        ]);
-
         $this->getPhpPath();
 
-        $run_level       = $this->getSetting('run_level');
+        $run_level       = $this->settings->get('run_level');
         $this->run_level = is_int($run_level) ? $run_level : 5;
 
-        $ignored_vars       = $this->getSetting('ignored_vars');
+        $ignored_vars       = $this->settings->get('ignored_vars');
         $this->ignored_vars = is_string($ignored_vars) ? $ignored_vars : '';
 
         if (null !== dcCore::app()->auth?->user_prefs) {
@@ -101,7 +105,7 @@ class phpstan extends AbstractTask
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setSettings([
+            $this->settings->set([
                 'phpexe_path'     => (!empty($_POST['phpexe_path']) ? $_POST['phpexe_path'] : ''),
                 'run_level'       => (int) $_POST['run_level'],
                 'ignored_vars'    => (!empty($_POST['ignored_vars']) ? $_POST['ignored_vars'] : ''),
@@ -140,19 +144,19 @@ class phpstan extends AbstractTask
                 )->class('form-note'),
                 // ignored_default
                 (new Para())->items([
-                    (new Checkbox('ignored_default', !empty($this->getSetting('ignored_default'))))->value(1),
+                    (new Checkbox('ignored_default', !empty($this->settings->get('ignored_default'))))->value(1),
                     (new Label(__('Do not use rules from default ignored errors list.'), Label::OUTSIDE_LABEL_AFTER))->for('ignored_default')->class('classic'),
                 ]),
                 (new Note())->text(__('See ignored errors from configuration file below.'))->class('form-note'),
                 // split_report
                 (new Para())->items([
-                    (new Checkbox('split_report', !empty($this->getSetting('split_report'))))->value(1),
+                    (new Checkbox('split_report', !empty($this->settings->get('split_report'))))->value(1),
                     (new Label(__('Split report by file rather than all in the end.'), Label::OUTSIDE_LABEL_AFTER))->for('split_report')->class('classic'),
                 ]),
                 (new Note())->text(__('Enable this can cause timeout.'))->class('form-note'),
                 // clear_cache
                 (new Para())->items([
-                    (new Checkbox('clear_cache', !empty($this->getSetting('clear_cache'))))->value(1),
+                    (new Checkbox('clear_cache', !empty($this->settings->get('clear_cache'))))->value(1),
                     (new Label(__('Clear result cache before each analizes.'), Label::OUTSIDE_LABEL_AFTER))->for('clear_cache')->class('classic'),
                 ]),
                 (new Note())->text(__('Enable this can cause timeout.'))->class('form-note'),
@@ -174,7 +178,7 @@ class phpstan extends AbstractTask
     public function openModule(): bool
     {
         if (!$this->writeConf()) {
-            $this->setError(__('Failed to write phpstan configuration'));
+            $this->error->add(__('Failed to write phpstan configuration'));
 
             return false;
         }
@@ -184,27 +188,27 @@ class phpstan extends AbstractTask
 
     public function closeFile(): ?bool
     {
-        if (!$this->getSetting('split_report')
+        if (!$this->settings->get('split_report')
             || !in_array($this->path_extension, ['php', 'in'])
         ) {
             return null;
         }
 
-        $clear = $this->getSetting('clear_cache') ? $this->execClear($this->path_full) : true;
+        $clear = $this->settings->get('clear_cache') ? $this->execClear($this->path_full) : true;
 
         return $clear && $this->execFixer($this->path_full);
     }
 
     public function closeModule(): ?bool
     {
-        if ($this->getSetting('split_report')) {
+        if ($this->settings->get('split_report')) {
             return null;
         }
-        if ($this->hasError()) {
+        if (!$this->error->empty()) {
             return false;
         }
 
-        $clear = $this->getSetting('clear_cache') ? $this->execClear() : true;
+        $clear = $this->settings->get('clear_cache') ? $this->execClear() : true;
 
         return $clear && $this->execFixer();
     }
@@ -245,14 +249,14 @@ class phpstan extends AbstractTask
                 throw new Exception('oops');
             }
             if (count($output) < 4) {
-                $this->setSuccess($from_clear ? __('Cache cleared') : __('No errors found'));
+                $this->success->add($from_clear ? __('Cache cleared') : __('No errors found'));
             } else {
-                $this->setWarning(sprintf('<pre>%s</pre>', implode('<br />', $output)));
+                $this->warning->add(sprintf('<pre>%s</pre>', implode('<br />', $output)));
             }
 
             return true;
         } catch (Exception $e) {
-            $this->setError(__('Failed to run phpstan'));
+            $this->error->add(__('Failed to run phpstan'));
 
             return false;
         }
@@ -263,7 +267,7 @@ class phpstan extends AbstractTask
      */
     private function getPhpPath(): void
     {
-        $phpexe_path = $this->getSetting('phpexe_path');
+        $phpexe_path = $this->settings->get('phpexe_path');
         if (!is_string($phpexe_path)) {
             $phpexe_path = '';
         }
@@ -279,7 +283,7 @@ class phpstan extends AbstractTask
 
     private function writeConf(): bool
     {
-        $full    = $this->getSetting('ignored_default') ? '' : 'full.';
+        $full    = $this->settings->get('ignored_default') ? '' : 'full.';
         $content = str_replace(
             [
                 '%LEVEL%',

@@ -24,13 +24,16 @@ use Dotclear\Helper\Html\Form\{
     Para,
     Select
 };
-use Dotclear\Plugin\improve\AbstractTask;
+use Dotclear\Plugin\improve\{
+    Task,
+    TaskDescriptor
+};
 use Exception;
 
 /**
  * Improve action module license file
  */
-class licensefile extends AbstractTask
+class LicenseFile extends Task
 {
     /** @var array Possible license filenames */
     protected static $license_filenames = [
@@ -45,16 +48,20 @@ class licensefile extends AbstractTask
     /** @var array Action */
     private $action_full = [];
 
+    protected function getProperties(): TaskDescriptor
+    {
+        return new TaskDescriptor(
+            id: 'license',
+            name: __('License file'),
+            description: __('Add or remove full license file to module root'),
+            configurator: true,
+            types: ['plugin', 'theme'],
+            priority: 330
+        );
+    }
+
     protected function init(): bool
     {
-        $this->setProperties([
-            'id'           => 'license',
-            'name'         => __('License file'),
-            'description'  => __('Add or remove full license file to module root'),
-            'priority'     => 330,
-            'configurator' => true,
-            'types'        => ['plugin', 'theme'],
-        ]);
         $this->action_version = [
             __('no version selected')                          => '',
             __('gpl2 - GNU General Public License v2')         => 'gpl2',
@@ -82,7 +89,7 @@ class licensefile extends AbstractTask
     public function configure($url): ?string
     {
         if (!empty($_POST['save'])) {
-            $this->setSettings([
+            $this->settings->set([
                 'action_version' => !empty($_POST['action_version']) ? $_POST['action_version'] : '',
                 'action_full'    => !empty($_POST['action_full']) ? $_POST['action_full'] : '',
             ]);
@@ -94,12 +101,12 @@ class licensefile extends AbstractTask
                 // action_version
                 (new Para())->items([
                     (new Label(__('License version:'), Label::OUTSIDE_LABEL_BEFORE))->for('action_version'),
-                    (new Select('action_version'))->default($this->getSetting('action_version'))->items($this->action_version),
+                    (new Select('action_version'))->default($this->settings->get('action_version'))->items($this->action_version),
                 ]),
                 // action_full
                 (new Para())->items([
                     (new Label(__('Action on file:'), Label::OUTSIDE_LABEL_BEFORE))->for('action_full'),
-                    (new Select('action_full'))->default($this->getSetting('action_full'))->items($this->action_full),
+                    (new Select('action_full'))->default($this->settings->get('action_full'))->items($this->action_full),
                 ]),
             ]),
         ])->render();
@@ -107,12 +114,12 @@ class licensefile extends AbstractTask
 
     public function openModule(): ?bool
     {
-        if (in_array($this->getSetting('action_full'), ['remove', 'full','overwrite'])) {
-            $this->deleteFullLicense(($this->getSetting('action_full') == 'overwrite'));
+        if (in_array($this->settings->get('action_full'), ['remove', 'full','overwrite'])) {
+            $this->deleteFullLicense(($this->settings->get('action_full') == 'overwrite'));
         }
-        if (in_array($this->getSetting('action_full'), ['create', 'overwrite', 'full'])) {
-            if (empty($this->getSetting('action_version'))) {
-                $this->setWarning(__('No full license type selected'));
+        if (in_array($this->settings->get('action_full'), ['create', 'overwrite', 'full'])) {
+            if (empty($this->settings->get('action_version'))) {
+                $this->warning->add(__('No full license type selected'));
             } else {
                 $this->writeFullLicense();
             }
@@ -124,16 +131,16 @@ class licensefile extends AbstractTask
     private function writeFullLicense(): ?bool
     {
         try {
-            $full = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'licensefile' . DIRECTORY_SEPARATOR . $this->getSetting('action_version') . '.full.txt');
+            $full = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'licensefile' . DIRECTORY_SEPARATOR . $this->settings->get('action_version') . '.full.txt');
             if (empty($full)) {
-                $this->setError(__('Failed to load license content'));
+                $this->error->add(__('Failed to load license content'));
 
                 return null;
             }
             Files::putContent($this->module->get('root') . DIRECTORY_SEPARATOR . 'LICENSE', str_replace("\r\n", "\n", $full));
-            $this->setSuccess(__('Write new license file "LICENSE"'));
+            $this->success->add(__('Write new license file "LICENSE"'));
         } catch (Exception $e) {
-            $this->setError(__('Failed to write new license file'));
+            $this->error->add(__('Failed to write new license file'));
 
             return null;
         }
@@ -148,11 +155,11 @@ class licensefile extends AbstractTask
                 continue;
             }
             if (!Files::isDeletable($this->module->get('root') . DIRECTORY_SEPARATOR . $file)) {
-                $this->setWarning(sprintf(__('Old license file is not deletable (%s)'), $file));
+                $this->warning->add(sprintf(__('Old license file is not deletable (%s)'), $file));
             } elseif (!@unlink($this->module->get('root') . DIRECTORY_SEPARATOR . $file)) {
-                $this->setError(sprintf(__('Failed to delete old license file (%s)'), $file));
+                $this->error->add(sprintf(__('Failed to delete old license file (%s)'), $file));
             } else {
-                $this->setSuccess(sprintf(__('Delete old license file "%s"'), $file));
+                $this->success->add(sprintf(__('Delete old license file "%s"'), $file));
             }
         }
 

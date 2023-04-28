@@ -19,7 +19,6 @@ use dcCore;
 use dcPage;
 use dcFavorites;
 use dcNsProcess;
-use Dotclear\App;
 use Dotclear\Helper\File\Files;
 
 /**
@@ -71,15 +70,23 @@ class Backend extends dcNsProcess
                 );
             },
 
-            // Add actions to improve
-            'improveTaskAdd' => function (Tasks $actions): void {
-                $dir = __DIR__ . DIRECTORY_SEPARATOR . 'Task' . DIRECTORY_SEPARATOR;
-                foreach (Files::scandir($dir) as $file) {
-                    if (str_ends_with($file, '.php') && is_file($dir . $file)) {
-                        $class = __NAMESPACE__ . '\\Task\\' . basename($file, '.php');
-                        $actions->add(new $class());
-                    }
-                }
+            // Add taks to improve
+            'improveTaskAdd' => function (Tasks $tasks): void {
+                $tasks
+                    ->add(new Task\CssHeader())
+                    ->add(new Task\DcDeprecated())
+                    ->add(new Task\DcStore())
+                    ->add(new Task\EndOfFile())
+                    ->add(new Task\GitShields())
+                    ->add(new Task\LicenseFile())
+                    ->add(new Task\NewLine())
+                    ->add(new Task\PhpCsFixer())
+                    ->add(new Task\PhpHeader())
+                    ->add(new Task\PhpStan())
+                    ->add(new Task\Po2Php())
+                    ->add(new Task\Tab())
+                    ->add(new Task\Zip())
+                    ;
             },
         ]);
 

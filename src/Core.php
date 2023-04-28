@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use ArrayObject;
 use dcCore;
 use dcLog;
 use dcModuleDefine;
@@ -31,9 +30,6 @@ class Core
 {
     /** @var    Tasks   $tasks  The tasks stack instance */
     public readonly Tasks $tasks;
-
-    /** @var    array<int,string>   $disabled   Disabled tasks modules */
-    private $disabled = [];
 
     /** @var    array<string,array>     $logs   Logs by actions modules */
     private $logs = [];
@@ -55,8 +51,10 @@ class Core
     protected function __construct()
     {
         $this->tasks = new Tasks();
+
+        // mark some tasks as disabled (by settings)
         $disable = explode(';', (string) dcCore::app()->blog?->settings->get(My::id())->get('disabled'));
-        foreach($disable as $id) {
+        foreach ($disable as $id) {
             $this->tasks->get($id)?->disable();
         }
     }
@@ -153,26 +151,26 @@ class Core
         return $lines;
     }
 
-    public function fixModule(dcModuleDefine $module, array $actions): float
+    public function fixModule(dcModuleDefine $module, array $tasks): float
     {
         $time_start = microtime(true);
 
         $workers = [];
-        foreach ($actions as $action) {
-            if ($this->tasks->get($action)?->isConfigured() 
-                && $this->tasks->get($action)?->isDisabled() === false
+        foreach ($tasks as $id) {
+            if (!$this->tasks->get($id)?->isDisabled()
+                && $this->tasks->get($id)?->isConfigured()
             ) {
-                $workers[] = $this->tasks->get($action);
+                $workers[] = $this->tasks->get($id);
             }
         }
-        foreach ($workers as $action) {
+        foreach ($workers as $task) {
             // trace all path and action in logs
-            $this->logs[My::id()][__('Begin')][] = $action->id();
+            $this->logs[My::id()][__('Begin')][] = $task->properties->id;
             // info: set current module
-            $action->setModule($module);
-            $action->setPath(__('Begin'), '', true);
+            $task->setModule($module);
+            $task->setPath(__('Begin'), '', true);
             // action: open module
-            $action->openModule();
+            $task->openModule();
         }
         if (!$module->get('root_writable') || !is_writable($module->get('root'))) {
             throw new Exception(__('Module path is not writable'));
@@ -182,61 +180,63 @@ class Core
             if (!file_exists($file[0])) {
                 continue;
             }
-            foreach ($workers as $action) {
+            foreach ($workers as $task) {
                 // trace all path and action in logs
-                $this->logs[My::id()][$file[0]][] = $action->id();
+                $this->logs[My::id()][$file[0]][] = $task->properties->id;
                 // info: set current path
-                $action->setPath($file[0], $file[1], $file[2]);
+                $task->setPath($file[0], $file[1], $file[2]);
             }
             if (!$file[2]) {
-                foreach ($workers as $action) {
+                foreach ($workers as $task) {
                     // action: open a directory. full path
-                    $action->openDirectory();
+                    $task->openDirectory();
                 }
             } else {
-                foreach ($workers as $action) {
+                foreach ($workers as $task) {
                     // action: before openning a file. full path, extension
-                    $action->openFile();
+                    $task->openFile();
                 }
                 if (in_array($file[1], self::$readfile_extensions)) {
                     if (false !== ($content = file_get_contents($file[0]))) {
                         $no_content = empty($content);
-                        foreach ($workers as $action) {
+                        foreach ($workers as $task) {
                             // action: read a file content. full path, extension, content
-                            $action->readFile($content);
+                            $task->readFile($content);
                             if (empty($content) && !$no_content) {
                                 throw new Exception(sprintf(
                                     __('File content has been removed: %s by %s'),
                                     $file[0],
-                                    $action->name()
+                                    $task->properties->name
                                 ));
                             }
                         }
                         Files::putContent($file[0], $content);
                     }
-                    foreach ($workers as $action) {
+                    foreach ($workers as $task) {
                         // action: after closing a file. full path, extension
-                        $action->closeFile();
+                        $task->closeFile();
                     }
                 }
             }
         }
-        foreach ($workers as $action) {
+        foreach ($workers as $task) {
             // trace all path and action in logs
-            $this->logs[My::id()][__('End')][] = $action->id();
+            $this->logs[My::id()][__('End')][] = $task->properties->id;
             // info: set current module
-            $action->setPath(__('End'), '', true);
+            $task->setPath(__('End'), '', true);
             // action: close module
-            $action->closeModule();
+            $task->closeModule();
         }
         // info: get acions reports
-        foreach ($workers as $action) {
-            $this->logs[$action->id()] = $action->getLogs();
+        foreach ($workers as $task) {
+            $logs = [];
             foreach ($this->has_log as $type => $v) {
-                if ($action->hasLog($type)) {
+                if (!$task->{$type}->empty()) {
+                    $logs[$type]          = $task->{$type}->dump();
                     $this->has_log[$type] = true;
                 }
             }
+            $this->logs[$task->properties->id] = $logs;
         }
 
         return round(microtime(true) - $time_start, 5);
