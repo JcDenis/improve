@@ -61,7 +61,7 @@ class NewLine extends Task
         if (!empty($_POST['save']) && !empty($_POST['newline_extensions'])) {
             $this->settings->set(
                 'extensions',
-                Core::cleanExtensions($_POST['newline_extensions'])
+                self::cleanExtensions($_POST['newline_extensions'])
             );
             $this->redirect($url);
         }
@@ -108,5 +108,29 @@ class NewLine extends Task
         }
 
         return true;
+    }
+
+    /**
+     * Check and clean file extension
+     *
+     * @param  string|array  $in    Extension(s) to clean
+     * @return array                Cleaned extension(s)
+     */
+    private static function cleanExtensions($in): array
+    {
+        $out = [];
+        if (!is_array($in)) {
+            $in = explode(',', $in);
+        }
+        if (!empty($in)) {
+            foreach ($in as $v) {
+                $v = trim(Files::getExtension('a.' . $v));
+                if (!empty($v)) {
+                    $out[] = $v;
+                }
+            }
+        }
+
+        return $out;
     }
 }

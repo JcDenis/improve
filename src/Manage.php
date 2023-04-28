@@ -81,18 +81,18 @@ class Manage extends dcNsProcess
                 dcAdminNotices::addWarningNotice(__('No module selected'));
             } else {
                 try {
-                    $time = Core::instance()->fixModule(
+                    $time = Improve::instance()->fix(
                         self::$type == 'plugin' ? dcCore::app()->plugins->getDefine(self::$module) : dcCore::app()->themes->getDefine(self::$module),
                         $_POST['actions']
                     );
-                    $log_id = Core::instance()->writeLogs();
+                    $log_id = Improve::instance()->logs->write();
                     dcCore::app()->blog?->triggerBlog();
 
-                    if (Core::instance()->hasLog('error')) {
+                    if (Improve::instance()->logs->has('error')) {
                         $notice = ['type' => dcAdminNotices::NOTICE_ERROR, 'msg' => __('Fix of "%s" complete in %s secondes with errors')];
-                    } elseif (Core::instance()->hasLog('warning')) {
+                    } elseif (Improve::instance()->logs->has('warning')) {
                         $notice = ['type' => dcAdminNotices::NOTICE_WARNING, 'msg' => __('Fix of "%s" complete in %s secondes with warnings')];
-                    } elseif (Core::instance()->hasLog('success')) {
+                    } elseif (Improve::instance()->logs->has('success')) {
                         $notice = ['type' => dcAdminNotices::NOTICE_SUCCESS, 'msg' => __('Fix of "%s" complete in %s secondes')];
                     } else {
                         $notice = ['type' => dcAdminNotices::NOTICE_SUCCESS, 'msg' => __('Fix of "%s" complete in %s secondes without messages')];
@@ -196,7 +196,7 @@ class Manage extends dcNsProcess
             '<th scope="col">' . __('Configuration') . '</td>' .
             (DC_DEBUG ? '<th scope="col">' . __('Priority') . '</td>' : '') . /* @phpstan-ignore-line */
             '</tr></thead><tbody>';
-            foreach (Core::instance()->tasks->dump() as $task) {
+            foreach (Improve::instance()->tasks->dump() as $task) {
                 if ($task->isDisabled() || !in_array(self::$type, $task->properties->types)) {
                     continue;
                 }
@@ -239,7 +239,7 @@ class Manage extends dcNsProcess
             </form>';
 
             if (!empty($_REQUEST['upd']) && !dcCore::app()->blog?->settings->get(My::id())->get('nodetails')) {
-                $logs = Core::instance()->parseLogs((int) $_REQUEST['upd']);
+                $logs = Improve::instance()->logs->parse((int) $_REQUEST['upd']);
 
                 if (!empty($logs)) {
                     echo '<div class="fieldset"><h4>' . __('Details') . '</h4>';
@@ -248,7 +248,7 @@ class Manage extends dcNsProcess
                         foreach ($types as $type => $tools) {
                             echo '<div class="' . $type . '"><ul>';
                             foreach ($tools as $tool => $msgs) {
-                                $a = Core::instance()->tasks->get($tool);
+                                $a = Improve::instance()->tasks->get($tool);
                                 if (null !== $a) {
                                     echo '<li>' . $a->properties->name . '<ul>';
                                     foreach ($msgs as $msg) {
@@ -284,7 +284,7 @@ class Manage extends dcNsProcess
 
     private static function getTask(): ?Task
     {
-        return empty($_REQUEST['config']) ? null : Core::instance()->tasks->get($_REQUEST['config']);
+        return empty($_REQUEST['config']) ? null : Improve::instance()->tasks->get($_REQUEST['config']);
     }
 
     private static function getPreference(bool $all = false): array
@@ -311,7 +311,7 @@ class Manage extends dcNsProcess
             $preferences              = self::getPreference(true);
             $preferences[self::$type] = [];
             if (!empty($_POST['actions'])) {
-                foreach (Core::instance()->tasks->dump() as $task) {
+                foreach (Improve::instance()->tasks->dump() as $task) {
                     if (!$task->isDisabled() && in_array(self::$type, $task->properties->types) && in_array($task->properties->id, $_POST['actions'])) {
                         $preferences[self::$type][] = $task->properties->id;
                     }

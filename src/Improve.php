@@ -26,16 +26,13 @@ use Exception;
 /**
  * Improve main class
  */
-class Core
+class Improve
 {
     /** @var    Tasks   $tasks  The tasks stack instance */
     public readonly Tasks $tasks;
 
-    /** @var    array<string,array>     $logs   Logs by actions modules */
-    private $logs = [];
-
-    /** @var    array<string,boolean>   $has_log    Has log of given type */
-    private $has_log = ['success' => false, 'warning' => false, 'error' => false];
+    /** @var    Logs    $logs   The logs stack instance */
+    public readonly Logs $logs;
 
     /** @var    array   $readfile_extensions    Allowed file extensions to open */
     private static $readfile_extensions = [
@@ -50,6 +47,7 @@ class Core
      */
     protected function __construct()
     {
+        $this->logs  = new logs();
         $this->tasks = new Tasks();
 
         // mark some tasks as disabled (by settings)
@@ -71,87 +69,19 @@ class Core
     /**
      * Get singleton instance.
      *
-     * @return  Core    Core instance
+     * @return  Improve     Improve instance
      */
-    public static function instance(): Core
+    public static function instance(): Improve
     {
-        if (!is_a(self::$instance, Core::class)) {
-            self::$instance = new Core();
+        if (!is_a(self::$instance, Improve::class)) {
+            self::$instance = new Improve();
         }
 
         return self::$instance;
     }
 
-    public function getLogs(): array
-    {
-        return $this->logs;
-    }
 
-    public function hasLog(string $type): bool
-    {
-        return array_key_exists($type, $this->has_log) && $this->has_log[$type];
-    }
-
-    public function writeLogs(): int
-    {
-        if (empty($this->logs)) {
-            return 0;
-        }
-        $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcLog::LOG_TABLE_NAME);
-        $cur->setField('log_msg', json_encode($this->logs));
-        $cur->setField('log_table', My::id());
-
-        return dcCore::app()->log->addLog($cur);
-    }
-
-    public function readLogs(int $id): array
-    {
-        $rs = dcCore::app()->log->getLogs(['log_table' => My::id(), 'log_id' => $id, 'limit' => 1]);
-        if ($rs->isEmpty()) {
-            return [];
-        }
-        dcCore::app()->log->delLogs($rs->f('log_id'));
-
-        $res = json_decode($rs->f('log_msg'), true);
-
-        return is_array($res) ? $res : [];
-    }
-
-    public function parseLogs(int $id): array
-    {
-        $logs = $this->readLogs($id);
-        if (empty($logs)) {
-            return [];
-        }
-        $lines = [];
-        foreach ($logs[My::id()] as $path => $tools) {
-            $l_types = [];
-            foreach (['success', 'warning', 'error'] as $type) {
-                $l_tools = [];
-                foreach ($tools as $tool) {
-                    $l_msg = [];
-                    if (!empty($logs[$tool][$type][$path])) {
-                        foreach ($logs[$tool][$type][$path] as $msg) {
-                            $l_msg[] = $msg;
-                        }
-                    }
-                    if (!empty($l_msg)) {
-                        $l_tools[$tool] = $l_msg;
-                    }
-                }
-                if (!empty($l_tools)) {
-                    $l_types[$type] = $l_tools;
-                }
-            }
-            if (!empty($l_types)) {
-                $lines[$path] = $l_types;
-            }
-        }
-
-        return $lines;
-    }
-
-    public function fixModule(dcModuleDefine $module, array $tasks): float
+    public function fix(dcModuleDefine $module, array $tasks): float
     {
         $time_start = microtime(true);
 
@@ -165,7 +95,7 @@ class Core
         }
         foreach ($workers as $task) {
             // trace all path and action in logs
-            $this->logs[My::id()][__('Begin')][] = $task->properties->id;
+            $this->logs->add(My::id(), __('Begin'), [$task->properties->id]);
             // info: set current module
             $task->setModule($module);
             $task->setPath(__('Begin'), '', true);
@@ -182,7 +112,7 @@ class Core
             }
             foreach ($workers as $task) {
                 // trace all path and action in logs
-                $this->logs[My::id()][$file[0]][] = $task->properties->id;
+                $this->logs->add(My::id(), $file[0], [$task->properties->id]);
                 // info: set current path
                 $task->setPath($file[0], $file[1], $file[2]);
             }
@@ -221,7 +151,7 @@ class Core
         }
         foreach ($workers as $task) {
             // trace all path and action in logs
-            $this->logs[My::id()][__('End')][] = $task->properties->id;
+            $this->logs->add(My::id(), __('End'), [$task->properties->id]);
             // info: set current module
             $task->setPath(__('End'), '', true);
             // action: close module
@@ -229,14 +159,11 @@ class Core
         }
         // info: get acions reports
         foreach ($workers as $task) {
-            $logs = [];
-            foreach ($this->has_log as $type => $v) {
+            foreach (['success', 'warning', 'error'] as $type) {
                 if (!$task->{$type}->empty()) {
-                    $logs[$type]          = $task->{$type}->dump();
-                    $this->has_log[$type] = true;
+                    $this->logs->add($task->properties->id, $type, $task->{$type}->dump());
                 }
             }
-            $this->logs[$task->properties->id] = $logs;
         }
 
         return round(microtime(true) - $time_start, 5);
@@ -273,29 +200,5 @@ class Core
         }
 
         return $res;
-    }
-
-    /**
-     * Check and clean file extension
-     *
-     * @param  string|array  $in    Extension(s) to clean
-     * @return array                Cleaned extension(s)
-     */
-    public static function cleanExtensions($in): array
-    {
-        $out = [];
-        if (!is_array($in)) {
-            $in = explode(',', $in);
-        }
-        if (!empty($in)) {
-            foreach ($in as $v) {
-                $v = trim(Files::getExtension('a.' . $v));
-                if (!empty($v)) {
-                    $out[] = $v;
-                }
-            }
-        }
-
-        return $out;
     }
 }
