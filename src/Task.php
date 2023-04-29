@@ -18,7 +18,7 @@ use dcModuleDefine;
 use Dotclear\Helper\Network\Http;
 
 /**
- * Improve action class helper
+ * Task abstract class.
  */
 abstract class Task
 {
@@ -40,7 +40,7 @@ abstract class Task
     /** @var    dcModuleDefine  Current module */
     protected dcModuleDefine $module;
 
-    /** @var    bool    Is disabled action */
+    /** @var    bool    Is disabled task */
     private bool $disabled = false;
 
     /** @var    string  Current full path */
@@ -53,7 +53,7 @@ abstract class Task
     protected ?bool $path_is_dir = null;
 
     /**
-     * Action constructor inits properties and settings of a child class.
+     * Task constructor inits properties and settings of a child class.
      */
     final public function __construct()
     {
@@ -75,10 +75,9 @@ abstract class Task
     abstract protected function getProperties(): TaskDescriptor;
 
     /**
-     * Action initialisation function.
+     * Task initialisation function.
      *
-     * It's called when an instance of ImproveAction child class is created.
-     * Usefull to setup action class.
+     * Called when Task insatnce is created.
      *
      * @return     bool  True if initialisation is ok.
      */
@@ -89,7 +88,7 @@ abstract class Task
      *
      * @param   string  $key    The setting ID
      *
-     * @return  mixed   Value of property or setting of action.
+     * @return  mixed   The setting value.
      */
     final public function get(string $key)
     {
@@ -99,7 +98,7 @@ abstract class Task
     /**
      * Set task as disabled.
      */
-    final public function disable()
+    final public function disable(): void
     {
         $this->disabled = true;
     }
@@ -109,7 +108,7 @@ abstract class Task
      *
      * @return  bool True on disabled
      */
-    final public function isDisabled()
+    final public function isDisabled(): bool
     {
         return $this->disabled;
     }
@@ -128,14 +127,14 @@ abstract class Task
     }
 
     /**
-     * Check if action class is well configured
+     * Check if task is well configured
      *
-     * @return  boolean     True if class action is well configured
+     * @return  boolean     True on well configured
      */
     abstract public function isConfigured(): bool;
 
     /**
-     * Get action configuration page header
+     * Get task configuration page header
      *
      * @return string Headers
      */
@@ -147,19 +146,19 @@ abstract class Task
     /**
      * Get configuraton gui
      *
-     * If action class uses internal configuration,
+     * If task class uses internal configuration,
      * it must share here html form content of its settings.
      * It must not use enclose bloc "form" nor button "save".
-     * This function is also called to redirect form
+     * This function must redirect form
      * after validation with $this->redirect($url);
      *
      * @param      string   $url    post form redirect url
      *
-     * @return     string|null      A setting of action.
+     * @return     string      The configuration form
      */
-    public function configure(string $url): ?string
+    public function configure(string $url): string
     {
-        return null;
+        return '';
     }
 
     /**
@@ -225,8 +224,8 @@ abstract class Task
     /**
      * Called when read content of a file to fix.
      *
-     * Content is shared from action to another.
-     * If an action erase content, fix is stopped.
+     * Content is shared from task to another.
+     * If an task erase content, fix is stopped.
      * If you want to erase a content you must erase
      * the file on action openDirectory.
      *

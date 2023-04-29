@@ -109,7 +109,7 @@ class PhpHeader extends Task
         return !empty($this->settings->get('bloc_action')) || !empty($this->settings->get('remove_old'));
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save'])) {
             $this->settings->set([
@@ -170,7 +170,7 @@ class PhpHeader extends Task
         $bloc = trim($this->bloc_content);
 
         if (empty($bloc)) {
-            $this->waring->set(__('bloc is empty'));
+            $this->warning->add(__('bloc is empty'));
 
             return null;
         }

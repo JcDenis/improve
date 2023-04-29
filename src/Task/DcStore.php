@@ -29,7 +29,7 @@ use Dotclear\Helper\Html\XmlTag;
 use Dotclear\Helper\Text;
 use Dotclear\Plugin\improve\{
     Task,
-    taskDescriptor
+    TaskDescriptor
 };
 use Exception;
 
@@ -66,7 +66,7 @@ class DcStore extends Task
         return !empty($this->settings->get('pattern'));
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save']) && !empty($_POST['dcstore_pattern'])) {
             $this->settings->set('pattern', (string) $_POST['dcstore_pattern']);

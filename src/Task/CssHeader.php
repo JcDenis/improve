@@ -109,7 +109,7 @@ class CssHeader extends Task
         return !empty($this->settings->get('bloc_action'));
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save'])) {
             $this->settings->set([
@@ -292,7 +292,7 @@ class CssHeader extends Task
             $count
         );
         if ($count) {
-            $this->succes->set(__('Delete old doc bloc content'));
+            $this->success->add(__('Delete old doc bloc content'));
         }
 
         return (string) $res;

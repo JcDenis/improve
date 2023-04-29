@@ -19,12 +19,11 @@ use dcCore;
 use dcPage;
 use dcFavorites;
 use dcNsProcess;
-use Dotclear\Helper\File\Files;
 
 /**
  * Improve admin class
  *
- * Add menu and dashboard icons, load Improve action modules.
+ * Add menu and dashboard icons, load Improve tasks.
  */
 class Backend extends dcNsProcess
 {
@@ -86,7 +85,7 @@ class Backend extends dcNsProcess
                     ->add(new Task\Po2Php())
                     ->add(new Task\Tab())
                     ->add(new Task\Zip())
-                    ;
+                ;
             },
         ]);
 

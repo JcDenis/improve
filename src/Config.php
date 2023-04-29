@@ -105,11 +105,11 @@ class Config extends dcNsProcess
 
         echo
         (new Div())->items([
-            (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled actions')))->fields($items),
+            (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled tasks')))->fields($items),
             (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
                 (new Para())->items([
                     (new Checkbox('nodetails', (bool) $settings->get('nodetails')))->value('1'),
-                    (new Label(__('Hide details of rendered actions'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('nodetails'),
+                    (new Label(__('Hide details of rendered tasks'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('nodetails'),
                 ]),
                 (new Para())->items([
                     (new Checkbox('allow_distrib', (bool) $settings->get('allow_distrib')))->value('1'),

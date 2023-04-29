@@ -55,7 +55,7 @@ class EndOfFile extends Task
         return true;
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save'])) {
             $this->settings->set('psr2', !empty($_POST['endoffile_psr2']));

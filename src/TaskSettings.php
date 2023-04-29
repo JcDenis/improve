@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve;
 
 use dcCore;
+use Exception;
 
 /**
  * Task settings management.
@@ -30,7 +31,7 @@ class TaskSettings
     /**
      * Constructor sets settings suffix.
      *
-     * @param   string  $suffit     The settings suffix (ie taks id)
+     * @param   string  $suffix     The settings suffix (ie taks id)
      */
     public function __construct(
         private string $suffix
@@ -73,7 +74,7 @@ class TaskSettings
     /**
      * Save settings.
      */
-    public function save()
+    public function save(): void
     {
         if (!is_null(dcCore::app()->blog)) {
             dcCore::app()->blog->settings->get(My::id())->put(

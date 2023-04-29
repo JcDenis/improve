@@ -30,7 +30,7 @@ class Install extends dcNsProcess
     /** @var array Improve default settings */
     private static $default_settings = [[
         'disabled',
-        'List of hidden action modules',
+        'List of hidden tasks modules',
         'cssheader;tab;newline;endoffile',
         'string',
     ]];

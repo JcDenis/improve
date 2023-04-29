@@ -1,678 +1,695 @@
 # Language: Français
-# Module: improve - 1.1.1
-# Date: 2023-03-20 22:45:53
-# Author: , contact@jcdenis.fr
-# Translated with translater 2023.03.19
+# Module: improve - 1.1.3
+# Date: 2023-04-29 00:18:08
+# Author: Jean-Christian Denis
+# Translated with translater 2023.04.23
 
 msgid ""
 msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
-"Project-Id-Version: improve 1.1.1\n"
+"Project-Id-Version: improve 1.1.3\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2023-03-20T22:45:53+00:00\n"
+"PO-Revision-Date: 2023-04-29T00:18:08+00:00\n"
 "Last-Translator: Jean-Christian Denis\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/Config.php:105
-msgid "List of disabled actions"
-msgstr "Listes des actions désactivées"
+#: src/Config.php:108
+msgid "List of disabled tasks"
+msgstr "Listes des tâches désactivées"
 
-#: src/Config.php:109
-msgid "Hide details of rendered actions"
-msgstr "Ne pas afficher le détail des actions effectuées"
+#: src/Config.php:112
+msgid "Hide details of rendered tasks"
+msgstr "Ne pas afficher le rendu des tâches"
 
-#: src/Core.php:206
+#: src/Config.php:116
+msgid "Show dotclear distributed modules"
+msgstr "Afficher les modules de la distribution Dotclear"
+
+#: src/Config.php:119
+msgid "Sort modules seletion by:"
+msgstr "Trier la sélection de modules par :"
+
+#: src/Improve.php:96
 msgid "Begin"
 msgstr "Début"
 
-#: src/Core.php:214
+#: src/Improve.php:104
 msgid "Module path is not writable"
 msgstr "Le chemin du module n'est pas accessible en écriture"
 
-#: src/Core.php:245
+#: src/Improve.php:135
 msgid "File content has been removed: %s by %s"
 msgstr "Le contenu du fichier a été supprimé : %s par %s"
 
-#: src/Core.php:262
+#: src/Improve.php:152
 msgid "End"
 msgstr "Fin"
 
-#: src/Manage.php:149
-msgid "Select a module"
-msgstr "Sélectionner un module"
+#: src/Manage.php:79
+msgid "No tasks selected"
+msgstr "Aucune tâche sélectionnée"
 
-#: src/Manage.php:178
-msgid "No action selected"
-msgstr "Aucune action sélectionné"
-
-#: src/Manage.php:180
+#: src/Manage.php:81
 msgid "No module selected"
 msgstr "Aucun module sélectionné"
 
-#: src/Manage.php:193
+#: src/Manage.php:92
 msgid "Fix of \"%s\" complete in %s secondes with errors"
 msgstr "Fixe de \"%s\" complété en %s secondes avec des erreurs"
 
-#: src/Manage.php:195
+#: src/Manage.php:94
 msgid "Fix of \"%s\" complete in %s secondes with warnings"
 msgstr "Fixe de \"%s\" complété en %s secondes avec des avertissements"
 
-#: src/Manage.php:197
+#: src/Manage.php:96
 msgid "Fix of \"%s\" complete in %s secondes"
 msgstr "Fixe de \"%s\" complété en %s secondes"
 
-#: src/Manage.php:199
+#: src/Manage.php:98
 msgid "Fix of \"%s\" complete in %s secondes without messages"
 msgstr "Fixe de \"%s\" complété en %s secondes sans message"
 
-#: src/Manage.php:234
-msgid "Themes actions"
-msgstr "Actions sur les thèmes"
+#: src/Manage.php:133
+msgid "Themes tasks"
+msgstr "Tâches des thèmes"
 
-#: src/Manage.php:234
-msgid "Plugins actions"
-msgstr "Actions sur les plugins"
+#: src/Manage.php:133
+msgid "Plugins tasks"
+msgstr "Tâches des plugins"
 
-#: src/Manage.php:234
+#: src/Manage.php:133
 msgid "Configure module"
 msgstr "Configurer le module"
 
-#: src/Manage.php:253
-msgid "Unknow module"
-msgstr "Module inconnu"
+#: src/Manage.php:152
+msgid "Unknow task"
+msgstr "Tâche inconnue"
 
-#: src/Manage.php:260
-msgid "Configure module \"%s\""
-msgstr "Configurer le module \"%s\""
+#: src/Manage.php:159
+msgid "Configure task \"%s\""
+msgstr "Configurer la tâche \"%s\""
 
-#: src/Manage.php:264
+#: src/Manage.php:164
 msgid "Nothing to configure"
 msgstr "Rien à configurer"
 
-#: src/Manage.php:279
+#: src/Manage.php:182
 msgid "Themes"
 msgstr "Thèmes"
 
-#: src/Manage.php:286
+#: src/Manage.php:190
 msgid "No module to manage"
 msgstr "Aucun module à gérer"
 
-#: src/Manage.php:293
+#: src/Manage.php:193
+msgid "List of available tasks"
+msgstr "Listes des tâches disponibles"
+
+#: src/Manage.php:194
+msgid "Task"
+msgstr "Tâches"
+
+#: src/Manage.php:196
+msgid "Configuration"
+msgstr "Configuration"
+
+#: src/Manage.php:197
 msgid "Priority"
 msgstr "Priorité"
 
-#: src/Manage.php:317
-msgid "Configure action '%s'"
-msgstr "Configurer l'action \"%s\""
+#: src/Manage.php:218
+msgid "Configure task '%s'"
+msgstr "Configurer la tâche \"%s\""
 
-#: src/Manage.php:317
+#: src/Manage.php:218
 msgid "Configure"
 msgstr "Configurer"
 
-#: src/Manage.php:327
+#: src/Manage.php:228
 msgid "Save fields selection as preference"
 msgstr "Enregistrer la sélection comme préférence"
 
-#: src/Manage.php:328
+#: src/Manage.php:231
 msgid "Select a module:"
 msgstr "Sélectionner un  module :"
 
-#: src/Manage.php:330
+#: src/Manage.php:233
 msgid "Fix it"
 msgstr "Corriger"
 
-#: src/module/cssheader.php:87
+#: src/Manage.php:358
+msgid "Select a module"
+msgstr "Sélectionner un module"
+
+#: src/Task/CssHeader.php:83
 msgid "CSS header"
 msgstr "Entête de fichier CSS"
 
-#: src/module/cssheader.php:88
+#: src/Task/CssHeader.php:84
 msgid "Add or remove phpdoc header bloc from css file"
 msgstr "Ajouter ou supprimer les bloc d'entête phpdoc des fichiers css"
 
-#: src/module/cssheader.php:95
-#: src/module/licensefile.php:74
-#: src/module/phpheader.php:95
+#: src/Task/CssHeader.php:94
+#: src/Task/LicenseFile.php:74
+#: src/Task/PhpHeader.php:94
 msgid "Do nothing"
 msgstr "Ne rien faire"
 
-#: src/module/cssheader.php:96
-#: src/module/phpheader.php:96
+#: src/Task/CssHeader.php:95
+#: src/Task/PhpHeader.php:95
 msgid "Add bloc if it does not exist"
 msgstr "Ajouter les blocs si ils n'existent pas déjà"
 
-#: src/module/cssheader.php:97
-#: src/module/phpheader.php:97
+#: src/Task/CssHeader.php:96
+#: src/Task/PhpHeader.php:96
 msgid "Add and overwrite bloc"
 msgstr "Ajouter et écraser les blocs"
 
-#: src/module/cssheader.php:98
-#: src/module/phpheader.php:98
+#: src/Task/CssHeader.php:97
+#: src/Task/PhpHeader.php:97
 msgid "Overwrite bloc only if it exists"
 msgstr "Ecraser les blocs seulement si ils existent"
 
-#: src/module/cssheader.php:99
-#: src/module/phpheader.php:99
+#: src/Task/CssHeader.php:98
+#: src/Task/PhpHeader.php:98
 msgid "Remove existing bloc header"
 msgstr "Retirer les blocs d'entête existant"
 
-#: src/module/cssheader.php:127
-#: src/module/licensefile.php:100
-#: src/module/phpheader.php:126
-#: src/module/phpstan.php:129
+#: src/Task/CssHeader.php:126
+#: src/Task/LicenseFile.php:100
+#: src/Task/PhpHeader.php:125
+#: src/Task/PhpStan.php:130
 msgid "Adjustments"
 msgstr "Ajustements"
 
-#: src/module/cssheader.php:130
-#: src/module/phpheader.php:129
+#: src/Task/CssHeader.php:129
+#: src/Task/PhpHeader.php:128
 msgid "Action:"
 msgstr "Action :"
 
-#: src/module/cssheader.php:136
-#: src/module/phpheader.php:140
+#: src/Task/CssHeader.php:135
+#: src/Task/PhpHeader.php:139
 msgid "Do not add bloc to files from \"locales\" and \"libs\" folder"
 msgstr "Ne pas ajouter les blocs d'entête aux fichiers des répertoires \"locales\" et \"libs\""
 
-#: src/module/cssheader.php:141
+#: src/Task/CssHeader.php:140
 msgid "Do not add bloc to files from \"tpl\" and \"default-templates\" folder"
 msgstr "Ne pas ajouter les blocs d'entête aux fichiers des répertoires \"tpl\" et \"default-templates\""
 
-#: src/module/cssheader.php:144
-#: src/module/dcstore.php:77
-#: src/module/endoffile.php:65
-#: src/module/gitshields.php:102
-#: src/module/newline.php:74
-#: src/module/phpheader.php:143
-#: src/module/zip.php:150
+#: src/Task/CssHeader.php:143
+#: src/Task/DcStore.php:78
+#: src/Task/EndOfFile.php:66
+#: src/Task/GitShields.php:103
+#: src/Task/NewLine.php:76
+#: src/Task/PhpHeader.php:142
+#: src/Task/Zip.php:153
 msgid "Contents"
 msgstr "Contenu"
 
-#: src/module/cssheader.php:147
-#: src/module/phpheader.php:146
+#: src/Task/CssHeader.php:146
+#: src/Task/PhpHeader.php:145
 msgid "Bloc content:"
 msgstr "Contenu du bloc :"
 
-#: src/module/cssheader.php:151
-#: src/module/dcstore.php:83
-#: src/module/phpheader.php:150
+#: src/Task/CssHeader.php:150
+#: src/Task/DcStore.php:84
+#: src/Task/PhpHeader.php:149
 msgid "You can use wildcards %s"
 msgstr "Vous pouvez utiliser les jokers suivants : %s."
 
-#: src/module/cssheader.php:154
-#: src/module/phpheader.php:153
+#: src/Task/CssHeader.php:153
+#: src/Task/PhpHeader.php:152
 msgid "Do not put structural elements to the begining of lines."
 msgstr "Ne pas mettre d'élément de structure en début de ligne"
 
-#: src/module/cssheader.php:169
-#: src/module/phpheader.php:168
+#: src/Task/CssHeader.php:174
+#: src/Task/PhpHeader.php:173
 msgid "bloc is empty"
 msgstr "le bloc est vide"
 
-#: src/module/cssheader.php:199
-#: src/module/phpheader.php:198
+#: src/Task/CssHeader.php:204
+#: src/Task/PhpHeader.php:203
 msgid "Prepare header info"
 msgstr "Préparer les informations d'entête"
 
-#: src/module/cssheader.php:203
-#: src/module/phpheader.php:202
+#: src/Task/CssHeader.php:208
+#: src/Task/PhpHeader.php:207
 msgid "Failed to parse bloc"
 msgstr "Impossible de préparer le bloc"
 
-#: src/module/cssheader.php:217
-#: src/module/phpheader.php:214
+#: src/Task/CssHeader.php:222
+#: src/Task/PhpHeader.php:219
 msgid "Skip directory"
 msgstr "Ignorer le répertoire"
 
-#: src/module/cssheader.php:268
-#: src/module/phpheader.php:269
+#: src/Task/CssHeader.php:273
+#: src/Task/PhpHeader.php:274
 msgid "Write new doc bloc content"
 msgstr "Ecrire le nouveau contenu de bloc"
 
-#: src/module/cssheader.php:290
-#: src/module/phpheader.php:291
+#: src/Task/CssHeader.php:295
+#: src/Task/PhpHeader.php:296
 msgid "Delete old doc bloc content"
 msgstr "Effacer l'ancien contenu de type phpdoc"
 
-#: src/module/dcdeprecated.php:36
+#: src/Task/DcDeprecated.php:38
 msgid "Dotclear deprecated"
 msgstr "Dépréciés de Dotclear"
 
-#: src/module/dcdeprecated.php:37
+#: src/Task/DcDeprecated.php:39
 msgid "Search for use of deprecated Dotclear functions"
 msgstr "Recherche l'utilisation de fonctions dépréciées de Dotclear"
 
-#: src/module/dcdeprecated.php:80
+#: src/Task/DcDeprecated.php:82
 msgid "Possible use of deprecated \"%s\", you should use \"%s\" instead since Dotclear %s."
 msgstr "Possible utilisation du déprécié \"%s\", vous devriez utiliser \"%s\" à la place depuis Dotclear %s."
 
-#: src/module/dcdeprecated.php:80
+#: src/Task/DcDeprecated.php:82
 msgid "Help"
 msgstr "Aide"
 
-#: src/module/dcstore.php:50
+#: src/Task/DcStore.php:48
 msgid "Store file"
 msgstr "Fichier de dépôt"
 
-#: src/module/dcstore.php:51
+#: src/Task/DcStore.php:49
 msgid "Re-create dcstore.xml file according to _define.php variables"
 msgstr "Re-créer le fichier dcstore.xml suivant les variables du fichier _define.php"
 
-#: src/module/dcstore.php:76
+#: src/Task/DcStore.php:77
 msgid "File will be overwritten if it exists"
 msgstr "Le fichier sera réécrit si il existe"
 
-#: src/module/dcstore.php:80
+#: src/Task/DcStore.php:81
 msgid "Predictable URL to zip file on the external repository:"
 msgstr "URL prédictive du fichier zip sur le dépôt externe :"
 
-#: src/module/dcstore.php:84
+#: src/Task/DcStore.php:85
 msgid "For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip"
 msgstr "Par exemple sur github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip"
 
-#: src/module/dcstore.php:85
+#: src/Task/DcStore.php:86
 msgid "Note on github, you must create a release and join to it the module zip file."
 msgstr "Note sur Github, vous devez créer un release et y joindre le fichier zip du module."
 
-#: src/module/dcstore.php:101
+#: src/Task/DcStore.php:102
 msgid "Write dcstore.xml file."
 msgstr "Ecrire le fichier dcstore.xml"
 
-#: src/module/dcstore.php:103
+#: src/Task/DcStore.php:104
 msgid "Failed to write dcstore.xml file"
 msgstr "Impossible d'écrire le fichier dcstore.xml"
 
-#: src/module/dcstore.php:118
-msgid "unkow module id"
-msgstr "Id du module inconu"
-
-#: src/module/dcstore.php:124
+#: src/Task/DcStore.php:122
 msgid "unknow module name"
 msgstr "nom du module inconnu"
 
-#: src/module/dcstore.php:130
+#: src/Task/DcStore.php:128
 msgid "unknow module version"
 msgstr "version du module inconnue"
 
-#: src/module/dcstore.php:136
+#: src/Task/DcStore.php:134
 msgid "unknow module author"
 msgstr "auteur du module inconnu"
 
-#: src/module/dcstore.php:142
+#: src/Task/DcStore.php:140
 msgid "unknow module description"
 msgstr "description du module inconnue"
 
-#: src/module/dcstore.php:148
+#: src/Task/DcStore.php:146
 msgid "no repository set in _define.php"
 msgstr "Aucun dépôt défini dans le fichier _define.php"
 
-#: src/module/dcstore.php:154
+#: src/Task/DcStore.php:152
 msgid "no zip file pattern set in configuration"
 msgstr "Pas de modèle de fichier zip présent dans la configuration"
 
-#: src/module/dcstore.php:172
+#: src/Task/DcStore.php:170
 msgid "no minimum dotclear version"
 msgstr "pas de version minimum de Dotclear"
 
-#: src/module/dcstore.php:179
+#: src/Task/DcStore.php:177
 msgid "no details URL"
 msgstr "Lien de détail non défini"
 
-#: src/module/dcstore.php:194
+#: src/Task/DcStore.php:192
 msgid "no support URL"
 msgstr "Lien de support non défini"
 
-#: src/module/endoffile.php:42
+#: src/Task/EndOfFile.php:40
 msgid "End of files"
 msgstr "Fin de fichiers"
 
-#: src/module/endoffile.php:43
+#: src/Task/EndOfFile.php:41
 msgid "Remove php tag and empty lines from end of files"
 msgstr "Supprimer le tag PHP et les lignes vides de fin de fichiers"
 
-#: src/module/endoffile.php:69
+#: src/Task/EndOfFile.php:70
 msgid "Add a blank line to the end of file"
 msgstr "Ajouter une ligne vide en fin de fichier"
 
-#: src/module/endoffile.php:71
+#: src/Task/EndOfFile.php:72
 msgid "PSR2 must have a blank line, whereas PSR12 must not."
 msgstr "PSR2 doit avoir une ligne vide, alors que PSR12 non."
 
-#: src/module/endoffile.php:87
+#: src/Task/EndOfFile.php:88
 msgid "Replace end of file"
 msgstr "Remplacer les fins de fichiers"
 
-#: src/module/gitshields.php:72
+#: src/Task/GitShields.php:70
 msgid "Shields badges"
 msgstr "Badges Shields.io"
 
-#: src/module/gitshields.php:73
+#: src/Task/GitShields.php:71
 msgid "Add and maintain shields.io badges to the REDAME.md file"
 msgstr "Ajoute et maintient à jour les badges shields.io du fichier README.md"
 
-#: src/module/gitshields.php:105
+#: src/Task/GitShields.php:106
 msgid "Your Github user name:"
 msgstr "Votre \"username\" Github :"
 
-#: src/module/gitshields.php:108
+#: src/Task/GitShields.php:109
 msgid "Used in your Github URL: http://github.com/username/module_id."
 msgstr "Utilisé dans l'URL Github tel que : http://github.com/username/module_id."
 
-#: src/module/gitshields.php:109
+#: src/Task/GitShields.php:110
 msgid "If you have badges not created by this tool in the README.md file you should remove them manually."
 msgstr "Si vous avez déjà des badges non créés par cet outil, vous devrez les retirer manuellement."
 
-#: src/module/gitshields.php:113
+#: src/Task/GitShields.php:114
 msgid "Include Dotaddict badge"
 msgstr "Inclure le badge Dotaddict"
 
-#: src/module/gitshields.php:115
+#: src/Task/GitShields.php:116
 msgid "If your plugin or theme is on Dotaddict, you can add a badge to link to its details in Dotaddict."
 msgstr "Si votre plugin ou theme est sur Dotaddict, vous pouvez ajouter un badge lier à ses détails sur DA."
 
-#: src/module/gitshields.php:166
+#: src/Task/GitShields.php:167
 msgid "Prepare custom shield info"
 msgstr "préparer les informations personnalisées"
 
-#: src/module/gitshields.php:200
+#: src/Task/GitShields.php:201
 msgid "Write new shield bloc"
 msgstr "Ecrire le nouveau bloc Shield"
 
-#: src/module/gitshields.php:216
+#: src/Task/GitShields.php:217
 msgid "Delete old shield bloc"
 msgstr "Effacer l'ancine bloc Shield"
 
-#: src/module/licensefile.php:59
+#: src/Task/LicenseFile.php:55
 msgid "License file"
 msgstr "Fichier de licence"
 
-#: src/module/licensefile.php:60
+#: src/Task/LicenseFile.php:56
 msgid "Add or remove full license file to module root"
 msgstr "Ajoute ou supprime le fichier de licence"
 
-#: src/module/licensefile.php:66
+#: src/Task/LicenseFile.php:66
 msgid "no version selected"
 msgstr "aucune version selectionnée"
 
-#: src/module/licensefile.php:75
+#: src/Task/LicenseFile.php:75
 msgid "Add file if it does not exist"
 msgstr "Ajouter le fichier si il n'existe pas"
 
-#: src/module/licensefile.php:76
+#: src/Task/LicenseFile.php:76
 msgid "Add file even if it exists"
 msgstr "Ajouter le fichier même si il existe"
 
-#: src/module/licensefile.php:77
+#: src/Task/LicenseFile.php:77
 msgid "Add file and remove others"
 msgstr "Ajouter la nouvelle licence et supprimer les autres"
 
-#: src/module/licensefile.php:78
+#: src/Task/LicenseFile.php:78
 msgid "Remove license files"
 msgstr "Supprimer les fichiers de licence"
 
-#: src/module/licensefile.php:103
+#: src/Task/LicenseFile.php:103
 msgid "License version:"
 msgstr "Version de la licence :"
 
-#: src/module/licensefile.php:108
+#: src/Task/LicenseFile.php:108
 msgid "Action on file:"
 msgstr "Action sur le fichier :"
 
-#: src/module/licensefile.php:122
+#: src/Task/LicenseFile.php:122
 msgid "No full license type selected"
 msgstr "Pas de type de licence seletionné"
 
-#: src/module/licensefile.php:136
+#: src/Task/LicenseFile.php:136
 msgid "Failed to load license content"
 msgstr "Impossible de charger le contenu de la licence"
 
-#: src/module/licensefile.php:141
+#: src/Task/LicenseFile.php:141
 msgid "Write new license file \"LICENSE\""
 msgstr "Écrire le nouveau fichier \"LICENSE\" de licence"
 
-#: src/module/licensefile.php:143
+#: src/Task/LicenseFile.php:143
 msgid "Failed to write new license file"
 msgstr "Impossible d'écrire le nouveau fichier de licence"
 
-#: src/module/licensefile.php:158
+#: src/Task/LicenseFile.php:158
 msgid "Old license file is not deletable (%s)"
 msgstr "L'ancien fichier de licence n'est pas supprimable (%s)"
 
-#: src/module/licensefile.php:160
+#: src/Task/LicenseFile.php:160
 msgid "Failed to delete old license file (%s)"
 msgstr "Impossible de supprimer l'ancien fichier de licence (%s)"
 
-#: src/module/licensefile.php:162
+#: src/Task/LicenseFile.php:162
 msgid "Delete old license file \"%s\""
 msgstr "Effacer l'ancien fichier de Licence \"%s\""
 
-#: src/module/newline.php:43
+#: src/Task/NewLine.php:42
 msgid "Newlines"
 msgstr "Retour à la ligne"
 
-#: src/module/newline.php:44
+#: src/Task/NewLine.php:43
 msgid "Replace bad and repetitive and empty newline by single newline in files"
 msgstr "Remplace les mauvais ou répétitifs retour à la ligne par une seule nouvelle ligne"
 
-#: src/module/newline.php:77
+#: src/Task/NewLine.php:79
 msgid "List of files extension to work on:"
 msgstr "Liste des extensions de fichier à corriger:"
 
-#: src/module/newline.php:80
+#: src/Task/NewLine.php:82
 msgid "Use comma separated list of extensions without dot, recommand \"php,js,xml,txt,md\"."
 msgstr "Utiliser une liste d'extensions séparé par des virgules et sans le point, recommandation: \"php,js,xml,txt,md\"."
 
-#: src/module/newline.php:105
+#: src/Task/NewLine.php:107
 msgid "Replace bad new lines"
 msgstr "Remplacer les retours à la ligne"
 
-#: src/module/phpcsfixer.php:72
+#: src/Task/PhpCsFixer.php:68
 msgid "Fix PSR coding style using Php CS Fixer"
 msgstr "Corrige le style du code suivant les règles PSR en utilisant Php CS Fixer"
 
-#: src/module/phpcsfixer.php:112
-#: src/module/phpstan.php:121
-#: src/module/zip.php:119
+#: src/Task/PhpCsFixer.php:113
+#: src/Task/PhpStan.php:122
+#: src/Task/Zip.php:122
 msgid "Root"
 msgstr "Racine"
 
-#: src/module/phpcsfixer.php:115
-#: src/module/phpstan.php:124
+#: src/Task/PhpCsFixer.php:116
+#: src/Task/PhpStan.php:125
 msgid "Root directory of PHP executable:"
 msgstr "Chemin complet du répertoire de l'exécutable PHP :"
 
-#: src/module/phpcsfixer.php:118
-#: src/module/phpstan.php:127
+#: src/Task/PhpCsFixer.php:119
+#: src/Task/PhpStan.php:128
 msgid "If this module does not work you can try to put here directory to php executable (without executable file name)."
 msgstr "Si ce module ne fonctionne pas vous pouvez tenter de mettre ici le chemin complet du répertoire de l'exécutable PHP (sans le nom de fichier exécutable)."
 
-#: src/module/phpcsfixer.php:123
+#: src/Task/PhpCsFixer.php:124
 msgid "PHP CS Fixer configuration file:"
 msgstr "Fichier de configuration de PHP CS Fixer :"
 
-#: src/module/phpcsfixer.php:159
+#: src/Task/PhpCsFixer.php:160
 msgid "Failed to run php-cs-fixer"
 msgstr "Impossible d'exécuter php-cs-fixer"
 
-#: src/module/phpheader.php:87
+#: src/Task/PhpHeader.php:83
 msgid "PHP header"
 msgstr "Entête de fichier PHP"
 
-#: src/module/phpheader.php:88
+#: src/Task/PhpHeader.php:84
 msgid "Add or remove phpdoc header bloc from php file"
 msgstr "Ajouter ou supprimer les bloc d'entête phpdoc des fichiers php"
 
-#: src/module/phpheader.php:135
+#: src/Task/PhpHeader.php:134
 msgid "Remove old style bloc header (using #)"
 msgstr "Supprimer les bloc d'entête ancien (utilisant #)"
 
-#: src/module/phpheader.php:313
+#: src/Task/PhpHeader.php:318
 msgid "Delete old style bloc content"
 msgstr "Effacer l'ancien contenu de type ancien"
 
-#: src/module/phpstan.php:69
+#: src/Task/PhpStan.php:65
 msgid "Analyse php code using PHPStan"
 msgstr "Analyse le code PHP en utilisant PHPStan"
 
-#: src/module/phpstan.php:120
+#: src/Task/PhpStan.php:121
 msgid "You must enable improve details to view analyse results !"
 msgstr "Pour voir les résultats d'analyse, vous devez activer l'affichage des détails dans les paramètres d'improve."
 
-#: src/module/phpstan.php:132
+#: src/Task/PhpStan.php:133
 msgid "Level:"
 msgstr "Niveau :"
 
-#: src/module/phpstan.php:137
+#: src/Task/PhpStan.php:138
 msgid "List of ignored variables:"
 msgstr "Listes des variables ignorées :"
 
-#: src/module/phpstan.php:141
+#: src/Task/PhpStan.php:142
 msgid "If you have errors like \"%s\", you can add this var here. Use ; as separator and do not put $ ahead."
 msgstr "Si vous avez des erreurs comme \"%s\", vous pouvez ajouter ces variables ici. Utiliser ; comme séparateur et ne pas mettre $ devant."
 
-#: src/module/phpstan.php:142
+#: src/Task/PhpStan.php:143
 msgid "For exemple: var;_othervar;avar"
 msgstr "Par exemple: var;othervar;avar"
 
-#: src/module/phpstan.php:142
+#: src/Task/PhpStan.php:143
 msgid "Some variables like core, _menu, are already set in ignored list."
 msgstr "Certaines variables comme core, _menu, ... sont déjà dans la liste des variables ignorées."
 
-#: src/module/phpstan.php:147
+#: src/Task/PhpStan.php:148
 msgid "Do not use rules from default ignored errors list."
 msgstr "Ne pas utiliser les règles de la liste des erreurs ignorées"
 
-#: src/module/phpstan.php:149
+#: src/Task/PhpStan.php:150
 msgid "See ignored errors from configuration file below."
 msgstr "Voir la liste des erreurs ignorées dans le fichier de configuration ci-dessous."
 
-#: src/module/phpstan.php:153
+#: src/Task/PhpStan.php:154
 msgid "Split report by file rather than all in the end."
 msgstr "Scinder le rapport par fichier plutôt qu'un seul à la fin."
 
-#: src/module/phpstan.php:155
+#: src/Task/PhpStan.php:156
 msgid "Enable this can cause timeout."
 msgstr "Activer ceci peut causer de Timeout."
 
-#: src/module/phpstan.php:159
+#: src/Task/PhpStan.php:160
 msgid "Clear result cache before each analizes."
 msgstr "Effacer le cache de résultat à chaque analyse."
 
-#: src/module/phpstan.php:166
+#: src/Task/PhpStan.php:167
 msgid "PHPStan configuration file:"
 msgstr "Fichier de configuration de PHPStan :"
 
-#: src/module/phpstan.php:180
+#: src/Task/PhpStan.php:181
 msgid "Failed to write phpstan configuration"
 msgstr "Impossible d'écrire la configuration de PHPStan"
 
-#: src/module/phpstan.php:251
+#: src/Task/PhpStan.php:252
 msgid "Cache cleared"
 msgstr "Cache effacé"
 
-#: src/module/phpstan.php:251
+#: src/Task/PhpStan.php:252
 msgid "No errors found"
 msgstr "Aucune erreur trouvé"
 
-#: src/module/phpstan.php:258
+#: src/Task/PhpStan.php:259
 msgid "Failed to run phpstan"
 msgstr "Impossible d'exécuter PHPStan"
 
-#: src/module/po2php.php:44
+#: src/Task/Po2Php.php:42
 msgid "Translation files"
 msgstr "Fichier de traductions"
 
-#: src/module/po2php.php:45
+#: src/Task/Po2Php.php:43
 msgid "Compile existing translation .po files to fresh .lang.php files"
 msgstr "Compile les fichiers de traductions .po existants en fichiers compilés .lang.php"
 
-#: src/module/po2php.php:65
+#: src/Task/Po2Php.php:67
 msgid "Compile .po file to .lang.php"
 msgstr "Fichier .po compilé en .lang.php"
 
-#: src/module/po2php.php:67
+#: src/Task/Po2Php.php:69
 msgid "Failed to compile .po file"
 msgstr "Impossible de compiler le fichier .po"
 
-#: src/module/tab.php:29
+#: src/Task/Tab.php:31
 msgid "Tabulations"
 msgstr "Tabulations"
 
-#: src/module/tab.php:30
+#: src/Task/Tab.php:32
 msgid "Replace tabulation by four space in php files"
 msgstr "Remplace les tabulation par quatre espaces dans les fichiers php"
 
-#: src/module/tab.php:45
+#: src/Task/Tab.php:51
 msgid "Replace tabulation by spaces"
 msgstr "Remplacer les tabulations"
 
-#: src/module/zip.php:80
+#: src/Task/Zip.php:78
 msgid "Zip module"
 msgstr "Zipper le module"
 
-#: src/module/zip.php:81
+#: src/Task/Zip.php:79
 msgid "Compress module into a ready to install package"
 msgstr "Compresser le module en un paquetage prêt à installer"
 
-#: src/module/zip.php:122
+#: src/Task/Zip.php:125
 msgid "Path to repository:"
 msgstr "Chemin vers le dépôt :"
 
-#: src/module/zip.php:126
+#: src/Task/Zip.php:129
 msgid "Preconization: %s"
 msgstr "Préconisation : %s"
 
-#: src/module/zip.php:128
+#: src/Task/Zip.php:131
 msgid "Blog's public directory"
 msgstr "Répertoire public du blog"
 
-#: src/module/zip.php:131
+#: src/Task/Zip.php:134
 msgid "Files"
 msgstr "Fichiers"
 
-#: src/module/zip.php:134
+#: src/Task/Zip.php:137
 msgid "Name of exported package:"
 msgstr "Nom du paquetage exporté :"
 
-#: src/module/zip.php:140
+#: src/Task/Zip.php:143
 msgid "Name of second exported package:"
 msgstr "Nom du second paquetage exporté :"
 
-#: src/module/zip.php:153
+#: src/Task/Zip.php:150
+msgid "Overwrite existing languages"
+msgstr "Ecraser les langues existantes"
+
+#: src/Task/Zip.php:156
 msgid "Extra files to exclude from package:"
 msgstr "Fichiers supplémentaires à exclure du paquetage :"
 
-#: src/module/zip.php:156
+#: src/Task/Zip.php:159
 msgid "By default all these files are always removed from packages : %s"
 msgstr "Pas défaut tous ces fichiers sont toujours exclu des paquetages : %s"
 
-#: src/module/zip.php:160
+#: src/Task/Zip.php:163
 msgid "Remove comments from files"
 msgstr "Retirer les commentaires des fichiers"
 
-#: src/module/zip.php:172
+#: src/Task/Zip.php:175
 msgid "Prepare excluded files \"%s\""
 msgstr "Préparer les fichiers à exclure \"%s\""
 
-#: src/module/zip.php:175
+#: src/Task/Zip.php:178
 msgid "Prepare comment removal"
 msgstr "Préparer le retrait des commentaires"
 
-#: src/module/zip.php:206
+#: src/Task/Zip.php:209
 msgid "Destination filename already exists"
 msgstr "Le fichier de destination existe déjà"
 
-#: src/module/zip.php:211
+#: src/Task/Zip.php:214
 msgid "Destination path is not writable"
 msgstr "Le répertoire de destination n'est pas accessible en écriture"
 
-#: src/module/zip.php:233
+#: src/Task/Zip.php:238
 msgid "Zip module into \"%s\""
 msgstr "Zipper le module vers \"%s\""
-
-msgid "Overwrite existing package"
-msgstr "Écraser les paquetages existants"
 
 msgid "Tiny tools to fix things for module devs"
 msgstr "Outils simple pour aider les développeurs à fignoler leurs modules"

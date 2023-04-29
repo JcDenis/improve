@@ -29,17 +29,17 @@ class Logs
     private $has = [
         'success' => false,
         'warning' => false,
-        'error'   => false
+        'error'   => false,
     ];
 
     /**
      * Add a log.
-     * 
+     *
      * @param   string  $task   The task ID
      * @param   string  $path   The path
      * @param   array   $msgs   The messages
      */
-    public function add(string $task, string $path, array $msgs)
+    public function add(string $task, string $path, array $msgs): void
     {
         // get existing messages
         $logs = $this->stack[$task][$path] ?? [];
@@ -55,19 +55,19 @@ class Logs
 
     /**
      * Check if log of type $type exists.
-     * 
+     *
      * @param   string  $type   The log type (success, warning, error)
-     * 
+     *
      * @return  bool    True on exist
      */
     public function has(string $type): bool
     {
-        return array_key_exists($type, $this->has) && $this->has[$type];
+        return (bool) ($this->has[$type] ?? false);
     }
 
     /**
      * Write logs to dcLogs.
-     * 
+     *
      * @return  int     The new log ID
      */
     public function write(): int
@@ -137,12 +137,12 @@ class Logs
 
     /**
      * Read logs from dcLog.
-     * 
+     *
      * Logs are read once then deleted from dcLog.
      *
-     * @param   int     The log ID
+     * @param   int     $id     The log ID
      *
-     * @return  The logs
+     * @return  array   The logs
      */
     private function read(int $id): array
     {

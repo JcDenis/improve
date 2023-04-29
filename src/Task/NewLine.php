@@ -14,6 +14,7 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
 
+use Dotclear\Helper\File\Files;
 use Dotclear\Helper\Html\Form\{
     Div,
     Fieldset,
@@ -56,7 +57,7 @@ class NewLine extends Task
         return !empty($this->settings->get('extensions'));
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save']) && !empty($_POST['newline_extensions'])) {
             $this->settings->set(

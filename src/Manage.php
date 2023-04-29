@@ -38,7 +38,7 @@ use Exception;
  * Improve page class
  *
  * Display page and configure modules
- * and launch action.
+ * and execute tasks.
  */
 class Manage extends dcNsProcess
 {
@@ -48,7 +48,7 @@ class Manage extends dcNsProcess
     /** @var    string  $module     Current module id */
     private static string $module = '-';
 
-    /** @var    null|Task   $task   Current action module */
+    /** @var    null|Task   $task   Current tasks instance */
     private static ?Task $task = null;
 
     public static function init(): bool
@@ -76,7 +76,7 @@ class Manage extends dcNsProcess
 
         if (!empty($_POST['fix'])) {
             if (empty($_POST['actions'])) {
-                dcAdminNotices::addWarningNotice(__('No action selected'));
+                dcAdminNotices::addWarningNotice(__('No tasks selected'));
             } elseif (self::$module == '-') {
                 dcAdminNotices::addWarningNotice(__('No module selected'));
             } else {
@@ -128,9 +128,9 @@ class Manage extends dcNsProcess
 
         echo
         dcPage::breadcrumb([
-            __('Plugins')                                                                                                                 => '',
-            My::name()                                                                                                                    => '',
-            empty($_REQUEST['config']) ? (self::$type == 'theme' ? __('Themes actions') : __('Plugins actions')) : __('Configure module') => '',
+            __('Plugins')                                                                                                             => '',
+            My::name()                                                                                                                => '',
+            empty($_REQUEST['config']) ? (self::$type == 'theme' ? __('Themes tasks') : __('Plugins tasks')) : __('Configure module') => '',
         ]) .
         dcPage::notices();
 
@@ -149,14 +149,14 @@ class Manage extends dcNsProcess
 
         if (null === self::$task) {
             echo '
-            <p class="warning">' . __('Unknow module') . '</p>
+            <p class="warning">' . __('Unknow task') . '</p>
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>';
         } else {
             $redir = $_REQUEST['redir'] ?? dcCore::app()->adminurl?->get('admin.plugin.' . My::id(), ['type' => self::$type, 'config' => self::$task->properties->id]);
             $res   = self::$task->configure($redir);
 
             echo '
-            <h3>' . sprintf(__('Configure module "%s"'), self::$task->properties->name) . '</h3>
+            <h3>' . sprintf(__('Configure task "%s"'), self::$task->properties->name) . '</h3>
             <p><a class="back" href="' . $back_url . '">' . __('Back') . '</a></p>
             <h4>' . Html::escapeHTML(self::$task->properties->description) . '</h4>' .
 
@@ -215,7 +215,7 @@ class Manage extends dcNsProcess
                 '<td class="minimal nowrap modules">' . (
                     false === $task->properties->configurator ? '' :
                         '<a class="module-config" href="' . dcCore::app()->adminurl?->get('admin.plugin.' . My::id(), ['type' => self::$type, 'config' => $task->properties->id]) .
-                        '" title="' . sprintf(__("Configure action '%s'"), $task->properties->name) . '">' . __('Configure') . '</a>'
+                        '" title="' . sprintf(__("Configure task '%s'"), $task->properties->name) . '">' . __('Configure') . '</a>'
                 ) . '</td>' .
                 (DC_DEBUG ? '<td class="minimal"><span class="debug">' . $task->properties->priority . '</span></td>' : '') . /* @phpstan-ignore-line */
                 '</tr>';

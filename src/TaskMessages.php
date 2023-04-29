@@ -58,7 +58,7 @@ class TaskMessages
     /**
      * Get a path messages.
      *
-     * @param   string  The path
+     * @param   string  $path   The path
      *
      * @return  array   The messages
      */

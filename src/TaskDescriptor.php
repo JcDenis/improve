@@ -46,10 +46,6 @@ class TaskDescriptor
         int $priority = 500
     ) {
         // Overload task priority from settings
-        if (!is_null(dcCore::app()->blog) && 1 < ($p = (int) dcCore::app()->blog?->settings->get(My::id())->get(self::PREFIX . $this->id))) {
-            $this->priority = $p;
-        } else {
-            $this->priority = abs($priority);
-        }
+        $this->priority = !is_null(dcCore::app()->blog) && 1 < ($p = (int) dcCore::app()->blog->settings->get(My::id())->get(self::PREFIX . $this->id)) ? $p : abs($priority);
     }
 }

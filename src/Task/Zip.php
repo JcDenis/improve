@@ -104,7 +104,7 @@ class Zip extends Task
         return !empty($this->settings->get('pack_repository')) && !empty($this->settings->get('pack_filename'));
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save'])) {
             $this->settings->set([
@@ -231,8 +231,8 @@ class Zip extends Task
             $this->module->getId(),
             true
         );
-        $zip->close();
         $zip->write();
+        $zip->close();
         unset($zip);
 
         $this->success->add(sprintf(__('Zip module into "%s"'), $path));

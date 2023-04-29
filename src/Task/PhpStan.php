@@ -102,7 +102,7 @@ class PhpStan extends Task
         return null;
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save'])) {
             $this->settings->set([

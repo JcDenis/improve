@@ -89,7 +89,7 @@ class GitShields extends Task
         return !empty($this->settings->get('username'));
     }
 
-    public function configure($url): ?string
+    public function configure(string $url): string
     {
         if (!empty($_POST['save']) && !empty($_POST['username'])) {
             $this->settings->set([

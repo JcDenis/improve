@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve;
 
 use dcCore;
-use dcLog;
 use dcModuleDefine;
 use Dotclear\Helper\File\{
     Files,
@@ -39,7 +38,7 @@ class Improve
         'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md', 'po',
     ];
 
-    /** @var    Core    $instance   Core instance */
+    /** @var    Improve     $instance   Improve instance */
     private static $instance;
 
     /**
@@ -47,7 +46,7 @@ class Improve
      */
     protected function __construct()
     {
-        $this->logs  = new logs();
+        $this->logs  = new Logs();
         $this->tasks = new Tasks();
 
         // mark some tasks as disabled (by settings)
@@ -79,7 +78,6 @@ class Improve
 
         return self::$instance;
     }
-
 
     public function fix(dcModuleDefine $module, array $tasks): float
     {
