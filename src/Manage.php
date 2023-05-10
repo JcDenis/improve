@@ -55,8 +55,7 @@ class Manage extends dcNsProcess
     {
         static::$init = defined('DC_CONTEXT_ADMIN')
             && !is_null(dcCore::app()->auth)
-            && dcCore::app()->auth->isSuperAdmin()
-            && My::phpCompliant();
+            && dcCore::app()->auth->isSuperAdmin();
 
         return static::$init;
     }
