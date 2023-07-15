@@ -161,7 +161,7 @@ class PhpHeader extends Task
 
     public function openModule(): ?bool
     {
-        if (is_null(dcCore::app()->auth)) {
+        if (!isset(dcCore::app()->auth)) {
             $this->warning->add(__('Auth is not set'));
 
             return null;

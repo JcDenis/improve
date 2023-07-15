@@ -39,7 +39,6 @@ class Config extends dcNsProcess
     public static function init(): bool
     {
         static::$init = defined('DC_CONTEXT_ADMIN')
-            && !is_null(dcCore::app()->auth)
             && dcCore::app()->auth->isSuperAdmin();
 
         return static::$init;
@@ -55,7 +54,7 @@ class Config extends dcNsProcess
             return true;
         }
 
-        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+        if (is_null(dcCore::app()->blog)) {
             return false;
         }
 
@@ -88,7 +87,7 @@ class Config extends dcNsProcess
             return;
         }
 
-        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->adminurl)) {
+        if (is_null(dcCore::app()->blog)) {
             return;
         }
 
