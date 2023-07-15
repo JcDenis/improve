@@ -31,6 +31,9 @@ class DcDeprecated extends Task
     /** @var array Deprecated functions [filetype [pattern, deprecated, replacement, version, help link]] */
     private $deprecated = ['php' => [], 'js' => []];
 
+    /** @var boolean Stop parsing files */
+    private $stop_scan = false;
+
     protected function getProperties(): TaskDescriptor
     {
         return new TaskDescriptor(
@@ -72,9 +75,23 @@ class DcDeprecated extends Task
         return true;
     }
 
+    public function openDirectory(): ?bool
+    {
+        $skipped         = $this->stop_scan;
+        $this->stop_scan = false;
+        if (preg_match('/\/(dcdeprecated)(\/.*?|)$/', $this->path_full)) {
+            if (!$skipped) {
+                $this->success->add(__('Skip directory'));
+            }
+            $this->stop_scan = true;
+        }
+
+        return null;
+    }
+
     public function readFile(&$content): ?bool
     {
-        if (!in_array($this->path_extension, array_keys($this->deprecated))) {
+        if ($this->stop_scan || !in_array($this->path_extension, array_keys($this->deprecated))) {
             return null;
         }
         foreach ($this->deprecated[$this->path_extension] as $d) {
