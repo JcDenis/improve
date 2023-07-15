@@ -69,14 +69,14 @@ return [
         ['dcPostsActions', 'dcPostsActions', 'Dotclear\Core\Backend\dcPostsActions', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcFavorites', 'dcFavorites', 'Dotclear\Core\Backend\Favorites', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcMenu', 'dcMenu', 'Dotclear\Core\Backend\Menu', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
-        ['dcPage', 'dcPage', 'Dotclear\Core\Backend\Page', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
+        ['dcPage::', 'dcPage', 'Dotclear\Core\Backend\Page', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcPager', 'dcPager', 'Dotclear\Core\Backend\Listing\Pager', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcThemeConfig', 'dcThemeConfig', 'Dotclear\Core\Backend\ThemeConfig', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcPublic', 'dcPublic', 'Dotclear\Core\Frontend\Utility', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcNsProcess', 'dcNsProcess', 'Dotclear\Core\Process', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcUpgrade', 'dcUpgrade', 'Dotclear\Core\Upgrade\Upgrade', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
 
-        ['dcCore::app\(\)->auth === null', 'is_null(dcCore::app()->auth)', 'isset(dcCore::app()->auth)', '2.27'],
-        ['is_null\(dcCore::app\(\)->auth\)', 'is_null(dcCore::app()->auth)', 'isset(dcCore::app()->auth)', '2.27'],
+        ['dcCore::app\(\)->auth === null', 'is_null(dcCore::app()->auth)', 'isset(dcCore::app()->auth)', '2.27', 'https://dotclear.watch/Billet/Les-d%C3%A9pr%C3%A9ci%C3%A9s'],
+        ['is_null\(dcCore::app\(\)->auth\)', 'is_null(dcCore::app()->auth)', 'isset(dcCore::app()->auth)', '2.27', 'https://dotclear.watch/Billet/Les-d%C3%A9pr%C3%A9ci%C3%A9s'],
     ],
 ];

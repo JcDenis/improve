@@ -12,8 +12,8 @@
  */
 return [
     'php' => [
-        ['Clearbricks::lib\(', 'Clearbricks::lib()', __('namespaces'), '2.26', 'https://dotclear.watch/Billet/Release-2.26'],
-        ['Clearbricks::add\(', 'Clearbricks::add()', __('namespaces'), '2.26', 'https://dotclear.watch/Billet/Release-2.26'],
+        ['Clearbricks::lib\(', 'Clearbricks::lib()', 'namespaces', '2.26', 'https://dotclear.watch/Billet/Release-2.26'],
+        ['Clearbricks::add\(', 'Clearbricks::add()', 'namespaces', '2.26', 'https://dotclear.watch/Billet/Release-2.26'],
         ['toExtStatic\(', 'dcRecord::toExtStatic()', 'Dotclear\Database\MetaRecord::toStatic()', '2.26', 'https://dotclear.watch/Billet/Release-2.26'],
         //['(themes|plugins)->setModules\(', 'adminModulesList::setModules()', 'ModulesList::setDefine()', '2.26', 'https://dotclear.watch/Billet/Release-2.26'],
         //['(themes|plugins)->getModules\(', 'adminModulesList::getModules()', 'ModulesList::getDefines()', '2.26', 'https://dotclear.watch/Billet/Release-2.26'],
