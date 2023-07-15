@@ -78,7 +78,7 @@ class DcDeprecated extends Task
             return null;
         }
         foreach ($this->deprecated[$this->path_extension] as $d) {
-            if (preg_match('/' . $d[0] . '/i', $content)) {
+            if (preg_match('/' . $d[0] . '/', $content)) {
                 $this->warning->add(sprintf(__('Possible use of deprecated "%s", you should use "%s" instead since Dotclear %s.'), $d[1], __($d[2]), $d[3]) . (empty($d[4]) ? '' : ' <a href="' . $d['4'] . '">' . __('Help') . '</a> '));
             }
         }
