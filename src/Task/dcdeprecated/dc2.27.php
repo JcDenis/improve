@@ -12,7 +12,7 @@
  */
 return [
     'php' => [
-        ['dcCore::autoload\(\)', 'dcCore::autoload() ', 'Autoloader::Me()', '2.27', 'https://dotclear.watch/Billet/Les-d%C3%A9pr%C3%A9ci%C3%A9s'],
+        ['dcCore::autoload\(\)', 'dcCore::autoload()', 'Autoloader::Me()', '2.27', 'https://dotclear.watch/Billet/Les-d%C3%A9pr%C3%A9ci%C3%A9s'],
         ['App::autoload\(\)', 'dcCore::autoload()', 'Autoloader::Me()', '2.27', 'https://dotclear.watch/Billet/Les-d%C3%A9pr%C3%A9ci%C3%A9s'],
         ['__error\(\)', '__error()', 'Autoloader::Me()', '2.27', 'https://dotclear.watch/Billet/La-classe-d-erreur'],
         //todo: logout
@@ -75,5 +75,8 @@ return [
         ['dcPublic', 'dcPublic', 'Dotclear\Core\Frontend\Utility', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcNsProcess', 'dcNsProcess', 'Dotclear\Core\Process', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcUpgrade', 'dcUpgrade', 'Dotclear\Core\Upgrade\Upgrade', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
+
+        ['dcCore::app\(\)->auth === null', 'is_null(dcCore::app()->auth)', 'isset(dcCore::app()->auth)', '2.27'],
+        ['is_null\(dcCore::app\(\)->auth\)', 'is_null(dcCore::app()->auth)', 'isset(dcCore::app()->auth)', '2.27'],
     ],
 ];
