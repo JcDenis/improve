@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/github/v/release/JcDenis/improve)](https://github.com/JcDenis/improve/releases)
 [![Date](https://img.shields.io/github/release-date/JcDenis/improve)](https://github.com/JcDenis/improve/releases)
 [![Issues](https://img.shields.io/github/issues/JcDenis/improve)](https://github.com/JcDenis/improve/issues)
-[![Dotclear](https://img.shields.io/badge/dotclear-v2.26-blue.svg)](https://fr.dotclear.org/download)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.27-blue.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-green.svg)](https://plugins.dotaddict.org/dc2/details/improve)
 [![License](https://img.shields.io/github/license/JcDenis/improve)](https://github.com/JcDenis/improve/blob/master/LICENSE)
 
@@ -23,7 +23,7 @@ It helps dev to clean up plugin or theme before publishing code.
 **improve** requires: 
 
   * admin permission
-  * Dotclear 2.26-dev
+  * Dotclear 2.27-dev
   * PHP 8.1+
 
 ## USAGE
@@ -34,8 +34,8 @@ Dotaddict repository. (See Dotclear's documentation to know how do this)
 Manage tools from sidebar plugin menu **improve**.
 Configure actions. Select actions and module to work with, then click fix.
 
- Hope some of you have idea to complete function of this plugin 
- and help devs to maintain their plugins and themes.
+Hope some of you have idea to complete function of this plugin 
+and help devs to maintain their plugins and themes.
 
 ## LINKS
 

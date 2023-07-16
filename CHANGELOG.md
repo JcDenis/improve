@@ -5,10 +5,15 @@ dev
 - [ ] add module to minify .js
 - [ ] write documentation of php class
 
+1.3 - 2023.07.16
+- require dotclear 2.27
+- require PHP 8.1+
+- use latest dotclear namespaces
+- add deprecated for Dotclear 2.26 and 2.27
+
 1.2 - 2023.04.29
 - require dotclear 2.26
 - require PHP 8.1+
-- use latest dotclear namespaces
 - move / rename / split class and methods
 - add plugin Uninstaller features
 - fix phpstan on modules that requires other modules

@@ -18,11 +18,11 @@ $this->registerModule(
     'improve',
     'Tiny tools to fix things for module devs',
     'Jean-Christian Denis and contributors',
-    '1.2',
+    '1.3',
     [
         'requires' => [
             ['php', '8.1'],
-            ['core', '2.26'],
+            ['core', '2.27'],
         ],
         'permissions' => null,
         'type'        => 'plugin',
