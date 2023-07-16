@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve\Task;
 
 use dcCore;
-use dcPage;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
@@ -79,7 +79,7 @@ class PhpStan extends Task
         $ignored_vars       = $this->settings->get('ignored_vars');
         $this->ignored_vars = is_string($ignored_vars) ? $ignored_vars : '';
 
-        if (null !== dcCore::app()->auth?->user_prefs) {
+        if (null !== dcCore::app()->auth->user_prefs) {
             dcCore::app()->auth->user_prefs->addWorkspace('interface');
             self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
             self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
@@ -96,7 +96,7 @@ class PhpStan extends Task
     public function header(): ?string
     {
         if (self::$user_ui_colorsyntax) {
-            return dcPage::jsLoadCodeMirror(self::$user_ui_colorsyntax_theme);
+            return Page::jsLoadCodeMirror(self::$user_ui_colorsyntax_theme);
         }
 
         return null;
@@ -170,8 +170,8 @@ class PhpStan extends Task
             ]),
         ])->render() . (
             !self::$user_ui_colorsyntax ? '' :
-            dcPage::jsModuleLoad(My::id() . '/src/Task/phpstan/phpstan.improve.js') .
-            dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
+            Page::jsLoad('/src/Task/phpstan/phpstan.improve.js') .
+            Page::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }
 

@@ -14,7 +14,6 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcCore;
 use dcModuleDefine;
 use Dotclear\Helper\File\{
     Files,
@@ -50,7 +49,7 @@ class Improve
         $this->tasks = new Tasks();
 
         // mark some tasks as disabled (by settings)
-        $disable = explode(';', (string) dcCore::app()->blog?->settings->get(My::id())->get('disabled'));
+        $disable = explode(';', (string) My::settings()?->get('disabled'));
         foreach ($disable as $id) {
             $this->tasks->get($id)?->disable();
         }

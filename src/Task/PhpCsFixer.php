@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve\Task;
 
 use dcCore;
-use dcPage;
+use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Form\{
     Div,
@@ -76,7 +76,7 @@ class PhpCsFixer extends Task
     {
         $this->getPhpPath();
 
-        if (null !== dcCore::app()->auth?->user_prefs) {
+        if (null !== dcCore::app()->auth->user_prefs) {
             dcCore::app()->auth->user_prefs->addWorkspace('interface');
             self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
             self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
@@ -93,7 +93,7 @@ class PhpCsFixer extends Task
     public function header(): ?string
     {
         if (self::$user_ui_colorsyntax) {
-            return dcPage::jsLoadCodeMirror(self::$user_ui_colorsyntax_theme);
+            return Page::jsLoadCodeMirror(self::$user_ui_colorsyntax_theme);
         }
 
         return null;
@@ -127,8 +127,8 @@ class PhpCsFixer extends Task
             ]),
         ])->render() . (
             !self::$user_ui_colorsyntax ? '' :
-            dcPage::jsModuleLoad(My::id() . '/src/Task/phpcsfixer/phpcsfixer.improve.js') .
-            dcPage::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
+            My::jsLoad('/src/Task/phpcsfixer/phpcsfixer.improve.js') .
+            Page::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }
 

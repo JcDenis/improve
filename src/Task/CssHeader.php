@@ -182,9 +182,7 @@ class CssHeader extends Task
             $this->bloc = (string) preg_replace_callback(
                 // use \u in bloc content for first_upper_case
                 '/(\\\u([a-z]{1}))/',
-                function ($str) {
-                    return ucfirst($str[2]);
-                },
+                fn ($str) => ucfirst($str[2]),
                 str_replace(
                     $this->bloc_wildcards,
                     [

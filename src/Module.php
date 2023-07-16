@@ -128,7 +128,7 @@ class Module
     }
 
     /**
-     * Replicate adminModulesList::sanitizeModule
+     * Replicate ModulesList::sanitizeModule
      *
      * @param  string $type       Module type
      * @param  string $id         Module id
@@ -184,7 +184,7 @@ class Module
     }
 
     /**
-     * Replicate adminModulesList::sanitizeString
+     * Replicate ModulesList::sanitizeString
      *
      * @param  string   $str    String to sanitize
      *

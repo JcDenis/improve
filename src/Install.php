@@ -16,7 +16,7 @@ namespace Dotclear\Plugin\improve;
 
 use dcCore;
 use dcNamespace;
-use dcNsProcess;
+use Dotclear\Core\Process;
 use Exception;
 
 /**
@@ -25,7 +25,7 @@ use Exception;
  * Set default settings and version
  * and manage changes on updates.
  */
-class Install extends dcNsProcess
+class Install extends Process
 {
     /** @var array Improve default settings */
     private static $default_settings = [[
@@ -37,15 +37,12 @@ class Install extends dcNsProcess
 
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && dcCore::app()->newVersion(My::id(), dcCore::app()->plugins->moduleInfo(My::id(), 'version'));
-
-        return static::$init;
+        return self::status(My::checkContext(My::INSTALL));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -65,7 +62,7 @@ class Install extends dcNsProcess
     private static function putSettings(): void
     {
         foreach (self::$default_settings as $v) {
-            dcCore::app()->blog?->settings->get(My::id())->put(
+            My::settings()?->put(
                 $v[0],
                 $v[2],
                 $v[3],
@@ -79,11 +76,11 @@ class Install extends dcNsProcess
     /** Update improve < 0.8 : action modules settings name */
     private static function update_0_8_0(): void
     {
-        if (!is_null(dcCore::app()->blog) && version_compare(dcCore::app()->getVersion(My::id()) ?? '0', '0.8', '<')) {
-            foreach (dcCore::app()->blog->settings->get(My::id())->dumpGlobalSettings() as $id => $values) {
+        if (!is_null(dcCore::app()->blog) && My::settings() && version_compare(dcCore::app()->getVersion(My::id()) ?? '0', '0.8', '<')) {
+            foreach (My::settings()->dumpGlobalSettings() as $id => $values) {
                 $newId = str_replace('ImproveAction', '', $id);
                 if ($id != $newId) {
-                    dcCore::app()->blog->settings->get(My::id())->rename($id, strtolower($newId));
+                    My::settings()->rename($id, strtolower($newId));
                 }
             }
         }

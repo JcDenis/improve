@@ -15,8 +15,8 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve;
 
 use dcCore;
-use dcPage;
-use dcNsProcess;
+use Dotclear\Core\Backend\Notices;
+use Dotclear\Core\Process;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -34,19 +34,16 @@ use Exception;
  *
  * Set preference for this plugin.
  */
-class Config extends dcNsProcess
+class Config extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && dcCore::app()->auth->isSuperAdmin();
-
-        return static::$init;
+        return self::status(My::checkContext(My::CONFIG));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -54,7 +51,7 @@ class Config extends dcNsProcess
             return true;
         }
 
-        if (is_null(dcCore::app()->blog)) {
+        if (is_null(dcCore::app()->blog) || !My::settings()) {
             return false;
         }
 
@@ -63,14 +60,14 @@ class Config extends dcNsProcess
             if (!empty($_POST['disabled']) && is_array($_POST['disabled'])) {
                 $pdisabled = implode(';', $_POST['disabled']);
             }
-            dcCore::app()->blog->settings->get(My::id())->put('disabled', $pdisabled);
-            dcCore::app()->blog->settings->get(My::id())->put('nodetails', !empty($_POST['nodetails']));
-            dcCore::app()->blog->settings->get(My::id())->put('allow_distrib', !empty($_POST['allow_distrib']));
-            dcCore::app()->blog->settings->get(My::id())->put('combosortby', $_POST['combosortby'] ?: 'name');
+            My::settings()->put('disabled', $pdisabled);
+            My::settings()->put('nodetails', !empty($_POST['nodetails']));
+            My::settings()->put('allow_distrib', !empty($_POST['allow_distrib']));
+            My::settings()->put('combosortby', $_POST['combosortby'] ?: 'name');
 
-            dcPage::addSuccessNotice(__('Configuration successfully updated'));
+            Notices::addSuccessNotice(__('Configuration successfully updated'));
 
-            dcCore::app()->adminurl->redirect(
+            dcCore::app()->admin->url->redirect(
                 'admin.plugins',
                 ['module' => My::id(), 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->__get('list')->getRedir()]
             );
@@ -83,7 +80,7 @@ class Config extends dcNsProcess
 
     public static function render(): void
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return;
         }
 
@@ -91,8 +88,7 @@ class Config extends dcNsProcess
             return;
         }
 
-        $items    = [];
-        $settings = dcCore::app()->blog->settings->get(My::id());
+        $items = [];
 
         foreach (Improve::instance()->tasks->dump() as $task) {
             $items[] = (new Para())->items([
@@ -106,16 +102,16 @@ class Config extends dcNsProcess
             (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled tasks')))->fields($items),
             (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
                 (new Para())->items([
-                    (new Checkbox('nodetails', (bool) $settings->get('nodetails')))->value('1'),
+                    (new Checkbox('nodetails', (bool) My::settings()?->get('nodetails')))->value('1'),
                     (new Label(__('Hide details of rendered tasks'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('nodetails'),
                 ]),
                 (new Para())->items([
-                    (new Checkbox('allow_distrib', (bool) $settings->get('allow_distrib')))->value('1'),
+                    (new Checkbox('allow_distrib', (bool) My::settings()?->get('allow_distrib')))->value('1'),
                     (new Label(__('Show dotclear distributed modules'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('allow_distrib'),
                 ]),
                 (new Para())->items([
                     (new Label(__('Sort modules seletion by:'), Label::OUTSIDE_LABEL_BEFORE))->for('combosortby'),
-                    (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default($settings->get('combosortby')),
+                    (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default(My::settings()?->get('combosortby')),
                 ]),
             ]),
         ])->render();

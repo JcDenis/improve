@@ -14,30 +14,25 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcAdmin;
 use dcCore;
-use dcPage;
-use dcFavorites;
-use dcNsProcess;
+use Dotclear\Core\Backend\Favorites;
+use Dotclear\Core\Process;
 
 /**
  * Improve admin class
  *
  * Add menu and dashboard icons, load Improve tasks.
  */
-class Backend extends dcNsProcess
+class Backend extends Process
 {
     public static function init(): bool
     {
-        static::$init = defined('DC_CONTEXT_ADMIN')
-            && dcCore::app()->auth->isSuperAdmin();
-
-        return static::$init;
+        return self::status(My::checkContext(My::BACKEND));
     }
 
     public static function process(): bool
     {
-        if (!static::$init) {
+        if (!self::status()) {
             return false;
         }
 
@@ -45,23 +40,17 @@ class Backend extends dcNsProcess
             return false;
         }
 
-        dcCore::app()->menu[dcAdmin::MENU_PLUGINS]->addItem(
-            My::name(),
-            dcCore::app()->adminurl->get('admin.plugin.' . My::id()),
-            dcPage::getPF(My::id() . '/icon.svg'),
-            preg_match('/' . preg_quote(dcCore::app()->adminurl->get('admin.plugin.' . My::id())) . '(&.*)?$/', $_SERVER['REQUEST_URI']),
-            dcCore::app()->auth->isSuperAdmin()
-        );
+        My::addBackendMenuItem();
 
         dcCore::app()->addBehaviors([
-            'adminDashboardFavoritesV2' => function (dcFavorites $favs): void {
+            'adminDashboardFavoritesV2' => function (Favorites $favs): void {
                 $favs->register(
                     My::id(),
                     [
                         'title'      => My::name(),
-                        'url'        => dcCore::app()->adminurl?->get('admin.plugin.' . My::id()),
-                        'small-icon' => dcPage::getPF(My::id() . '/icon.svg'),
-                        'large-icon' => dcPage::getPF(My::id() . '/icon.svg'),
+                        'url'        => My::manageUrl(),
+                        'small-icon' => My::icons(),
+                        'large-icon' => My::icons(),
                         //'permissions' => null,
                     ]
                 );
