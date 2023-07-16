@@ -18,7 +18,7 @@ $this->registerModule(
     'improve',
     'Tiny tools to fix things for module devs',
     'Jean-Christian Denis and contributors',
-    '1.3.1',
+    '1.3.2',
     [
         'requires' => [
             ['php', '8.1'],
