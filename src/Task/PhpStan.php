@@ -90,7 +90,7 @@ class PhpStan extends Task
 
     public function isConfigured(): bool
     {
-        return !dcCore::app()->blog?->settings->get(My::id())->get('nodetails');
+        return !My::settings()?->get('nodetails');
     }
 
     public function header(): ?string
@@ -170,7 +170,7 @@ class PhpStan extends Task
             ]),
         ])->render() . (
             !self::$user_ui_colorsyntax ? '' :
-            Page::jsLoad('/src/Task/phpstan/phpstan.improve.js') .
+            My::jsLoad('/src/Task/phpstan/phpstan.improve.js') .
             Page::jsRunCodeMirror('editor', 'file_content', 'dotclear', self::$user_ui_colorsyntax_theme)
         );
     }
