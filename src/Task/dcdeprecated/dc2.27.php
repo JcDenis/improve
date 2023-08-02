@@ -66,7 +66,7 @@ return [
         ['dcAdminURL', 'dcAdminURL', 'Dotclear\Core\Backend\Url', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcBlogsActions', 'dcBlogsActions', 'Dotclear\Core\Backend\Action\ActionsBlogs', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcCommentsActions', 'dcCommentsActions', 'Dotclear\Core\Backend\Action\ActionsComments', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
-        ['dcPostsActions', 'dcPostsActions', 'Dotclear\Core\Backend\dcPostsActions', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
+        ['dcPostsActions', 'dcPostsActions', 'Dotclear\Core\Backend\Action\ActionsPosts', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcFavorites', 'dcFavorites', 'Dotclear\Core\Backend\Favorites', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcMenu', 'dcMenu', 'Dotclear\Core\Backend\Menu', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
         ['dcPage::', 'dcPage', 'Dotclear\Core\Backend\Page', '2.27', 'https://dotclear.watch/Billet/D%C3%A9placement-de-classes'],
