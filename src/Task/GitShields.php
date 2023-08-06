@@ -58,11 +58,11 @@ class GitShields extends Task
 
     /** @var array Shields patterns */
     protected $bloc_content = [
-        'release'   => '[![Release](https://img.shields.io/github/v/release/%username%/%module%)](https://%domain%/%username%/%module%/releases)',
-        'date'      => '[![Date](https://img.shields.io/github/release-date/%username%/%module%)](https://%domain%/%username%/%module%/releases)',
-        'issues'    => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://%domain%/%username%/%module%/issues)',
-        'dotclear'  => '[![Dotclear](https://img.shields.io/badge/dotclear-v%dotclear%-blue.svg)](https://fr.dotclear.org/download)',
-        'dotaddict' => '[![Dotaddict](https://img.shields.io/badge/dotaddict-official-green.svg)](https://%type%s.dotaddict.org/dc2/details/%module%)',
+        'release'   => '[![Release](https://img.shields.io/badge/release-%version%-a2cbe9.svg)](https://%domain%/%username%/%module%/releases)',
+        'date'      => '[![Date](https://img.shields.io/badge/date-%date%-c44d58.svg)](https://%domain%/%username%/%module%/releases)',
+#        'issues'    => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://%domain%/%username%/%module%/issues)',
+        'dotclear'  => '[![Dotclear](https://img.shields.io/badge/dotclear-v%dotclear%-137bbb.svg)](https://fr.dotclear.org/download)',
+        'dotaddict' => '[![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://%type%s.dotaddict.org/dc2/details/%module%)',
         'license'   => '[![License](https://img.shields.io/github/license/%username%/%module%)](https://%domain%/%username%/%module%/blob/master/LICENSE)',
     ];
 
@@ -162,6 +162,8 @@ class GitShields extends Task
                     '%domain%',
                     '%username%',
                     '%module%',
+                    '%version%',
+                    '%date%',
                     '%dotclear%',
                     '%type%',
                     "\r\n", "\n",
@@ -170,6 +172,8 @@ class GitShields extends Task
                     $this->domain,
                     $this->username,
                     $this->module->getId(),
+                    str_replace(['-', '_'], ['--', '__'], $this->module->get('version')),
+                    date('Y.m.d', time()),
                     $dotclear = $this->getDotclearVersion(),
                     $this->module->get('type'),
                     '', '',
