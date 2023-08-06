@@ -38,6 +38,9 @@ class GitShields extends Task
     /** @var string Username of git repo */
     private $username = '';
 
+    /** @var string Domain of git repo */
+    private $domain = 'github.com';
+
     /** @var boolean add Dotaddict shield */
     private $dotaddict = false;
 
@@ -55,12 +58,12 @@ class GitShields extends Task
 
     /** @var array Shields patterns */
     protected $bloc_content = [
-        'release'   => '[![Release](https://img.shields.io/github/v/release/%username%/%module%)](https://github.com/%username%/%module%/releases)',
-        'date'      => '[![Date](https://img.shields.io/github/release-date/%username%/%module%)](https://github.com/%username%/%module%/releases)',
-        'issues'    => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://github.com/%username%/%module%/issues)',
+        'release'   => '[![Release](https://img.shields.io/github/v/release/%username%/%module%)](https://%domain%/%username%/%module%/releases)',
+        'date'      => '[![Date](https://img.shields.io/github/release-date/%username%/%module%)](https://%domain%/%username%/%module%/releases)',
+        'issues'    => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://%domain%/%username%/%module%/issues)',
         'dotclear'  => '[![Dotclear](https://img.shields.io/badge/dotclear-v%dotclear%-blue.svg)](https://fr.dotclear.org/download)',
         'dotaddict' => '[![Dotaddict](https://img.shields.io/badge/dotaddict-official-green.svg)](https://%type%s.dotaddict.org/dc2/details/%module%)',
-        'license'   => '[![License](https://img.shields.io/github/license/%username%/%module%)](https://github.com/%username%/%module%/blob/master/LICENSE)',
+        'license'   => '[![License](https://img.shields.io/github/license/%username%/%module%)](https://%domain%/%username%/%module%/blob/master/LICENSE)',
     ];
 
     protected function getProperties(): TaskDescriptor
@@ -79,6 +82,8 @@ class GitShields extends Task
     {
         $username        = $this->settings->get('username');
         $this->username  = is_string($username) ? $username : '';
+        $domain          = $this->settings->get('domain');
+        $this->domain    = is_string($domain) ? $domain : 'github.com';
         $this->dotaddict = (bool) $this->settings->get('dotaddict');
 
         return true;
@@ -94,6 +99,7 @@ class GitShields extends Task
         if (!empty($_POST['save']) && !empty($_POST['username'])) {
             $this->settings->set([
                 'username'  => (string) $_POST['username'],
+                'domain'  => (string) $_POST['domain'],
                 'dotaddict' => !empty($_POST['dotaddict']),
             ]);
             $this->redirect($url);
@@ -101,6 +107,12 @@ class GitShields extends Task
 
         return (new Div())->items([
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Contents'))))->fields([
+                // domain
+                (new Para())->items([
+                    (new Label(__('Your Github repository domain:'), Label::OUTSIDE_LABEL_BEFORE))->for('domain'),
+                    (new Input('domain'))->size(65)->maxlenght(255)->value($this->domain),
+                ]),
+                (new Note())->text(__('By default this is github.com or you can specify a custom gitea domain'))->class('form-note'),
                 // username
                 (new Para())->items([
                     (new Label(__('Your Github user name:'), Label::OUTSIDE_LABEL_BEFORE))->for('username'),
@@ -147,6 +159,7 @@ class GitShields extends Task
             }
             $blocs[$k] = trim(str_replace(
                 [
+                    '%domain%',
                     '%username%',
                     '%module%',
                     '%dotclear%',
@@ -154,6 +167,7 @@ class GitShields extends Task
                     "\r\n", "\n",
                 ],
                 [
+                    $this->domain,
                     $this->username,
                     $this->module->getId(),
                     $dotclear = $this->getDotclearVersion(),
