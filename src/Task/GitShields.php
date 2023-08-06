@@ -58,9 +58,9 @@ class GitShields extends Task
 
     /** @var array Shields patterns */
     protected $bloc_content = [
-        'release'   => '[![Release](https://img.shields.io/badge/release-%version%-a2cbe9.svg)](https://%domain%/%username%/%module%/releases)',
-        'date'      => '[![Date](https://img.shields.io/badge/date-%date%-c44d58.svg)](https://%domain%/%username%/%module%/releases)',
-#        'issues'    => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://%domain%/%username%/%module%/issues)',
+        'release' => '[![Release](https://img.shields.io/badge/release-%version%-a2cbe9.svg)](https://%domain%/%username%/%module%/releases)',
+        'date'    => '[![Date](https://img.shields.io/badge/date-%date%-c44d58.svg)](https://%domain%/%username%/%module%/releases)',
+        #        'issues'    => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://%domain%/%username%/%module%/issues)',
         'dotclear'  => '[![Dotclear](https://img.shields.io/badge/dotclear-v%dotclear%-137bbb.svg)](https://fr.dotclear.org/download)',
         'dotaddict' => '[![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://%type%s.dotaddict.org/dc2/details/%module%)',
         'license'   => '[![License](https://img.shields.io/github/license/%username%/%module%)](https://%domain%/%username%/%module%/blob/master/LICENSE)',
@@ -99,7 +99,7 @@ class GitShields extends Task
         if (!empty($_POST['save']) && !empty($_POST['username'])) {
             $this->settings->set([
                 'username'  => (string) $_POST['username'],
-                'domain'  => (string) $_POST['domain'],
+                'domain'    => (string) $_POST['domain'],
                 'dotaddict' => !empty($_POST['dotaddict']),
             ]);
             $this->redirect($url);

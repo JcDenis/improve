@@ -18,7 +18,7 @@ $this->registerModule(
     'improve',
     'Tiny tools to fix things for module devs',
     'Jean-Christian Denis and contributors',
-    '1.3.2',
+    '1.4',
     [
         'requires' => [
             ['php', '8.1'],
@@ -26,8 +26,8 @@ $this->registerModule(
         ],
         'permissions' => null,
         'type'        => 'plugin',
-        'support'     => 'https://github.com/JcDenis/' . basename(__DIR__),
-        'details'     => 'https://github.com/JcDenis/' . basename(__DIR__),
-        'repository'  => 'https://raw.githubusercontent.com/JcDenis/' . basename(__DIR__) . '/master/dcstore.xml',
+        'support'     => 'https://git.dotclear.watch/JcDenis/' . basename(__DIR__) . '/issues',
+        'details'     => 'https://git.dotclear.watch/JcDenis/' . basename(__DIR__) . '/src/branch/master/README.md',
+        'repository'  => 'https://git.dotclear.watch/JcDenis/' . basename(__DIR__) . '/raw/branch/master/dcstore.xml',
     ]
 );
