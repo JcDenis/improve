@@ -5,7 +5,7 @@
     <version>1.4</version>
     <author>Jean-Christian Denis and contributors</author>
     <desc>Tiny tools to fix things for module devs</desc>
-    <file>https://gitea.dotclear.watch/JcDenis/improve/releases/download/v1.4/plugin-improve.zip</file>
+    <file>https://git.dotclear.watch/JcDenis/improve/releases/download/v1.4/plugin-improve.zip</file>
     <da:dcmin>2.27</da:dcmin>
     <da:details>https://git.dotclear.watch/JcDenis/improve/src/branch/master/README.md</da:details>
     <da:support>https://git.dotclear.watch/JcDenis/improve/issues</da:support>
