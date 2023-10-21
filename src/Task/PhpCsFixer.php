@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Form\{
@@ -36,11 +26,19 @@ use Dotclear\Plugin\improve\{
 use Exception;
 
 /**
- * Improve action module PHP CS Fixer
+ * @brief       improve task: PHP CS Fixer class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class PhpCsFixer extends Task
 {
-    /** @var array<int,string> Type of runtime errors */
+    /**
+     * Type of runtime errors.
+     *
+     * @var     array<int, string>  $errors
+     */
     protected static $errors = [
         0  => 'OK.',
         1  => 'General error (or PHP minimal requirement not matched).',
@@ -51,13 +49,25 @@ class PhpCsFixer extends Task
         64 => 'Exception raised within the application',
     ];
 
-    /** @var boolean User pref to use colored synthax */
+    /**
+     * User pref to use colored synthax.
+     *
+     * @var     bool    $user_ui_colorsyntax
+     */
     protected static $user_ui_colorsyntax = false;
 
-    /** @var string User pref for colored synthax theme */
+    /**
+     * User pref for colored synthax theme.
+     *
+     * @var     string  $user_ui_colorsyntax_theme
+     */
     protected static $user_ui_colorsyntax_theme = 'default';
 
-    /** @var string Settings PHP executable path */
+    /**
+     * Settings PHP executable path.
+     *
+     * @var     string  $phpexe_path
+     */
     private $phpexe_path = '';
 
     protected function getProperties(): TaskDescriptor
@@ -76,11 +86,9 @@ class PhpCsFixer extends Task
     {
         $this->getPhpPath();
 
-        if (null !== dcCore::app()->auth->user_prefs) {
-            dcCore::app()->auth->user_prefs->addWorkspace('interface');
-            self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
-            self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
-        }
+        //App::auth()->prefs()->addWorkspace('interface');
+        self::$user_ui_colorsyntax       = App::auth()->prefs()->get('interface')->get('colorsyntax');
+        self::$user_ui_colorsyntax_theme = App::auth()->prefs()->get('interface')->get('colorsyntax_theme');
 
         return true;
     }
@@ -164,7 +172,7 @@ class PhpCsFixer extends Task
     }
 
     /**
-     * Get php executable path
+     * Get php executable path.
      */
     private function getPhpPath(): void
     {

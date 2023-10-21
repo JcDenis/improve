@@ -1,27 +1,25 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcCore;
+use Dotclear\App;
 
 /**
- * The Tasks stack.
+ * @brief       improve tasks stack class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Tasks
 {
-    /** @var    array<string,Task>   $stack   The tasks stack */
+    /**
+     * The tasks stack.
+     *
+     * @var     array<string, Task>  $stack
+     */
     private array $stack = [];
 
     /**
@@ -30,7 +28,7 @@ class Tasks
     public function __construct()
     {
         # --BEHAVIOR-- improveTaskAdd: Tasks
-        dcCore::app()->callBehavior('improveTaskAdd', $this);
+        App::behavior()->callBehavior('improveTaskAdd', $this);
 
         uasort($this->stack, fn ($a, $b) => $a->properties->name <=> $b->properties->name);
         uasort($this->stack, fn ($a, $b) => $a->properties->priority <=> $b->properties->priority);
@@ -55,7 +53,7 @@ class Tasks
     /**
      * Get all tasks.
      *
-     * @return  array<string,Task>  The tasks stack
+     * @return  array<string, Task>     The tasks stack
      */
     public function dump(): array
     {

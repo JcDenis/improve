@@ -1,15 +1,5 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
@@ -17,22 +7,30 @@ namespace Dotclear\Plugin\improve;
 use Dotclear\Helper\File\Path;
 
 /**
- * Improve module helper
+ * @brief       improve module helper class.
+ * @ingroup     improve
  *
  * Help to load module configuration file (_define.php)
  * and gather information about it.
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Module
 {
-    /** @var array  Current module properties */
+    /**
+     * Current module properties.
+     *
+     * @var     array<string, mixed>    $properties
+     */
     private $properties = [];
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param string    $type           Module type, plugin or theme
-     * @param string    $id             Module id
-     * @param array     $properties     Module properties
+     * @param   string                  $type           Module type, plugin or theme
+     * @param   string                  $id             Module id
+     * @param   array<string, mixed>    $properties     Module properties
      */
     public function __construct(string $type, string $id, array $properties = [])
     {
@@ -41,9 +39,9 @@ class Module
     }
 
     /**
-     * Get module properties
+     * Get module properties.
      *
-     * @return array    The properties
+     * @return  array<string, mixed>    The properties
      */
     public function get(): array
     {
@@ -51,13 +49,13 @@ class Module
     }
 
     /**
-     * Get clean properties of registered module
+     * Get clean properties of registered module.
      *
-     * @param string    $type           Module type, plugin or theme
-     * @param string    $id             Module id
-     * @param array     $properties     Module properties
+     * @param   string                  $type           Module type, plugin or theme
+     * @param   string                  $id             Module id
+     * @param   array<string, mixed>    $properties     Module properties
      *
-     * @return array                    Module properties
+     * @return  array<string, mixed>    Module properties
      */
     public static function clean(string $type, string $id, array $properties): array
     {
@@ -67,12 +65,12 @@ class Module
     }
 
     /**
-     * Replicate dcModule::loadDefine
+     * Replicate dcModule::loadDefine.
      *
-     * @param  string $id   Module id
-     * @param  string $root Module path
+     * @param   string  $id     Module id
+     * @param   string  $root   Module path
      *
-     * @return boolean      Success
+     * @return  bool    True on success
      */
     private function loadDefine(string $id, string $root): bool
     {
@@ -86,7 +84,7 @@ class Module
     }
 
     /**
-     * Replicate dcModule::registerModule
+     * Replicate dcModule::registerModule.
      *
      * @param   string          $name           The module name
      * @param   string          $desc           The module description
@@ -94,7 +92,7 @@ class Module
      * @param   string          $version        The module version
      * @param   string|array    $properties     The properties
      *
-     * @return  boolean                 Success
+     * @return  bool    True on success
      * @phpstan-ignore-next-line
      */
     private function registerModule(string $name, string $desc, string $author, string $version, $properties = []): bool
@@ -128,13 +126,13 @@ class Module
     }
 
     /**
-     * Replicate ModulesList::sanitizeModule
+     * Replicate ModulesList::sanitizeModule.
      *
-     * @param  string $type       Module type
-     * @param  string $id         Module id
-     * @param  array  $properties Module properties
+     * @param   string                  $type           Module type
+     * @param   string                  $id             Module id
+     * @param   array<string, mixed>    $properties     Module properties
      *
-     * @return array              Sanitized module properties
+     * @return  array<string, mixed>    Sanitized module properties
      */
     public static function sanitizeModule(string $type, string $id, array $properties): array
     {
@@ -184,11 +182,11 @@ class Module
     }
 
     /**
-     * Replicate ModulesList::sanitizeString
+     * Replicate ModulesList::sanitizeString.
      *
-     * @param  string   $str    String to sanitize
+     * @param   string  $str    String to sanitize
      *
-     * @return string           Sanitized string
+     * @return  string  Sanitized string
      */
     public static function sanitizeString(string $str): string
     {

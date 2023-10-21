@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcModuleDefine;
+use Dotclear\Module\ModuleDefine;
 use Dotclear\Helper\File\{
     Files,
     Path
@@ -22,43 +12,69 @@ use Dotclear\Helper\File\{
 use Exception;
 
 /**
- * Improve main class
+ * @brief       improve main class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Improve
 {
-    /** @var    Tasks   $tasks  The tasks stack instance */
+    /**
+     * The tasks stack instance.
+     *
+     * @var     Tasks   $tasks
+     */
     public readonly Tasks $tasks;
 
-    /** @var    Logs    $logs   The logs stack instance */
+    /**
+     * The logs stack instance.
+     *
+     * @var     Logs    $logs
+     */
     public readonly Logs $logs;
 
-    /** @var    array   $readfile_extensions    Allowed file extensions to open */
+    /**
+     * Allowed file extensions to open.
+     *
+     * @var     array<int, string>  $readfile_extensions
+     */
     private static $readfile_extensions = [
         'php', 'xml', 'js', 'css', 'csv', 'html', 'htm', 'txt', 'md', 'po',
     ];
 
-    /** @var    Improve     $instance   Improve instance */
+    /**
+     * Improve instance.
+     *
+     * @var     Improve     $instance
+     */
     private static $instance;
 
     /**
-     * Constructor
+     * Constructor.
      */
     protected function __construct()
     {
         $this->logs  = new Logs();
         $this->tasks = new Tasks();
 
-        // mark some tasks as disabled (by settings)
-        $disable = explode(';', (string) My::settings()?->get('disabled'));
+        // Mark some tasks as disabled (by settings)
+        $disable = explode(';', (string) My::settings()->get('disabled'));
         foreach ($disable as $id) {
             $this->tasks->get($id)?->disable();
         }
     }
 
+    /**
+     * Disable clone.
+     */
     protected function __clone()
     {
     }
 
+    /**
+     * Diable wakeup.
+     */
     public function __wakeup()
     {
         throw new Exception('nope');
@@ -78,7 +94,15 @@ class Improve
         return self::$instance;
     }
 
-    public function fix(dcModuleDefine $module, array $tasks): float
+    /**
+     * Fix a module.
+     *
+     * @param   ModuleDefine        $module     The module
+     * @param   array<int, string>  $tasks      The tasks
+     *
+     * @return  float   The spent time
+     */
+    public function fix(ModuleDefine $module, array $tasks): float
     {
         $time_start = microtime(true);
 
@@ -166,6 +190,15 @@ class Improve
         return round(microtime(true) - $time_start, 5);
     }
 
+    /**
+     * Get module files.
+     *
+     * @param   string                                              $path   The module path
+     * @param   string                                              $dir    (internal) The working directory
+     * @param   array<int, array{0: string, 1: string, 2: bool}>    $res    (internal) The files stack
+     *
+     * @return  array<int, array{0: string, 1: string, 2: bool}>    The files stack
+     */
     private static function getModuleFiles(string $path, string $dir = '', array $res = []): array
     {
         $path = Path::real($path);

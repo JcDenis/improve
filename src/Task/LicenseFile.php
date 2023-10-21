@@ -1,15 +1,5 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
@@ -31,21 +21,37 @@ use Dotclear\Plugin\improve\{
 use Exception;
 
 /**
- * Improve action module license file
+ * @brief       improve task: license class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class LicenseFile extends Task
 {
-    /** @var array Possible license filenames */
+    /**
+     * Possible license filenames.
+     *
+     * @var     array<int, string>  $license_filenames
+     */
     protected static $license_filenames = [
         'license',
         'license.md',
         'license.txt',
     ];
 
-    /** @var array Possible license names */
+    /**
+     * License names combo.
+     *
+     * @var     array<string, string>   $action_version
+     */
     private $action_version = [];
 
-    /** @var array Action */
+    /**
+     * Actions combo.
+     *
+     * @var     array<string, string>   $action_full
+     */
     private $action_full = [];
 
     protected function getProperties(): TaskDescriptor
@@ -71,7 +77,7 @@ class LicenseFile extends Task
             __('Do What The Fuck You Want To Public License')  => 'wtfpl',
         ];
         $this->action_full = [
-            __('Do nothing')                    => 0,
+            __('Do nothing')                    => '',
             __('Add file if it does not exist') => 'create',
             __('Add file even if it exists')    => 'overwrite',
             __('Add file and remove others')    => 'full',
@@ -128,6 +134,11 @@ class LicenseFile extends Task
         return null;
     }
 
+    /**
+     * Write full license file.
+     *
+     * @return  ?bool   True on success
+     */
     private function writeFullLicense(): ?bool
     {
         try {
@@ -148,6 +159,11 @@ class LicenseFile extends Task
         return true;
     }
 
+    /**
+     * Delete full license file.
+     *
+     * @return  bool    True on success
+     */
     private function deleteFullLicense(bool $only_one = false): bool
     {
         foreach (self::fileExists($this->module->get('root')) as $file) {
@@ -166,6 +182,13 @@ class LicenseFile extends Task
         return true;
     }
 
+    /**
+     * Check if files exist.
+     *
+     * @param   string  $root The path to scan
+     *
+     * @return  array<int, string>  The existing license files
+     */
     private static function fileExists(string $root): array
     {
         $existing = [];

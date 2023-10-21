@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -34,11 +24,19 @@ use Dotclear\Plugin\improve\{
 use Exception;
 
 /**
- * Improve action module php header
+ * @brief       improve task: header class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class PhpHeader extends Task
 {
-    /** @var string Exemple of header */
+    /**
+     * Exemple of header.
+     *
+     * @var     string  $exemple
+     */
     private static $exemple = <<<EOF
         @brief %module_id%, a %module_type% for Dotclear 2
 
@@ -51,7 +49,11 @@ class PhpHeader extends Task
         @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
         EOF;
 
-    /** @var array<string> Allowed bloc replacement */
+    /**
+     * Allowed bloc replacement.
+     *
+     * @var     array<int, string>  bloc_wildcards
+     */
     private $bloc_wildcards = [
         '%year%',
         '%module_id%',
@@ -64,16 +66,32 @@ class PhpHeader extends Task
         '%user_url%',
     ];
 
-    /** @var array Allowed action for header */
+    /**
+     * Allowed action for header.
+     *
+     * @var     array<string, string>   $action_bloc
+     */
     private $action_bloc = [];
 
-    /** @var string Parsed bloc */
+    /**
+     * Parsed bloc.
+     *
+     * @var     string  $bloc
+     */
     private $bloc = '';
 
-    /** @var boolean Stop parsing files */
+    /**
+     * Stop parsing files.
+     *
+     * @var     bool    $stop_scan
+     */
     private $stop_scan = false;
 
-    /** @var string Settings bloc content */
+    /**
+     * Settings bloc content.
+     *
+     * @var     string  $bloc_content
+     */
     private $bloc_content = '';
 
     protected function getProperties(): TaskDescriptor
@@ -91,7 +109,7 @@ class PhpHeader extends Task
     protected function init(): bool
     {
         $this->action_bloc = [
-            __('Do nothing')                       => 0,
+            __('Do nothing')                       => '',
             __('Add bloc if it does not exist')    => 'create',
             __('Add and overwrite bloc')           => 'overwrite',
             __('Overwrite bloc only if it exists') => 'replace',
@@ -161,12 +179,6 @@ class PhpHeader extends Task
 
     public function openModule(): ?bool
     {
-        if (!isset(dcCore::app()->auth)) {
-            $this->warning->add(__('Auth is not set'));
-
-            return null;
-        }
-
         $bloc = trim($this->bloc_content);
 
         if (empty($bloc)) {
@@ -187,13 +199,13 @@ class PhpHeader extends Task
                     [
                         date('Y'),
                         $this->module->getId(),
-                        $this->module->get('name'),
-                        $this->module->get('author'),
-                        $this->module->get('type'),
-                        dcCore::app()->auth->getInfo('user_cn'),
-                        dcCore::app()->auth->getinfo('user_name'),
-                        dcCore::app()->auth->getInfo('user_email'),
-                        dcCore::app()->auth->getInfo('user_url'),
+                        (string) $this->module->get('name'),
+                        (string) $this->module->get('author'),
+                        (string) $this->module->get('type'),
+                        (string) App::auth()->getInfo('user_cn'),
+                        (string) App::auth()->getinfo('user_name'),
+                        (string) App::auth()->getInfo('user_email'),
+                        (string) App::auth()->getInfo('user_url'),
                     ],
                     (string) $bloc
                 )
@@ -253,10 +265,11 @@ class PhpHeader extends Task
     }
 
     /**
-     * Write bloc content in file content
+     * Write bloc content in file content.
      *
-     * @param  string $content Old content
-     * @return string          New content
+     * @param   string  $content    Old content
+     *
+     * @return  string  New content
      */
     private function writeDocBloc(string $content): string
     {
@@ -276,10 +289,11 @@ class PhpHeader extends Task
     }
 
     /**
-     * Delete bloc content in file content
+     * Delete bloc content in file content.
      *
-     * @param  string $content Old content
-     * @return string          New content
+     * @param   string  $content    Old content
+     *
+     * @return  string  New content
      */
     private function deleteDocBloc(string $content): string
     {
@@ -298,10 +312,11 @@ class PhpHeader extends Task
     }
 
     /**
-     * Delete old style bloc content in file content
+     * Delete old style bloc content in file content.
      *
-     * @param  string $content Old content
-     * @return string          New content
+     * @param   string  $content    Old content
+     *
+     * @return  string  New content
      */
     private function deleteOldBloc(string $content): string
     {

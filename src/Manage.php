@@ -1,21 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcCore;
-use dcThemes;
+use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Core\Process;
@@ -35,20 +24,33 @@ use Dotclear\Helper\Text as TText;
 use Exception;
 
 /**
- * Improve page class
+ * @brief       improve manage class.
+ * @ingroup     improve
  *
- * Display page and configure modules
- * and execute tasks.
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Manage extends Process
 {
-    /** @var    string  $type   Current module(s) type */
+    /**
+     * Current module(s) type.
+     *
+     * @var     string  $type
+     */
     private static string $type = 'plugin';
 
-    /** @var    string  $module     Current module id */
+    /**
+     * Current module id.
+     *
+     * @var     string  $module
+     */
     private static string $module = '-';
 
-    /** @var    null|Task   $task   Current tasks instance */
+    /**
+     * Current tasks instance.
+     *
+     * @var     null|Task   $task
+     */
     private static ?Task $task = null;
 
     public static function init(): bool
@@ -77,11 +79,11 @@ class Manage extends Process
             } else {
                 try {
                     $time = Improve::instance()->fix(
-                        self::$type == 'plugin' ? dcCore::app()->plugins->getDefine(self::$module) : dcCore::app()->themes->getDefine(self::$module),
+                        self::$type == 'plugin' ? App::plugins()->getDefine(self::$module) : App::themes()->getDefine(self::$module),
                         $_POST['actions']
                     );
                     $log_id = Improve::instance()->logs->write();
-                    dcCore::app()->blog?->triggerBlog();
+                    App::blog()->triggerBlog();
 
                     if (Improve::instance()->logs->has('error')) {
                         $notice = ['type' => Notices::NOTICE_ERROR, 'msg' => __('Fix of "%s" complete in %s secondes with errors')];
@@ -96,7 +98,7 @@ class Manage extends Process
 
                     $done = true;
                 } catch (Exception $e) {
-                    dcCore::app()->error->add($e->getMessage());
+                    App::error()->add($e->getMessage());
                     $done = false;
                 }
             }
@@ -138,6 +140,9 @@ class Manage extends Process
         Page::closeModule();
     }
 
+    /**
+     * Configure a task.
+     */
     private static function displayConfigurator(): void
     {
         $back_url = $_REQUEST['redir'] ?? My::manageURL(['type' => self::$type]);
@@ -162,12 +167,15 @@ class Manage extends Process
                     (new Hidden('type', self::$type)),
                     (new Hidden('config', self::$task->properties->id)),
                     (new Hidden('redir', $redir)),
-                    dcCore::app()->formNonce(false),
+                    App::nonce()->formNonce(),
                 ]),
             ])->render();
         }
     }
 
+    /**
+     * Show actions.
+     */
     private static function displayActions(): void
     {
         echo
@@ -190,7 +198,7 @@ class Manage extends Process
             '<th colspan="2" class="first">' . __('Task') . '</td>' .
             '<th scope="col">' . __('Description') . '</td>' .
             '<th scope="col">' . __('Configuration') . '</td>' .
-            (DC_DEBUG ? '<th scope="col">' . __('Priority') . '</td>' : '') . /* @phpstan-ignore-line */
+            (App::config()->debugMode() ? '<th scope="col">' . __('Priority') . '</td>' : '') . /* @phpstan-ignore-line */
             '</tr></thead><tbody>';
             foreach (Improve::instance()->tasks->dump() as $task) {
                 if ($task->isDisabled() || !in_array(self::$type, $task->properties->types)) {
@@ -213,7 +221,7 @@ class Manage extends Process
                         '<a class="module-config" href="' . My::manageUrl(['type' => self::$type, 'config' => $task->properties->id]) .
                         '" title="' . sprintf(__("Configure task '%s'"), $task->properties->name) . '">' . __('Configure') . '</a>'
                 ) . '</td>' .
-                (DC_DEBUG ? '<td class="minimal"><span class="debug">' . $task->properties->priority . '</span></td>' : '') . /* @phpstan-ignore-line */
+                (App::config()->debugMode() ? '<td class="minimal"><span class="debug">' . $task->properties->priority . '</span></td>' : '') . /* @phpstan-ignore-line */
                 '</tr>';
             }
 
@@ -228,13 +236,13 @@ class Manage extends Process
                     (new Select('module'))->default(self::$module)->items($combo_modules),
                     (new Submit('fix'))->value(__('Fix it')),
                     (new Hidden(['type'], self::$type)),
-                    dcCore::app()->formNonce(false),
+                    App::nonce()->formNonce(),
                 ]),
             ])->render() .
             '<br class="clear" />
             </form>';
 
-            if (!empty($_REQUEST['upd']) && !My::settings()?->get('nodetails')) {
+            if (!empty($_REQUEST['upd']) && !My::settings()->get('nodetails')) {
                 $logs = Improve::instance()->logs->parse((int) $_REQUEST['upd']);
 
                 if (!empty($logs)) {
@@ -248,7 +256,9 @@ class Manage extends Process
                                 if (null !== $a) {
                                     echo '<li>' . $a->properties->name . '<ul>';
                                     foreach ($msgs as $msg) {
-                                        echo '<li>' . $msg . '</li>';
+                                        if (is_string($msg)) {
+                                            echo '<li>' . $msg . '</li>';
+                                        }
                                     }
                                 }
                                 echo '</ul></li>';
@@ -283,11 +293,16 @@ class Manage extends Process
         return empty($_REQUEST['config']) ? null : Improve::instance()->tasks->get($_REQUEST['config']);
     }
 
+    /**
+     * Get tasks preferences.
+     *
+     * @return  array<string, array<string, mixed>|mixed>
+     */
     private static function getPreference(bool $all = false): array
     {
         try {
             if (!empty(self::$type)) {
-                $preferences = My::settings()?->get('preferences');
+                $preferences = My::settings()->get('preferences');
                 if (is_string($preferences)) {
                     $preferences = json_decode($preferences, true);
                     if (is_array($preferences)) {
@@ -303,7 +318,7 @@ class Manage extends Process
 
     private static function setPreferences(): bool
     {
-        if (!empty($_POST['save_preferences']) && !is_null(dcCore::app()->blog)) {
+        if (!empty($_POST['save_preferences']) && App::blog()->isDefined()) {
             $preferences              = self::getPreference(true);
             $preferences[self::$type] = [];
             if (!empty($_POST['actions'])) {
@@ -313,7 +328,7 @@ class Manage extends Process
                     }
                 }
             }
-            My::settings()?->put('preferences', json_encode($preferences), 'string', null, true, true);
+            My::settings()->put('preferences', json_encode($preferences), 'string', null, true, true);
             Notices::addSuccessNotice(__('Configuration successfully updated'));
 
             return true;
@@ -322,20 +337,24 @@ class Manage extends Process
         return false;
     }
 
+    /**
+     * Get modules combo list.
+     *
+     * @return  array<string, string>   The modules combo
+     */
     private static function comboModules(): array
     {
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             return [];
         }
 
-        if (!(dcCore::app()->themes instanceof dcThemes)) {
-            dcCore::app()->themes = new dcThemes();
-            dcCore::app()->themes->loadModules(dcCore::app()->blog->themes_path, null);
+        if (!App::themes()->isEmpty()) {
+            App::themes()->loadModules(App::blog()->themesPath(), null);
         }
 
         $combo_modules = [];
-        $modules       = self::$type == 'plugin' ? dcCore::app()->plugins->getDefines() : dcCore::app()->themes->getDefines();
-        if (My::settings()?->get('combosortby') === 'id') {
+        $modules       = self::$type == 'plugin' ? App::plugins()->getDefines() : App::themes()->getDefines();
+        if (My::settings()->get('combosortby') === 'id') {
             uasort($modules, fn ($a, $b) => strtolower($a->getId()) <=> strtolower($b->getId()));
         } else {
             uasort($modules, fn ($a, $b) => strtolower(TText::removeDiacritics($a->get('name'))) <=> strtolower(TText::removeDiacritics($b->get('name'))));

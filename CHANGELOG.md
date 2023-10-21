@@ -6,6 +6,18 @@ improve todo - xxxx.xx.xx
 * [ ] add module to minify .js
 * [ ] write documentation of php class
 
+improve 1.5 - 2023.10.22
+===========================================================
+* Require Dotclear 2.28
+* Require PHP 8.1
+* Upgrade to Dotclear 2.28
+* Upgrade to php-cs-fixer 3.35.1
+* Upgrade to phpstan 1.10.39
+* Use Dotclear cache for phpstan (fix right on system tmp dir)
+* Update phpstan default rules to follow Dotclear rules
+* Code review (phpstan)
+* Deprecated task is not yet up-to-date with Dotclear 2.28...
+
 improve 1.4 - 2023.08.07
 ===========================================================
 * Require Dotclear 2.27

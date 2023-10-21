@@ -1,15 +1,5 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
@@ -24,14 +14,28 @@ use Dotclear\Plugin\improve\{
 };
 
 /**
- * Improve action module Dotclear depreciated
+ * @brief       improve task: deprecated class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class DcDeprecated extends Task
 {
-    /** @var array Deprecated functions [filetype [pattern, deprecated, replacement, version, help link]] */
+    /**
+     * Deprecated functions.
+     *
+     * [filetype [pattern, deprecated, replacement, version, help link]]
+     *
+     * @var     array<string, array<int, array<int<0, 4>, string>>>     $deprecated
+     */
     private $deprecated = ['php' => [], 'js' => []];
 
-    /** @var boolean Stop parsing files */
+    /**
+     * Stop parsing files
+     *
+     * @var     bool    $stop_scan
+     */
     private $stop_scan = false;
 
     protected function getProperties(): TaskDescriptor

@@ -1,15 +1,5 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
@@ -31,7 +21,11 @@ use Dotclear\Plugin\improve\{
 };
 
 /**
- * Improve action module new line
+ * @brief       improve task: nl class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class NewLine extends Task
 {
@@ -112,10 +106,11 @@ class NewLine extends Task
     }
 
     /**
-     * Check and clean file extension
+     * Check and clean file extension.
      *
-     * @param  string|array  $in    Extension(s) to clean
-     * @return array                Cleaned extension(s)
+     * @param   string|array<int, string>   $in     Extension(s) to clean
+     *
+     * @return  array<int,string>   Cleaned extension(s)
      */
     private static function cleanExtensions($in): array
     {

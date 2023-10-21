@@ -1,55 +1,91 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcModuleDefine;
+use Dotclear\Module\ModuleDefine;
 use Dotclear\Helper\Network\Http;
 
 /**
- * Task abstract class.
+ * @brief       improve task helper.
+ * @ingroup     improve
+ *
+ * Task MUST extends this class.
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 abstract class Task
 {
-    /** @var    TaskDescriptor  Task descriptor instance */
+    /**
+     * Task descriptor instance.
+     *
+     * @var     TaskDescriptor  $properties
+     */
     public readonly TaskDescriptor $properties;
 
-    /** @var    TaskMessages    Task success messages instance */
+    /**
+     * Task success messages instance.
+     *
+     * @var     TaskMessages    $success
+     */
     public readonly TaskMessages $success;
 
-    /** @var    TaskMessages    Task warning messages instance */
+    /**
+     * Task warning messages instance.
+     *
+     * @var     TaskMessages    $warning
+     */
     public readonly TaskMessages $warning;
 
-    /** @var    TaskMessages    Task error messages instance */
+    /**
+     * Task error messages instance.
+     *
+     * @var     TaskMessages    $error
+     */
     public readonly TaskMessages $error;
 
-    /** @var    TaskSettings    Task settings instance */
+    /**
+     * Task settings instance.
+     *
+     * @var     TaskSettings    $settings
+     */
     protected readonly TaskSettings $settings;
 
-    /** @var    dcModuleDefine  Current module */
-    protected dcModuleDefine $module;
+    /**
+     * Current module.
+     *
+     * @var     ModuleDefine    $module
+     */
+    protected ModuleDefine $module;
 
-    /** @var    bool    Is disabled task */
+    /**
+     * Is disabled task.
+     *
+     * @var     bool    $disabled
+     */
     private bool $disabled = false;
 
-    /** @var    string  Current full path */
+    /**
+     * Current full path.
+     *
+     * @var     string  $path_full
+     */
     protected string $path_full = '';
 
-    /** @var    string  Current file extension */
+    /**
+     * Current file extension.
+     *
+     * @var     string  $path_extension
+     */
     protected string $path_extension = '';
 
-    /** @var    null|bool    Current path is directory */
+    /**
+     * Current path is directory.
+     *
+     * @var     null|bool   $path_is_dir
+     */
     protected ?bool $path_is_dir = null;
 
     /**
@@ -62,7 +98,7 @@ abstract class Task
         $this->error      = new TaskMessages();
         $this->properties = $this->getProperties();
         $this->settings   = new TaskSettings($this->properties->id);
-        $this->module     = new dcModuleDefine('undefined');
+        $this->module     = new ModuleDefine('undefined');
 
         $this->init();
     }
@@ -70,7 +106,7 @@ abstract class Task
     /**
      * Get task description.
      *
-     * @return     TaskDescriptor   The task description
+     * @return  TaskDescriptor  The task description
      */
     abstract protected function getProperties(): TaskDescriptor;
 
@@ -79,7 +115,7 @@ abstract class Task
      *
      * Called when Task insatnce is created.
      *
-     * @return     bool  True if initialisation is ok.
+     * @return  bool    True if initialisation is ok.
      */
     abstract protected function init(): bool;
 
@@ -106,7 +142,7 @@ abstract class Task
     /**
      * Check if task is disabled.
      *
-     * @return  bool True on disabled
+     * @return  bool    True on disabled
      */
     final public function isDisabled(): bool
     {
@@ -129,14 +165,14 @@ abstract class Task
     /**
      * Check if task is well configured
      *
-     * @return  boolean     True on well configured
+     * @return  bool    True on well configured
      */
     abstract public function isConfigured(): bool;
 
     /**
-     * Get task configuration page header
+     * Get task configuration page header.
      *
-     * @return string Headers
+     * @return  string  Headers
      */
     public function header(): ?string
     {
@@ -144,7 +180,7 @@ abstract class Task
     }
 
     /**
-     * Get configuraton gui
+     * Get configuraton gui.
      *
      * If task class uses internal configuration,
      * it must share here html form content of its settings.
@@ -152,9 +188,9 @@ abstract class Task
      * This function must redirect form
      * after validation with $this->redirect($url);
      *
-     * @param      string   $url    post form redirect url
+     * @param   string  $url    post form redirect url
      *
-     * @return     string      The configuration form
+     * @return  string  The configuration form
      */
     public function configure(string $url): string
     {
@@ -164,11 +200,11 @@ abstract class Task
     /**
      * Set in class var current module definitions.
      *
-     * @see Improve::sanitizeModule()
+     * @see     Improve::sanitizeModule()
      *
-     * @param      dcModuleDefine $module      Module definitons
+     * @param   ModuleDefine    $module     Module definitons
      */
-    final public function setModule(dcModuleDefine $module): bool
+    final public function setModule(ModuleDefine $module): bool
     {
         $this->module = $module;
 
@@ -178,9 +214,9 @@ abstract class Task
     /**
      * Set in class var current path definitons.
      *
-     * @param      string   $path_full          Full path
-     * @param      string   $path_extension     Path extension (if it is a file)
-     * @param      boolean  $path_is_dir        True if path is a directory
+     * @param   string  $path_full          Full path
+     * @param   string  $path_extension     Path extension (if it is a file)
+     * @param   bool    $path_is_dir        True if path is a directory
      */
     final public function setPath(string $path_full, string $path_extension, bool $path_is_dir): bool
     {
@@ -229,7 +265,7 @@ abstract class Task
      * If you want to erase a content you must erase
      * the file on action openDirectory.
      *
-     * @param      string $content        File content
+     * @param   string  $content    File content
      */
     public function readFile(string &$content): ?bool
     {

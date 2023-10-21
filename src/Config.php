@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Process;
 use Dotclear\Helper\Html\Form\{
@@ -30,9 +20,11 @@ use Dotclear\Helper\Html\Form\{
 use Exception;
 
 /**
- * Admin Improve configuration class
+ * @brief       improve backend config class.
+ * @ingroup     improve
  *
- * Set preference for this plugin.
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Config extends Process
 {
@@ -51,7 +43,7 @@ class Config extends Process
             return true;
         }
 
-        if (is_null(dcCore::app()->blog) || !My::settings()) {
+        if (!App::blog()->isDefined()) {
             return false;
         }
 
@@ -67,12 +59,12 @@ class Config extends Process
 
             Notices::addSuccessNotice(__('Configuration successfully updated'));
 
-            dcCore::app()->admin->url->redirect(
+            App::backend()->url()->redirect(
                 'admin.plugins',
-                ['module' => My::id(), 'conf' => 1, 'chk' => 1, 'redir' => dcCore::app()->admin->__get('list')->getRedir()]
+                ['module' => My::id(), 'conf' => 1, 'chk' => 1, 'redir' => App::backend()->__get('list')->getRedir()]
             );
         } catch (Exception $e) {
-            dcCore::app()->error->add($e->getMessage());
+            App::error()->add($e->getMessage());
         }
 
         return true;
@@ -81,10 +73,6 @@ class Config extends Process
     public static function render(): void
     {
         if (!self::status()) {
-            return;
-        }
-
-        if (is_null(dcCore::app()->blog)) {
             return;
         }
 
@@ -102,16 +90,16 @@ class Config extends Process
             (new Fieldset())->class('fieldset')->legend(new Legend(__('List of disabled tasks')))->fields($items),
             (new Fieldset())->class('fieldset')->legend(new Legend(__('Options')))->fields([
                 (new Para())->items([
-                    (new Checkbox('nodetails', (bool) My::settings()?->get('nodetails')))->value('1'),
+                    (new Checkbox('nodetails', (bool) My::settings()->get('nodetails')))->value('1'),
                     (new Label(__('Hide details of rendered tasks'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('nodetails'),
                 ]),
                 (new Para())->items([
-                    (new Checkbox('allow_distrib', (bool) My::settings()?->get('allow_distrib')))->value('1'),
+                    (new Checkbox('allow_distrib', (bool) My::settings()->get('allow_distrib')))->value('1'),
                     (new Label(__('Show dotclear distributed modules'), Label::OUTSIDE_LABEL_AFTER))->class('classic')->for('allow_distrib'),
                 ]),
                 (new Para())->items([
                     (new Label(__('Sort modules seletion by:'), Label::OUTSIDE_LABEL_BEFORE))->for('combosortby'),
-                    (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default(My::settings()?->get('combosortby')),
+                    (new Select('combosortby'))->items([__('Name') => 'name', __('Id') => 'id'])->default(My::settings()->get('combosortby')),
                 ]),
             ]),
         ])->render();

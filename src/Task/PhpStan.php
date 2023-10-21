@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Core\Backend\Page;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Form\{
@@ -38,23 +28,47 @@ use Dotclear\Plugin\improve\{
 use Exception;
 
 /**
- * Improve action module PHPStan
+ * @brief       improve task: PHPstan class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class PhpStan extends Task
 {
-    /** @var boolean User pref to use colored synthax */
+    /**
+     * User pref to use colored synthax.
+     *
+     * @var     bool    $user_ui_colorsyntax
+     */
     protected static $user_ui_colorsyntax = false;
 
-    /** @var string User pref for colored synthax theme */
+    /**
+     * User pref for colored synthax theme.
+     *
+     * @var     string  $user_ui_colorsyntax_theme
+     */
     protected static $user_ui_colorsyntax_theme = 'default';
 
-    /** @var integer Settings phpstan run level */
-    private $run_level = 5;
+    /**
+     * Settings phpstan run level.
+     *
+     * @var     int     $run_level
+     */
+    private $run_level = 8;
 
-    /** @var string Settings phpstan ignored vars */
+    /**
+     * Settings phpstan ignored vars.
+     *
+     * @var     string  $ignored_vars
+     */
     private $ignored_vars = '';
 
-    /** @var string Settings PHP executable path */
+    /**
+     * Settings PHP executable path.
+     *
+     * @var     string  $phpexe_path
+     */
     private $phpexe_path = '';
 
     protected function getProperties(): TaskDescriptor
@@ -79,18 +93,16 @@ class PhpStan extends Task
         $ignored_vars       = $this->settings->get('ignored_vars');
         $this->ignored_vars = is_string($ignored_vars) ? $ignored_vars : '';
 
-        if (null !== dcCore::app()->auth->user_prefs) {
-            dcCore::app()->auth->user_prefs->addWorkspace('interface');
-            self::$user_ui_colorsyntax       = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax');
-            self::$user_ui_colorsyntax_theme = dcCore::app()->auth->user_prefs->get('interface')->get('colorsyntax_theme');
-        }
+        //App::auth()->prefs()->addWorkspace('interface');
+        self::$user_ui_colorsyntax       = App::auth()->prefs()->get('interface')->get('colorsyntax');
+        self::$user_ui_colorsyntax_theme = App::auth()->prefs()->get('interface')->get('colorsyntax_theme');
 
         return true;
     }
 
     public function isConfigured(): bool
     {
-        return !My::settings()?->get('nodetails');
+        return !My::settings()->get('nodetails');
     }
 
     public function header(): ?string
@@ -220,23 +232,24 @@ class PhpStan extends Task
         }
 
         return $this->execCmd(sprintf(
-            '%sphp %s/phpstan/libs/phpstan.phar clear-result-cache',
+            '%sphp %s/phpstan/libs/phpstan.phar clear-result-cache --configuration=%s',
             $this->phpexe_path,
-            __DIR__
+            __DIR__,
+            App::config()->varRoot() . '/phpstan.neon'
         ), true);
     }
 
     private function execFixer(string $path = null): bool
     {
-        if (!empty($path)) {
-            $path .= ' ';
+        if (empty($path)) {
+            $path = Path::real($this->module->get('root'));
         }
 
         return $this->execCmd(sprintf(
-            '%sphp %s/phpstan/libs/phpstan.phar analyse ' . $path . '--configuration=%s',
+            '%sphp %s/phpstan/libs/phpstan.phar analyse ' . $path . ' --configuration=%s',
             $this->phpexe_path,
             __DIR__,
-            DC_VAR . '/phpstan.neon'
+            App::config()->varRoot() . '/phpstan.neon'
         ));
     }
 
@@ -263,7 +276,7 @@ class PhpStan extends Task
     }
 
     /**
-     * Get php executable path
+     * Get php executable path.
      */
     private function getPhpPath(): void
     {
@@ -289,13 +302,15 @@ class PhpStan extends Task
                 '%LEVEL%',
                 '%MODULE_ROOT%',
                 '%DC_ROOT%',
+                '%CACHE_ROOT%',
                 '%BOOTSTRAP_ROOT%',
                 '%SCAN_DIRECTORIES%',
             ],
             [
                 $this->run_level,
                 (string) Path::real($this->module->get('root'), false),
-                (string) Path::real(DC_ROOT, false),
+                (string) Path::real(App::config()->dotclearRoot(), false),
+                (string) Path::real(App::config()->cacheRoot(), false),
                 (string) Path::real(__DIR__ . '/phpstan', false),
                 $this->getScanDirectories(),
             ],
@@ -314,17 +329,17 @@ class PhpStan extends Task
                 '      path: *' . "\n\n";
         }
 
-        return (bool) file_put_contents(DC_VAR . '/phpstan.neon', $content);
+        return (bool) file_put_contents(App::config()->varRoot() . '/phpstan.neon', $content);
     }
 
     private function getScanDirectories(): string
     {
         $ret = '';
         if ($this->module->get('type') == 'plugin') {
-            $paths = explode(PATH_SEPARATOR, DC_PLUGINS_ROOT);
+            $paths = explode(PATH_SEPARATOR, App::config()->pluginsRoot());
             foreach ($paths as $path) {
                 $path = Path::real($path, false);
-                if ($path !== false && $path != Path::real(DC_ROOT . DIRECTORY_SEPARATOR . 'plugins', false)) {
+                if ($path !== false && $path != Path::real(App::config()->dotclearRoot() . DIRECTORY_SEPARATOR . 'plugins', false)) {
                     $ret .= '    - ' . $path . "\n";
                 }
             }

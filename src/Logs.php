@@ -1,31 +1,32 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve;
 
-use dcCore;
-use dcLog;
+use Dotclear\App;
 
 /**
- * Logs management.
+ * @brief       improve logs helper class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Logs
 {
-    /** @ var   array<string,array>     $stack  The logs stack */
+    /**
+     * The logs stack.
+     *
+     * @var     array<string, array<string, array<int, string>|array<string, array<int, string>>>>  $stack
+     */
     private array $stack;
 
-    /** @var    array<string,bool>  $has    Has log of given type */
+    /**
+     * Has log of given type.
+     *
+     * @var     array<string, bool>     $has
+     */
     private $has = [
         'success' => false,
         'warning' => false,
@@ -35,19 +36,19 @@ class Logs
     /**
      * Add a log.
      *
-     * @param   string  $task   The task ID
-     * @param   string  $path   The path
-     * @param   array   $msgs   The messages
+     * @param   string              $task   The task ID
+     * @param   string              $path   The path
+     * @param   array<int, string>  $msgs   The messages
      */
     public function add(string $task, string $path, array $msgs): void
     {
-        // get existing messages
+        // Get existing messages
         $logs = $this->stack[$task][$path] ?? [];
 
-        // merge with new messages
+        // Merge with new messages
         $this->stack[$task][$path] = array_merge($logs, $msgs);
 
-        // check message type
+        // Check message type
         if (in_array($path, ['success', 'warning', 'error'])) {
             $this->has[$path] = true;
         }
@@ -75,11 +76,11 @@ class Logs
         if (empty($this->stack)) {
             return 0;
         }
-        $cur = dcCore::app()->con->openCursor(dcCore::app()->prefix . dcLog::LOG_TABLE_NAME);
+        $cur = App::log()->openLogCursor();
         $cur->setField('log_msg', json_encode($this->stack));
         $cur->setField('log_table', My::id());
 
-        return dcCore::app()->log->addLog($cur);
+        return App::log()->addLog($cur);
     }
 
     /**
@@ -89,7 +90,7 @@ class Logs
      *
      * @param   int     $id The log ID
      *
-     * @return  array   The parse logs
+     * @return  array<string, array<string, array<string, array<int|string, string|array<int, string>>>>>   The parse logs
      */
     public function parse(int $id): array
     {
@@ -103,8 +104,11 @@ class Logs
             foreach (['success', 'warning', 'error'] as $type) {
                 $l_tools = [];
                 foreach ($tools as $tool) {
+                    if (!is_string($tool)) {
+                        continue;
+                    }
                     $l_msg = [];
-                    if (!empty($logs[$tool][$type][$path])) {
+                    if (!empty($logs[$tool][$type][$path]) && is_array($logs[$tool][$type][$path])) {
                         foreach ($logs[$tool][$type][$path] as $msg) {
                             $l_msg[] = $msg;
                         }
@@ -128,7 +132,7 @@ class Logs
     /**
      * Get all messages
      *
-     * @return  array<string,array>     The messages stack
+     * @return  array<string, array<string, array<int, string>|array<string, array<int, string>>>>  The messages stack
      */
     public function dump(): array
     {
@@ -142,15 +146,15 @@ class Logs
      *
      * @param   int     $id     The log ID
      *
-     * @return  array   The logs
+     * @return  array<string, array<string, array<int, string>|array<string, array<int, string>>>>  The logs
      */
     private function read(int $id): array
     {
-        $rs = dcCore::app()->log->getLogs(['log_table' => My::id(), 'log_id' => $id, 'limit' => 1]);
+        $rs = App::log()->getLogs(['log_table' => My::id(), 'log_id' => $id, 'limit' => 1]);
         if ($rs->isEmpty()) {
             return [];
         }
-        dcCore::app()->log->delLogs($rs->f('log_id'));
+        App::log()->delLogs($rs->f('log_id'));
 
         $res = json_decode($rs->f('log_msg'), true);
 

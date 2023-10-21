@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Helper\File\{
     Files,
     Path
@@ -35,11 +25,19 @@ use Dotclear\Plugin\improve\{
 };
 
 /**
- * Improve action module zip
+ * @brief       improve task: zip class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class Zip extends Task
 {
-    /** @var array List of excluded file pattern */
+    /**
+     * List of excluded file pattern.
+     *
+     * @var     array<int, string>  $exclude
+     */
     public static $exclude = [
         '.',
         '..',
@@ -53,7 +51,11 @@ class Zip extends Task
         '_disabled',
     ];
 
-    /** @var array Replacement wildcards */
+    /**
+     * Replacement wildcards.
+     *
+     * @var     array<int, string>  $filename_wildcards
+     */
     public static $filename_wildcards = [
         '%type%',
         '%id%',
@@ -62,13 +64,25 @@ class Zip extends Task
         '%time%',
     ];
 
-    /** @var string Settings Excluded files */
+    /**
+     * Settings Excluded files.
+     *
+     * @var     string  $pack_excludefiles
+     */
     private $pack_excludefiles = '';
 
-    /** @var string Settings Main packacge filename */
+    /**
+     * Settings Main packacge filename.
+     *
+     * @var string  $pack_filename
+     */
     private $pack_filename = '';
 
-    /** @var string Settings Second package filename */
+    /**
+     * Settings Second package filename.
+     *
+     * @var     string  $secondpack_filename
+     */
     private $secondpack_filename = '';
 
     protected function getProperties(): TaskDescriptor
@@ -127,8 +141,8 @@ class Zip extends Task
                 ]),
                 (new Note())->text(sprintf(
                     __('Preconization: %s'),
-                    dcCore::app()->blog?->public_path ?
-                    Path::real(dcCore::app()->blog->public_path) : __("Blog's public directory")
+                    App::blog()->publicPath() ?
+                    Path::real(App::blog()->publicPath()) : __("Blog's public directory")
                 ))->class('form-note'),
             ]),
             (new Fieldset())->class('fieldset')->legend((new Legend(__('Files'))))->fields([
@@ -187,6 +201,12 @@ class Zip extends Task
         return null;
     }
 
+    /**
+     * Zip module.
+     *
+     * @param   string              $file       Path to zip
+     * @param   array<int, string>  $exclude    files to exlude
+     */
     private function zipModule(string $file, array $exclude): void
     {
         $file = str_replace(

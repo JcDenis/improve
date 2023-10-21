@@ -15,20 +15,32 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve;
 
 /**
- * Task messages group.
+ * @brief       improve messages group class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class TaskMessages
 {
-    /** @ var   array<string,array>     $stack  The messages by path stack */
+    /**
+     * The messages by path stack.
+     *
+     * @var     array<string, array<int, string>>   $stack
+     */
     private array $stack;
 
-    /** @ var   string  $path  The current path */
+    /**
+     * The current path.
+     *
+     * @var     string  $path
+     */
     private string $path = 'root';
 
     /**
      * Set current working path.
      *
-     * @param   string  $path    The path
+     * @param   string  $path   The path
      */
     public function path(string $path = 'root'): void
     {
@@ -38,7 +50,7 @@ class TaskMessages
     /**
      * Check if there are messages.
      *
-     * return   bool    True if not empty
+     * @return  bool    True if not empty
      */
     public function empty(): bool
     {
@@ -60,7 +72,7 @@ class TaskMessages
      *
      * @param   string  $path   The path
      *
-     * @return  array   The messages
+     * @return  array<int, string>  The messages
      */
     public function get(string $path): array
     {
@@ -68,9 +80,9 @@ class TaskMessages
     }
 
     /**
-     * Get all messages
+     * Get all messages.
      *
-     * @return  array<string,array>     The messages stack
+     * @return  array<string, array<int, string>>   The messages stack
      */
     public function dump(): array
     {

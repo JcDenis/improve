@@ -14,22 +14,33 @@ declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task\zip;
 
+/**
+ * @brief       improve Zip hack class.
+ * @ingroup     improve
+ *
+ * Extend Zip Helper to add some functions.
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Zip extends \Dotclear\Helper\File\Zip\Zip
 {
-    /** @var boolean Should remove comments from files */
+    /**
+     * Should remove comments from files.
+     *
+     * @var     bool  $remove_comment
+     */
     public static $remove_comment = false;
 
     /**
      * Replace helper Zip::writeFile
      *
-     * @param      string    $name   The name
-     * @param      string    $file   The file
-     * @param      string    $size   The size
-     * @param      int|null  $mtime  The mtime
-     *
-     * @return     void
+     * @param   string      $name   The name
+     * @param   string      $file   The file
+     * @param   int|float   $size   The size
+     * @param   int|float   $mtime  The mtime
      */
-    protected function writeFile($name, $file, $size, $mtime)
+    protected function writeFile(string $name, string $file, int|float $size, int|float $mtime): void
     {
         if (!isset($this->entries[$name])) {
             return;
@@ -51,8 +62,8 @@ class Zip extends \Dotclear\Helper\File\Zip\Zip
 
         unset($content);
 
-        $mdate = $this->makeDate($mtime);
-        $mtime = $this->makeTime($mtime);
+        $mdate = $this->makeDate((int) $mtime);
+        $mtime = $this->makeTime((int) $mtime);
 
         # Data descriptor
         $data_desc = "\x50\x4b\x03\x04" .
@@ -101,6 +112,13 @@ class Zip extends \Dotclear\Helper\File\Zip\Zip
         $this->ctrl_dir[] = $cdrec;
     }
 
+    /**
+     * Remove PHP comments.
+     *
+     * @param   string  $content    The file content
+     *
+     * @return  string The cleaned file content
+     */
     protected static function removePHPComment(string $content): string
     {
         $comment = [T_COMMENT];

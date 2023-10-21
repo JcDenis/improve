@@ -1,15 +1,5 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
@@ -34,11 +24,19 @@ use Dotclear\Plugin\improve\{
 use Exception;
 
 /**
- * Improve action module dcstore.xml
+ * @brief       improve task: dcstore class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class DcStore extends Task
 {
-    /** @var string Settings dcstore zip url pattern */
+    /**
+     * Settings dcstore zip url pattern.
+     *
+     * @var     string  $pattern
+     */
     private $pattern = '';
 
     protected function getProperties(): TaskDescriptor
@@ -109,6 +107,11 @@ class DcStore extends Task
         return true;
     }
 
+    /**
+     * Generate dcstore XML content.
+     *
+     * @return  string  The XML content
+     */
     public function generateXML(): string
     {
         $xml = ['<modules xmlns:da="http://dotaddict.org/da/">'];
@@ -203,6 +206,11 @@ class DcStore extends Task
         return self::prettyXML($res->toXML());
     }
 
+    /**
+     * Clean up XML content.
+     *
+     * @return  string  The pretty XML content
+     */
     private static function prettyXML(string $str): string
     {
         if (class_exists('DOMDocument')) {
@@ -217,6 +225,11 @@ class DcStore extends Task
         return str_replace('><', ">\n<", $str);
     }
 
+    /**
+     * Parse module info.
+     *
+     * @return  string  The parsed content
+     */
     private function parseFilePattern(): string
     {
         return Text::tidyURL(str_replace(

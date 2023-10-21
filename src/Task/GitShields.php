@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief improve, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contributors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\improve\Task;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -31,35 +21,66 @@ use Dotclear\Plugin\improve\{
 };
 
 /**
- * Improve action module Github shields.io
+ * @brief       improve task: EOF class.
+ * @ingroup     improve
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
 class GitShields extends Task
 {
-    /** @var string Username of git repo */
+    /**
+     * Username of git repo.
+     * @var     string  $username
+     */
     private $username = '';
 
-    /** @var string Domain of git repo */
+    /**
+     * Domain of git repo.
+     *
+     * @var     string  $domain
+     */
     private $domain = 'github.com';
 
-    /** @var boolean add Dotaddict shield */
+    /**
+     * Add Dotaddict shield.
+     *
+     * @var     bool    $dotaddict
+     */
     private $dotaddict = false;
 
-    /** @var boolean Stop scaning files */
+    /**
+     * Stop scaning files.
+     *
+     * @var bool    $stop_scan
+     */
     private $stop_scan = false;
 
-    /** @var array Parsed bloc */
+    /**
+     * Parsed bloc.
+     *
+     * @var     array<string, string>   $blocs
+     */
     private $blocs = [];
 
-    /** @var array Search patterns */
+    /**
+     * Search patterns.
+     *
+     * @var     array<string, string>   $bloc_pattern
+     */
     protected $bloc_pattern = [
         'remove' => '/\[!\[Release(.*)LICENSE\)/ms',
         'target' => '/^([^\n]+)[\r\n|\n]{1,}/ms',
     ];
 
-    /** @var array Shields patterns */
+    /**
+     * Shields patterns.
+     *
+     * @var     array<string, string>   $bloc_content
+     */
     protected $bloc_content = [
         'release' => '[![Release](https://img.shields.io/badge/release-%version%-a2cbe9.svg)](https://%domain%/%username%/%module%/releases)',
-        'date'    => '[![Date](https://img.shields.io/badge/date-%date%-c44d58.svg)](https://%domain%/%username%/%module%/releases)',
+        'date'    => '![Date](https://img.shields.io/badge/date-%date%-c44d58.svg)',
         #        'issues'    => '[![Issues](https://img.shields.io/github/issues/%username%/%module%)](https://%domain%/%username%/%module%/issues)',
         'dotclear'  => '[![Dotclear](https://img.shields.io/badge/dotclear-v%dotclear%-137bbb.svg)](https://fr.dotclear.org/download)',
         'dotaddict' => '[![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://%type%s.dotaddict.org/dc2/details/%module%)',
@@ -150,6 +171,9 @@ class GitShields extends Task
         return true;
     }
 
+    /**
+     * Parse module and user info.
+     */
     private function replaceInfo(): void
     {
         $blocs = [];
@@ -185,6 +209,9 @@ class GitShields extends Task
         $this->success->add(__('Prepare custom shield info'));
     }
 
+    /**
+     * Get dotclear version.
+     */
     private function getDotclearVersion(): string
     {
         $version = null;
@@ -203,9 +230,16 @@ class GitShields extends Task
             $version = $this->module->get('dc_min');
         }
 
-        return $version ?: dcCore::app()->getVersion('core');
+        return $version ?: App::version()->getVersion('core');
     }
 
+    /**
+     * Write shield bloc.
+     *
+     * @param   string  $content    The file content
+     *
+     * @return  string  The README file content
+     */
     private function writeShieldsBloc(string $content): string
     {
         $res = preg_replace(
@@ -222,6 +256,13 @@ class GitShields extends Task
         return (string) $res;
     }
 
+    /**
+     * Delete existing shield bloc.
+     *
+     * @param   string  $content    The file content
+     *
+     * @return  string  The README file content
+     */
     private function deleteShieldsBloc(string $content): string
     {
         $res = preg_replace(

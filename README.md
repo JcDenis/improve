@@ -1,17 +1,16 @@
 # README
 
-[![Release](https://img.shields.io/badge/release-1.4-a2cbe9.svg)](https://git.dotclear.watch/JcDenis/improve/releases)
-[![Date](https://img.shields.io/badge/date-2023.08.06-c44d58.svg)](https://git.dotclear.watch/JcDenis/improve/releases)
-[![Dotclear](https://img.shields.io/badge/dotclear-v2.27-137bbb.svg)](https://fr.dotclear.org/download)
+[![Release](https://img.shields.io/badge/release-1.5-a2cbe9.svg)](https://git.dotclear.watch/JcDenis/improve/releases)
+![Date](https://img.shields.io/badge/date-2023.10.22-c44d58.svg)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.28-137bbb.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/improve)
-[![License](https://img.shields.io/github/license/JcDenis/improve)](https://git.dotclear.watch/JcDenis/improve/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/license-GPL--2.0-ececec.svg)](https://git.dotclear.watch/JcDenis/improve/src/branch/master/LICENSE)
 
-## WHAT IS IMPROVE ?
+## ABOUT
 
-_improve_ is a plugin for the open-source 
-web publishing software called Dotclear.
+_improve_ is a plugin for the open-source web publishing software called [Dotclear](https://www.dotclear.org).
 
-It helps dev to clean up plugin or theme before publishing code.
+> Help dev to clean up plugin or theme before publishing code.
 
 * Open to third party plugin
 * Easy and fast to use
@@ -19,11 +18,9 @@ It helps dev to clean up plugin or theme before publishing code.
 
 ## REQUIREMENTS
 
-_improve_ requires: 
-
-* admin permission
-* Dotclear 2.27
+* Dotclear 2.28
 * PHP 8.1+
+* Dotclear Super admin permissions
 
 ## USAGE
 
@@ -38,13 +35,14 @@ and help devs to maintain their plugins and themes.
 
 ## LINKS
 
-* License : [GNU GPL v2](https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)
-* Source & contribution : [Gitea Page](https://git.dotclear.watch/JcDenis/improve) [GitHub Page](https://github.com/JcDenis/improve)
-* Packages & details : [Gitea Page](https://git.dotclear.watch/JcDenis/improve/releases) or [Dotaddict Page](https://plugins.dotaddict.org/dc2/details/improve)
+* [License](https://git.dotclear.watch/JcDenis/improve/src/branch/master/LICENSE)
+* [Packages & details](https://git.dotclear.watch/JcDenis/improve/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/improve))
+* [Sources & contributions](https://git.dotclear.watch/JcDenis/improve) (or on [GitHub](https://github.com/JcDenis/improve))
+* [Issues & security](https://git.dotclear.watch/JcDenis/improve/issues) (or on [GitHub](https://github.com/JcDenis/improve/issues))
 
 ## CONTRIBUTORS
 
-* Jean-Christian Denis
+* Jean-Christian Denis (author)
 * Gvx
 
 You are welcome to contribute to this code.
