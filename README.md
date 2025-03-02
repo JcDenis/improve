@@ -4,7 +4,7 @@
 ![Date](https://img.shields.io/github/release-date/jcdenis/improve?color=red)
 [![Dotclear](https://img.shields.io/badge/dotclear-v2.33-137bbb.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/improve)
-[![License](https://img.shields.io/github/license/jcdenis/improve?color=white)](https://github.com/JcDenis/improve/src/branch/master/LICENSE)
+[![License](https://img.shields.io/github/license/jcdenis/improve?color=white)](https://github.com/JcDenis/improve/blob/master/LICENSE)
 
 ## ABOUT
 
@@ -35,7 +35,7 @@ and help devs to maintain their plugins and themes.
 
 ## LINKS
 
-* [License](https://github.com/JcDenis/improve/src/branch/master/LICENSE)
+* [License](https://github.com/JcDenis/improve/blob/master/LICENSE)
 * [Packages & details](https://github.com/JcDenis/improve/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/improve))
 * [Sources & contributions](https://github.com/JcDenis/improve)
 * [Issues & security](https://github.com/JcDenis/improve/issues)
