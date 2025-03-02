@@ -6,6 +6,12 @@ improve todo - xxxx.xx.xx
 * [ ] add module to minify .js
 * [ ] write documentation of php class
 
+improve 1.5.1 - 2025.03.02
+===========================================================
+* Require Dotclear 2.28
+* Require PHP 8.1
+* Fix repository URLs
+
 improve 1.5 - 2023.10.22
 ===========================================================
 * Require Dotclear 2.28

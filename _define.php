@@ -17,7 +17,7 @@ $this->registerModule(
     'improve',
     'Tiny tools to fix things for module devs',
     'Jean-Christian Denis and contributors',
-    '1.5',
+    '1.5.1',
     [
         'requires'    => [['core', '2.28']],
         'permissions' => 'My',
