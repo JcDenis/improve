@@ -2,7 +2,7 @@
 
 [![Release](https://img.shields.io/github/v/release/jcdenis/improve?color=lightblue)](https://github.com/JcDenis/improve/releases)
 ![Date](https://img.shields.io/github/release-date/jcdenis/improve?color=red)
-[![Dotclear](https://img.shields.io/badge/dotclear-v2.33-137bbb.svg)](https://fr.dotclear.org/download)
+[![Dotclear](https://img.shields.io/badge/dotclear-v2.39-137bbb.svg)](https://fr.dotclear.org/download)
 [![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/improve)
 [![License](https://img.shields.io/github/license/jcdenis/improve?color=white)](https://github.com/JcDenis/improve/blob/master/LICENSE)
 
@@ -18,7 +18,7 @@ _improve_ is a plugin for the open-source web publishing software called [Dotcle
 
 ## REQUIREMENTS
 
-* Dotclear 2.28
+* Dotclear 2.39
 * PHP 8.1+
 * Dotclear Super admin permissions
 
