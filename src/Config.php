@@ -6,7 +6,7 @@ namespace Dotclear\Plugin\improve;
 
 use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -26,8 +26,10 @@ use Exception;
  * @author      Jean-Christian Denis
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-class Config extends Process
+class Config
 {
+    use TraitProcess;
+
     public static function init(): bool
     {
         return self::status(My::checkContext(My::CONFIG));

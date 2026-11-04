@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\improve;
 
 use Dotclear\App;
-use Dotclear\Core\Process;
+use Dotclear\Helper\Process\TraitProcess;
 use Exception;
 
 /**
@@ -15,8 +15,10 @@ use Exception;
  * @author      Jean-Christian Denis
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-class Install extends Process
+class Install
 {
+    use TraitProcess;
+
     /**
      * Improve default settings.
      *
@@ -85,9 +87,9 @@ class Install extends Process
     {
         if (version_compare(App::version()->getVersion(My::id()), '1.1', '<')) {
             foreach (['setting_', 'preferences'] as $key) {
-                $record = App::con()->select(
-                    'SELECT * FROM ' . App::con()->prefix() . App::blogWorkspace()::NS_TABLE_NAME . ' ' .
-                    "WHERE setting_ns = '" . App::con()->escapeStr(My::id()) . "' " .
+                $record = App::db()->con()->select(
+                    'SELECT * FROM ' . App::db()->con()->prefix() . App::blogWorkspace()::NS_TABLE_NAME . ' ' .
+                    "WHERE setting_ns = '" . App::db()->con()->escapeStr(My::id()) . "' " .
                     "AND setting_id LIKE '" . $key . "%' "
                 );
 
@@ -97,8 +99,8 @@ class Install extends Process
                         $cur   = App::blogWorkspace()->openBlogWorkspaceCursor();
                         $cur->setField('setting_value', json_encode(is_array($value) ? $value : []));
                         $cur->update(
-                            "WHERE setting_id = '" . $record->f('setting_id') . "' and setting_ns = '" . App::con()->escapeStr($record->f('setting_ns')) . "' " .
-                            'AND blog_id ' . (null === $record->f('blog_id') ? 'IS NULL ' : ("= '" . App::con()->escapeStr($record->f('blog_id')) . "' "))
+                            "WHERE setting_id = '" . $record->f('setting_id') . "' and setting_ns = '" . App::db()->con()->escapeStr($record->f('setting_ns')) . "' " .
+                            'AND blog_id ' . (null === $record->f('blog_id') ? 'IS NULL ' : ("= '" . App::db()->con()->escapeStr($record->f('blog_id')) . "' "))
                         );
                     } catch(Exception) {
                     }

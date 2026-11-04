@@ -131,13 +131,13 @@ class GitShields extends Task
                 // domain
                 (new Para())->items([
                     (new Label(__('Your Github repository domain:'), Label::OUTSIDE_LABEL_BEFORE))->for('domain'),
-                    (new Input('domain'))->size(65)->maxlenght(255)->value($this->domain),
+                    (new Input('domain'))->size(65)->maxlength(255)->value($this->domain),
                 ]),
                 (new Note())->text(__('By default this is github.com or you can specify a custom gitea domain'))->class('form-note'),
                 // username
                 (new Para())->items([
                     (new Label(__('Your Github user name:'), Label::OUTSIDE_LABEL_BEFORE))->for('username'),
-                    (new Input('username'))->size(65)->maxlenght(255)->value($this->username),
+                    (new Input('username'))->size(65)->maxlength(255)->value($this->username),
                 ]),
                 (new Note())->text(__('Used in your Github URL: http://github.com/username/module_id.'))->class('form-note'),
                 (new Note())->text(__('If you have badges not created by this tool in the README.md file you should remove them manually.'))->class('form-note'),

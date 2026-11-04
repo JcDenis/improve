@@ -77,7 +77,7 @@ class DcStore extends Task
                 // phpexe_path
                 (new Para())->items([
                     (new Label(__('Predictable URL to zip file on the external repository:'), Label::OUTSIDE_LABEL_BEFORE))->for('dcstore_pattern'),
-                    (new Input('dcstore_pattern'))->size(65)->maxlenght(255)->value($this->pattern),
+                    (new Input('dcstore_pattern'))->size(65)->maxlength(255)->value($this->pattern),
                 ]),
                 (new Note())->text(sprintf(__('You can use wildcards %s'), '%author%, %type%, %id%, %version%.'))->class('form-note'),
                 (new Note())->text(__('For exemple on github https://github.com/MyGitName/%id%/releases/download/v%version%/%type%-%id%.zip'))->class('form-note'),

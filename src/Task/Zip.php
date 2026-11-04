@@ -137,7 +137,7 @@ class Zip extends Task
                 // pack_repository
                 (new Para())->items([
                     (new Label(__('Path to repository:'), Label::OUTSIDE_LABEL_BEFORE))->for('pack_repository'),
-                    (new Input('pack_repository'))->size(65)->maxlenght(255)->value($this->settings->get('pack_repository')),
+                    (new Input('pack_repository'))->size(65)->maxlength(255)->value($this->settings->get('pack_repository')),
                 ]),
                 (new Note())->text(sprintf(
                     __('Preconization: %s'),
@@ -149,13 +149,13 @@ class Zip extends Task
                 // pack_filename
                 (new Para())->items([
                     (new Label(__('Name of exported package:'), Label::OUTSIDE_LABEL_BEFORE))->for('pack_filename'),
-                    (new Input('pack_filename'))->size(65)->maxlenght(255)->value($this->settings->get('pack_filename')),
+                    (new Input('pack_filename'))->size(65)->maxlength(255)->value($this->settings->get('pack_filename')),
                 ]),
                 (new Note())->text(sprintf(__('Preconization: %s'), '%type%-%id%'))->class('form-note'),
                 // secondpack_filename
                 (new Para())->items([
                     (new Label(__('Name of second exported package:'), Label::OUTSIDE_LABEL_BEFORE))->for('secondpack_filename'),
-                    (new Input('secondpack_filename'))->size(65)->maxlenght(255)->value($this->settings->get('secondpack_filename')),
+                    (new Input('secondpack_filename'))->size(65)->maxlength(255)->value($this->settings->get('secondpack_filename')),
                 ]),
                 (new Note())->text(sprintf(__('Preconization: %s'), '%type%-%id%-%version%'))->class('form-note'),
                 // pack_overwrite
@@ -168,7 +168,7 @@ class Zip extends Task
                 // pack_excludefiles
                 (new Para())->items([
                     (new Label(__('Extra files to exclude from package:'), Label::OUTSIDE_LABEL_BEFORE))->for('pack_excludefiles'),
-                    (new Input('pack_excludefiles'))->size(65)->maxlenght(255)->value($this->settings->get('pack_excludefiles')),
+                    (new Input('pack_excludefiles'))->size(65)->maxlength(255)->value($this->settings->get('pack_excludefiles')),
                 ]),
                 (new Note())->text(sprintf(__('By default all these files are always removed from packages : %s'), implode(', ', self::$exclude)))->class('form-note'),
                 // pack_nocomment

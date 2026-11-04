@@ -135,7 +135,7 @@ class PhpStan extends Task
                 // phpexe_path
                 (new Para())->items([
                     (new Label(__('Root directory of PHP executable:'), Label::OUTSIDE_LABEL_BEFORE))->for('phpexe_path'),
-                    (new Input('phpexe_path'))->size(65)->maxlenght(255)->value($this->phpexe_path),
+                    (new Input('phpexe_path'))->size(65)->maxlength(255)->value($this->phpexe_path),
                 ]),
                 (new Note())->text(__('If this module does not work you can try to put here directory to php executable (without executable file name).'))->class('form-note'),
             ]),
@@ -148,7 +148,7 @@ class PhpStan extends Task
                 // ignored_vars
                 (new Para())->items([
                     (new Label(__('List of ignored variables:'), Label::OUTSIDE_LABEL_BEFORE))->for('ignored_vars'),
-                    (new Input('ignored_vars'))->size(65)->maxlenght(255)->value($this->ignored_vars),
+                    (new Input('ignored_vars'))->size(65)->maxlength(255)->value($this->ignored_vars),
                 ]),
                 (new Note())->text(
                     sprintf(__('If you have errors like "%s", you can add this var here. Use ; as separator and do not put $ ahead.'), 'Variable $var might not be defined') .

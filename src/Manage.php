@@ -7,8 +7,8 @@ namespace Dotclear\Plugin\improve;
 use Dotclear\App;
 use Dotclear\Core\Backend\Notices;
 use Dotclear\Core\Backend\Page;
-use Dotclear\Core\Process;
 use Dotclear\Helper\Html\Html;
+use Dotclear\Helper\Process\TraitProcess;
 use Dotclear\Helper\Html\Form\{
     Checkbox,
     Div,
@@ -30,8 +30,10 @@ use Exception;
  * @author      Jean-Christian Denis
  * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-class Manage extends Process
+class Manage
 {
+    use TraitProcess;
+
     /**
      * Current module(s) type.
      *
@@ -86,15 +88,14 @@ class Manage extends Process
                     App::blog()->triggerBlog();
 
                     if (Improve::instance()->logs->has('error')) {
-                        $notice = ['type' => Notices::NOTICE_ERROR, 'msg' => __('Fix of "%s" complete in %s secondes with errors')];
+                        Notices::addErrorNotice(sprintf(__('Fix of "%s" complete in %s secondes with errors'), self::$module, $time));
                     } elseif (Improve::instance()->logs->has('warning')) {
-                        $notice = ['type' => Notices::NOTICE_WARNING, 'msg' => __('Fix of "%s" complete in %s secondes with warnings')];
+                        Notices::addWarningNotice(sprintf(__('Fix of "%s" complete in %s secondes with warnings'), self::$module, $time));
                     } elseif (Improve::instance()->logs->has('success')) {
-                        $notice = ['type' => Notices::NOTICE_SUCCESS, 'msg' => __('Fix of "%s" complete in %s secondes')];
+                        Notices::addSuccessNotice(sprintf(__('Fix of "%s" complete in %s secondes'), self::$module, $time));
                     } else {
-                        $notice = ['type' => Notices::NOTICE_SUCCESS, 'msg' => __('Fix of "%s" complete in %s secondes without messages')];
+                        Notices::addSuccessNotice(sprintf(__('Fix of "%s" complete in %s secondes without messages'), self::$module, $time));
                     }
-                    Notices::addNotice($notice['type'], sprintf($notice['msg'], self::$module, $time));
 
                     $done = true;
                 } catch (Exception $e) {

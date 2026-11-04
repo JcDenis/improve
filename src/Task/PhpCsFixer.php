@@ -122,7 +122,7 @@ class PhpCsFixer extends Task
                 // phpexe_path
                 (new Para())->items([
                     (new Label(__('Root directory of PHP executable:'), Label::OUTSIDE_LABEL_BEFORE))->for('phpexe_path'),
-                    (new Input('phpexe_path'))->size(65)->maxlenght(255)->value($this->phpexe_path),
+                    (new Input('phpexe_path'))->size(65)->maxlength(255)->value($this->phpexe_path),
                 ]),
                 (new Note())->text(__('If this module does not work you can try to put here directory to php executable (without executable file name).'))->class('form-note'),
             ]),
